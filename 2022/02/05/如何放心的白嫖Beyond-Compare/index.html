@@ -17,7 +17,7 @@
 <meta property="og:image" content="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/02.png">
 <meta property="og:image" content="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/03.png">
 <meta property="article:published_time" content="2022-02-05T08:47:36.000Z">
-<meta property="article:modified_time" content="2022-02-05T09:18:16.959Z">
+<meta property="article:modified_time" content="2022-02-06T11:57:54.228Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/01.png">
@@ -103,7 +103,7 @@
 <h1 id="0x01-YJ结论"><a href="#0x01-YJ结论" class="headerlink" title="0x01-YJ结论"></a>0x01-YJ结论</h1><p>删除指定注册表项下的值项可重新试用30天</p>
 <h1 id="0x02-YJ过程"><a href="#0x02-YJ过程" class="headerlink" title="0x02-YJ过程"></a>0x02-YJ过程</h1><p>2022/02/04日打开后，显示剩余30天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/01.png" alt="image"><br>2022/02/05日打开后，显示剩余29天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/02.png" alt="image"><br>执行完批处理后，显示剩余30天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/03.png" alt="image">  </p>
 <h1 id="0x03-YJ结果"><a href="#0x03-YJ结果" class="headerlink" title="0x03-YJ结果"></a>0x03-YJ结果</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"></span><br><span class="line">reg.exe delete &quot;HKEY_CURRENT_USER\SOFTWARE\Scooter Software\Beyond Compare 4&quot; /v CacheID /f</span><br><span class="line"></span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
-<p>将上述批处理加到任务计划程序，每月1号定期执行</p>
+<p>将上述批处理加到任务计划程序，每月1号定期执行，并设置“过了计划开始时间，立即执行”</p>
 
       
     </div>

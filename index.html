@@ -150,7 +150,7 @@
 <h1 id="0x01-YJ结论"><a href="#0x01-YJ结论" class="headerlink" title="0x01-YJ结论"></a>0x01-YJ结论</h1><p>删除指定注册表项下的值项可重新试用30天</p>
 <h1 id="0x02-YJ过程"><a href="#0x02-YJ过程" class="headerlink" title="0x02-YJ过程"></a>0x02-YJ过程</h1><p>2022/02/04日打开后，显示剩余30天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/01.png" alt="image"><br>2022/02/05日打开后，显示剩余29天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/02.png" alt="image"><br>执行完批处理后，显示剩余30天评估，如下图<br><img src="./pic/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/03.png" alt="image">  </p>
 <h1 id="0x03-YJ结果"><a href="#0x03-YJ结果" class="headerlink" title="0x03-YJ结果"></a>0x03-YJ结果</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"></span><br><span class="line">reg.exe delete &quot;HKEY_CURRENT_USER\SOFTWARE\Scooter Software\Beyond Compare 4&quot; /v CacheID /f</span><br><span class="line"></span><br><span class="line">pause</span><br></pre></td></tr></table></figure>
-<p>将上述批处理加到任务计划程序，每月1号定期执行</p>
+<p>将上述批处理加到任务计划程序，每月1号定期执行，并设置“过了计划开始时间，立即执行”</p>
 
       
     </div>
@@ -196,7 +196,7 @@
 <p>我是2022/01/11日下载的30天试用版GoLand，到期日应该是2022/02/10日<br>然后在第二天2022/01/12日执行批处理后，到期日变为2022/02/11日<br>（其他图忘记截了）只有1个图<br><img src="./pic/%E5%A6%82%E4%BD%95%E5%AE%89%E5%85%A8%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/04.png" alt="image"></p>
 <h1 id="0x03-YJ结果"><a href="#0x03-YJ结果" class="headerlink" title="0x03-YJ结果"></a>0x03-YJ结果</h1><p>可通过批处理来自动化做这件事情（我个人用PyCharm Community功能目前足够，暂时没测试PyCharm Professional）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\IntelliJIdea2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\IntelliJIdea2021.1</span><br><span class="line">reg.exe delete HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains /f</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\GoLand2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\GoLand2021.1</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\PhpStorm2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\PhpStorm2021.1</span><br></pre></td></tr></table></figure>
-<p>将上述批处理加到任务计划程序，每月1号定期执行  </p>
+<p>将上述批处理加到任务计划程序，每月1号定期执行，并设置“过了计划开始时间，立即执行”  </p>
 <p>有人竟然问我，如果这个月1号没开电脑怎么办？<br>哈哈哈，手动执行一下即可 :)</p>
 
       
