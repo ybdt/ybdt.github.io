@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>爆破带有验证码的Web登录表单 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时） 本文定位教程类文章，共包括step1-step5 step1-安装插件下载并安装插件下载地址：https:&#x2F;&#x2F;github.com&#x2F;f0ng&#x2F;captch">
+<meta property="og:type" content="article">
+<meta property="og:title" content="爆破带有验证码的Web登录表单">
+<meta property="og:url" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时） 本文定位教程类文章，共包括step1-step5 step1-安装插件下载并安装插件下载地址：https:&#x2F;&#x2F;github.com&#x2F;f0ng&#x2F;captch">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/02.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/04.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/05.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/03.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/06.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/07.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/08.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/09.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/10.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/11.png">
+<meta property="article:published_time" content="2022-03-22T14:28:59.000Z">
+<meta property="article:modified_time" content="2022-03-22T14:30:51.082Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-爆破带有验证码的Web登录表单" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" class="article-date">
+  <time class="dt-published" datetime="2022-03-22T14:28:59.000Z" itemprop="datePublished">2022-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      爆破带有验证码的Web登录表单
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）</p>
+<p>本文定位教程类文章，共包括step1-step5</p>
+<h1 id="step1-安装插件"><a href="#step1-安装插件" class="headerlink" title="step1-安装插件"></a>step1-安装插件</h1><p>下载并安装插件<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/f0ng/captcha-killer-modified/releases">https://github.com/f0ng/captcha-killer-modified/releases</a>  </p>
+<h1 id="step2-插件获取图片验证码"><a href="#step2-插件获取图片验证码" class="headerlink" title="step2-插件获取图片验证码"></a>step2-插件获取图片验证码</h1><p>burp抓包会发现某个请求是获取图片验证码的，将这个请求发送到插件中的captcha panel<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png" alt="image"><br>点击captcha-killer-modified界面中的获取，发现可以正常获取验证码<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/02.png" alt="image">  </p>
+<h1 id="step3-本地启动验证码识别接口"><a href="#step3-本地启动验证码识别接口" class="headerlink" title="step3-本地启动验证码识别接口"></a>step3-本地启动验证码识别接口</h1><p>此处我们使用github上的一个开源验证码识别项目，没有次数限制，识别率在80%左右</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip3.exe install ddddocr</span><br><span class="line"></span><br><span class="line">python3.exe .\codereg.py</span><br></pre></td></tr></table></figure>
+<p>codereg.py位于：<a target="_blank" rel="noopener" href="https://github.com/ybdt/dict-hub/blob/master/2022_03_22_%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/codereg.py">https://github.com/ybdt/dict-hub/blob/master/2022_03_22_%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/codereg.py</a><br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/04.png" alt="image"></p>
+<h1 id="step4-识别验证码"><a href="#step4-识别验证码" class="headerlink" title="step4-识别验证码"></a>step4-识别验证码</h1><p>点击captcha-killer-modified界面，接口URL填上步中启动后的监听地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8888</span><br></pre></td></tr></table></figure>
+<p>请求模板填如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST /reg HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:8888</span><br><span class="line">Connection: close</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 55</span><br><span class="line"></span><br><span class="line">&lt;@BASE64&gt;&lt;@IMG_RAW&gt;&lt;/@IMG_RAW&gt;&lt;/@BASE64&gt;</span><br></pre></td></tr></table></figure>
+<p>点击识别，可以看到能够识别到验证码<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/05.png" alt="image"><br>点击锁定<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/03.png" alt="image">  </p>
+<h1 id="step5-暴力破解"><a href="#step5-暴力破解" class="headerlink" title="step5-暴力破解"></a>step5-暴力破解</h1><p>burp拦截登录数据包<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/06.png" alt="image"><br>发送到intruder，选择Pitchfork<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/07.png" alt="image"><br>payload1正常选择字典，payload2选择如下<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/08.png" alt="image"><br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/09.png" alt="image"><br>线程选择1，发送延时为500ms<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/10.png" alt="image"><br>可看到能够成功爆破带有验证码的Web表单，识别率在80%左右<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/11.png" alt="image">  </p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/_P6OlL1xQaYSY1bvZJL4Uw">https://mp.weixin.qq.com/s/_P6OlL1xQaYSY1bvZJL4Uw</a><br><a target="_blank" rel="noopener" href="https://github.com/f0ng/captcha-killer-modified">https://github.com/f0ng/captcha-killer-modified</a><br><a target="_blank" rel="noopener" href="https://github.com/c0ny1/captcha-killer">https://github.com/c0ny1/captcha-killer</a><br><a target="_blank" rel="noopener" href="https://gv7.me/articles/2019/burp-captcha-killer-usage/">https://gv7.me/articles/2019/burp-captcha-killer-usage/</a><br><a target="_blank" rel="noopener" href="https://github.com/sml2h3/ddddocr">https://github.com/sml2h3/ddddocr</a>  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="cl128imz400008oue1f4a42d1" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">基于PHPStudy+PHPStorm配置PHP动态调试环境</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/">爆破带有验证码的Web登录表单</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">基于PHPStudy+PHPStorm配置PHP动态调试环境</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/">Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/03/02/VMware-vCenter-Server%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-21972%EF%BC%89/">VMware vCenter Server未授权文件上传漏洞分析（CVE-2021-21972）</a>
+          </li>
+        
+          <li>
+            <a href="/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/">整合Linux渗透环境到Windows中，不再用2套渗透环境</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

@@ -71,6 +71,58 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-爆破带有验证码的Web登录表单" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" class="article-date">
+  <time class="dt-published" datetime="2022-03-22T14:28:59.000Z" itemprop="datePublished">2022-03-22</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/">爆破带有验证码的Web登录表单</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）</p>
+<p>本文定位教程类文章，共包括step1-step5</p>
+<h1 id="step1-安装插件"><a href="#step1-安装插件" class="headerlink" title="step1-安装插件"></a>step1-安装插件</h1><p>下载并安装插件<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/f0ng/captcha-killer-modified/releases">https://github.com/f0ng/captcha-killer-modified/releases</a>  </p>
+<h1 id="step2-插件获取图片验证码"><a href="#step2-插件获取图片验证码" class="headerlink" title="step2-插件获取图片验证码"></a>step2-插件获取图片验证码</h1><p>burp抓包会发现某个请求是获取图片验证码的，将这个请求发送到插件中的captcha panel<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png" alt="image"><br>点击captcha-killer-modified界面中的获取，发现可以正常获取验证码<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/02.png" alt="image">  </p>
+<h1 id="step3-本地启动验证码识别接口"><a href="#step3-本地启动验证码识别接口" class="headerlink" title="step3-本地启动验证码识别接口"></a>step3-本地启动验证码识别接口</h1><p>此处我们使用github上的一个开源验证码识别项目，没有次数限制，识别率在80%左右</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">pip3.exe install ddddocr</span><br><span class="line"></span><br><span class="line">python3.exe .\codereg.py</span><br></pre></td></tr></table></figure>
+<p>codereg.py位于：<a target="_blank" rel="noopener" href="https://github.com/ybdt/dict-hub/blob/master/2022_03_22_%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/codereg.py">https://github.com/ybdt/dict-hub/blob/master/2022_03_22_%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/codereg.py</a><br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/04.png" alt="image"></p>
+<h1 id="step4-识别验证码"><a href="#step4-识别验证码" class="headerlink" title="step4-识别验证码"></a>step4-识别验证码</h1><p>点击captcha-killer-modified界面，接口URL填上步中启动后的监听地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://127.0.0.1:8888</span><br></pre></td></tr></table></figure>
+<p>请求模板填如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">POST /reg HTTP/1.1</span><br><span class="line">Host: 127.0.0.1:8888</span><br><span class="line">Connection: close</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/76.0.3809.132 Safari/537.36</span><br><span class="line">Sec-Fetch-Mode: navigate</span><br><span class="line">Sec-Fetch-User: ?1</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3</span><br><span class="line">Sec-Fetch-Site: none</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">Content-Length: 55</span><br><span class="line"></span><br><span class="line">&lt;@BASE64&gt;&lt;@IMG_RAW&gt;&lt;/@IMG_RAW&gt;&lt;/@BASE64&gt;</span><br></pre></td></tr></table></figure>
+<p>点击识别，可以看到能够识别到验证码<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/05.png" alt="image"><br>点击锁定<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/03.png" alt="image">  </p>
+<h1 id="step5-暴力破解"><a href="#step5-暴力破解" class="headerlink" title="step5-暴力破解"></a>step5-暴力破解</h1><p>burp拦截登录数据包<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/06.png" alt="image"><br>发送到intruder，选择Pitchfork<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/07.png" alt="image"><br>payload1正常选择字典，payload2选择如下<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/08.png" alt="image"><br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/09.png" alt="image"><br>线程选择1，发送延时为500ms<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/10.png" alt="image"><br>可看到能够成功爆破带有验证码的Web表单，识别率在80%左右<br><img src="./image/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/11.png" alt="image">  </p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/_P6OlL1xQaYSY1bvZJL4Uw">https://mp.weixin.qq.com/s/_P6OlL1xQaYSY1bvZJL4Uw</a><br><a target="_blank" rel="noopener" href="https://github.com/f0ng/captcha-killer-modified">https://github.com/f0ng/captcha-killer-modified</a><br><a target="_blank" rel="noopener" href="https://github.com/c0ny1/captcha-killer">https://github.com/c0ny1/captcha-killer</a><br><a target="_blank" rel="noopener" href="https://gv7.me/articles/2019/burp-captcha-killer-usage/">https://gv7.me/articles/2019/burp-captcha-killer-usage/</a><br><a target="_blank" rel="noopener" href="https://github.com/sml2h3/ddddocr">https://github.com/sml2h3/ddddocr</a>  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="cl128imz400008oue1f4a42d1" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-基于PHPStudy-PHPStorm配置PHP动态调试环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" class="article-date">
@@ -432,6 +484,10 @@
       <ul>
         
           <li>
+            <a href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/">爆破带有验证码的Web登录表单</a>
+          </li>
+        
+          <li>
             <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">基于PHPStudy+PHPStorm配置PHP动态调试环境</a>
           </li>
         
@@ -445,10 +501,6 @@
         
           <li>
             <a href="/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/">整合Linux渗透环境到Windows中，不再用2套渗透环境</a>
-          </li>
-        
-          <li>
-            <a href="/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/">如何放心的白嫖Beyond Compare</a>
           </li>
         
       </ul>
