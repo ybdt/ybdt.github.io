@@ -6,33 +6,33 @@
   
   <title>基于PHPStudy+PHPStorm配置PHP动态调试环境 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，用着效果不怎么好 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的php.ini在末尾添加如下代码   1234">
+  <meta name="description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的ph">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于PHPStudy+PHPStorm配置PHP动态调试环境">
-<meta property="og:url" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/index.html">
+<meta property="og:url" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，用着效果不怎么好 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的php.ini在末尾添加如下代码   1234">
+<meta property="og:description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的ph">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/05.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/10.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/01.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/02.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/03.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/06.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/07.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/08.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/09.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/11.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/12.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/13.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png">
-<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/05.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/10.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/01.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/02.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/03.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/06.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/07.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/08.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/09.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/11.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/12.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/13.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png">
+<meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png">
 <meta property="article:published_time" content="2022-03-22T01:31:21.000Z">
-<meta property="article:modified_time" content="2022-03-24T15:48:37.097Z">
+<meta property="article:modified_time" content="2022-03-25T08:12:25.940Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
+<meta name="twitter:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -89,9 +89,9 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-基于PHPStudy-PHPStorm配置PHP动态调试环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-基于phpStudy+PhpStorm配置PHP动态调试环境" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" class="article-date">
+    <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" class="article-date">
   <time class="dt-published" datetime="2022-03-22T01:31:21.000Z" itemprop="datePublished">2022-03-22</time>
 </a>
     
@@ -111,7 +111,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>之前配置过基于phpstudy+vscode的php动态调试环境，用着效果不怎么好</p>
+        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
 <p>以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人</p>
 <p>本文定位教程类文章，共包括step1-step7</p>
 <h1 id="step1-修改php-ini"><a href="#step1-修改php-ini" class="headerlink" title="step1-修改php.ini"></a>step1-修改php.ini</h1><p>本文我们以php5.6为例，首先修改php5.6中的php.ini<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png" alt="image"><br>在末尾添加如下代码  </p>
@@ -123,7 +123,7 @@
 <h1 id="step3-配置服务器"><a href="#step3-配置服务器" class="headerlink" title="step3-配置服务器"></a>step3-配置服务器</h1><p>PHP-&gt;服务器-&gt;添加，指定名称、主机、端口（其中<a target="_blank" rel="noopener" href="http://www.ybdt.best是我修改hosts后,指向127.0.0.1的域名)/">www.ybdt.best是我修改hosts后，指向127.0.0.1的域名）</a><br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/07.png" alt="image">  </p>
 <h1 id="step4-编辑配置"><a href="#step4-编辑配置" class="headerlink" title="step4-编辑配置"></a>step4-编辑配置</h1><p>打开编辑配置<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/08.png" alt="image"><br>在编辑配置中设置名称、服务器、起始URL<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/09.png" alt="image">  </p>
 <h1 id="step5-调试测试"><a href="#step5-调试测试" class="headerlink" title="step5-调试测试"></a>step5-调试测试</h1><p>在第9行下断点，并点击右上角的甲壳虫<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/11.png" alt="image"><br>PHPStorm会自动打开浏览器<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/12.png" alt="image"><br>同时停在设置的断点处<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/13.png" alt="image">  </p>
-<h1 id="step6-带参数的调试测试"><a href="#step6-带参数的调试测试" class="headerlink" title="step6-带参数的调试测试"></a>step6-带参数的调试测试</h1><p>有人可能会问，直接点击甲壳虫不能带有参数啊？<br>其实只要请求中有参数XDEBUG_SESSION_START，请求就会自动走phpstorm的xdebug<br>例如，发起如下请求<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png" alt="image"><br>phpstorm会停在断点，可看到用户传入的参数<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png" alt="image">  </p>
+<h1 id="step6-带参数的调试测试"><a href="#step6-带参数的调试测试" class="headerlink" title="step6-带参数的调试测试"></a>step6-带参数的调试测试</h1><p>有人可能会问，直接点击甲壳虫不能带有参数啊？<br>其实首次发起请求后，Cookie中会带有XDEBUG_SESSION_START参数，再次发起请求后会自动走phpstorm的xdebug<br>例如，发起如下请求<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png" alt="image"><br>phpstorm会停在断点，可看到用户传入的参数<br><img src="./image/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png" alt="image">  </p>
 <h1 id="step7-网关超时"><a href="#step7-网关超时" class="headerlink" title="step7-网关超时"></a>step7-网关超时</h1><p>停在断点处没几分钟，会出现网关超时的问题，解决办法  </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">在nginx配置文件的http块增加</span><br><span class="line">fastcgi_read_timeout 3600s;</span><br></pre></td></tr></table></figure>
 
@@ -132,7 +132,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cl11h0efh0000ecue1b5w54yh" data-title="基于PHPStudy+PHPStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cl165ekr900007suee2qc1814" data-title="基于PHPStudy+PHPStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       
@@ -196,7 +196,7 @@
           </li>
         
           <li>
-            <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EPHPStudy-PHPStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">基于PHPStudy+PHPStorm配置PHP动态调试环境</a>
+            <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">基于PHPStudy+PHPStorm配置PHP动态调试环境</a>
           </li>
         
           <li>
