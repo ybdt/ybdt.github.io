@@ -4,13 +4,17 @@
   <meta charset="utf-8">
   
   
-  <title>Tag: Spring | Hexo</title>
+  <title>MemoryAnalyzerTool启动失败提示需要正确jdk路径--解决办法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/tags/Spring/index.html">
+  <meta name="description" content="我用的MemoryAnalyzerTool版本是1.12.0，这个版本需要jdk11，可我本机默认是jdk8，所以需要折腾一下 可修改MemoryAnalyzerTool的配置文件MemoryAnalyzer.ini指定jdk路径 1234567891011-vmC:\Program Files\Java\jdk-11.0.10\bin\javaw.exe-startupplugins&#x2F;org.e">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MemoryAnalyzerTool启动失败提示需要正确jdk路径--解决办法">
+<meta property="og:url" content="http://example.com/2022/04/03/MemoryAnalyzerTool%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E6%AD%A3%E7%A1%AEjdk%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="我用的MemoryAnalyzerTool版本是1.12.0，这个版本需要jdk11，可我本机默认是jdk8，所以需要折腾一下 可修改MemoryAnalyzerTool的配置文件MemoryAnalyzer.ini指定jdk路径 1234567891011-vmC:\Program Files\Java\jdk-11.0.10\bin\javaw.exe-startupplugins&#x2F;org.e">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-04-03T03:52:49.000Z">
+<meta property="article:modified_time" content="2022-04-03T03:54:07.608Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -69,39 +73,57 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2022" class="archive-year">2022</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2022/03/31/Spring-Core-RCE-0day-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" class="archive-article-date">
-  <time class="dt-published" datetime="2022-03-31T03:44:10.000Z" itemprop="datePublished">Mar 31</time>
+        <section id="main"><article id="post-MemoryAnalyzerTool启动失败提示需要正确jdk路径-解决办法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/03/MemoryAnalyzerTool%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E6%AD%A3%E7%A1%AEjdk%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2022-04-03T03:52:49.000Z" itemprop="datePublished">2022-04-03</time>
 </a>
-      
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2022/03/31/Spring-Core-RCE-0day-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/">Spring-Core-RCE-0day-漏洞复现</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      MemoryAnalyzerTool启动失败提示需要正确jdk路径--解决办法
     </h1>
   
 
-    </header>
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>我用的MemoryAnalyzerTool版本是1.12.0，这个版本需要jdk11，可我本机默认是jdk8，所以需要折腾一下</p>
+<p>可修改MemoryAnalyzerTool的配置文件MemoryAnalyzer.ini指定jdk路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">-vm</span><br><span class="line">C:\Program Files\Java\jdk-11.0.10\bin\javaw.exe</span><br><span class="line"></span><br><span class="line">-startup</span><br><span class="line">plugins/org.eclipse.equinox.launcher_1.6.200.v20210416-2027.jar</span><br><span class="line"></span><br><span class="line">--launcher.library</span><br><span class="line">plugins/org.eclipse.equinox.launcher.win32.win32.x86_64_1.2.200.v20210429-1609</span><br><span class="line"></span><br><span class="line">-vmargs</span><br><span class="line">-Xmx1024m</span><br></pre></td></tr></table></figure>
+
+<p>这里需要注意一点，也是我碰到的一个小坑：即使jdk路径有空格也不能用双引号（跟多数情况不太一样），否则还是会报错找不到</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/03/MemoryAnalyzerTool%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E6%AD%A3%E7%A1%AEjdk%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" data-id="cl1ir1ub40000t8ue1uj42cks" data-title="MemoryAnalyzerTool启动失败提示需要正确jdk路径--解决办法" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/03/31/Spring-Core-RCE-0day-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Spring-Core-RCE-0day-漏洞复现</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
 
 
 </section>
