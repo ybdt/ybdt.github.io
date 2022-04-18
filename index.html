@@ -71,6 +71,47 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Windows-Server-2012及以上不提取密码登录Administrator桌面" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" class="article-date">
+  <time class="dt-published" datetime="2022-04-18T06:20:07.000Z" itemprop="datePublished">2022-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/">Windows Server 2012及以上不提取密码登录Administrator桌面</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Windows Server自2012起，不能直接通过mimikatz抓密码，想抓密码需要修改注册表，然后让用户重新登录，可实战中有的场景是服务器管理员一直没有登录（可能这台服务器被遗忘了。。），此时我们可以退而求其次，不抓取密码通过一个技巧直接登录管理员Administrator的桌面</p>
+<h1 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h1><p>假如我们拿到一个system权限的webshell（针对中间件如php-fpm、Tomcat、Weblogic的上传攻击或漏洞攻击通常都是system权限）<br>kill掉杀软添加用户或通过某种技巧绕过防护添加用户，并将添加的用户添加到管理员组<br>通过代理工具将目标的远程桌面端口映射出来<br>用新添加的用户登录到目标的远程桌面<br>首先需要通过psexec启动一个system权限的cmd（注意，后面的命令tscon 1需要system权限），命令行下执行tscon 1切换到管理员Administrator的桌面，这里1为Administrator的会话id，可通过query user查询</p>
+<h1 id="结果"><a href="#结果" class="headerlink" title="结果"></a>结果</h1><p>结果展示如下图<br><img src="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/01.png" alt="pic"><br><img src="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/01.png" alt="pic">  </p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="cl24cuww40000wgue0wkmeva1" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
+      
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-MemoryAnalyzerTool启动失败提示需要正确jdk路径-解决办法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/04/03/MemoryAnalyzerTool%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E6%AD%A3%E7%A1%AEjdk%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
@@ -502,48 +543,12 @@
 
 
   
-    <article id="post-新征程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" class="article-date">
-  <time class="dt-published" datetime="2022-01-11T11:34:25.000Z" itemprop="datePublished">2022-01-11</time>
-</a>
+
+
+  <nav id="page-nav">
     
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/">新征程</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>这是博客新家（Github Pages）的第一篇博客，也是2022年的第一篇，更是我从长春来到北京入职新公司后的第一篇，一段新的征程，一段新的开始</p>
-<p>之前的博客搭建在免费的谷歌云上，不过随着谷歌云的免费到期，付费了一段时间，每月费用实在太高，只得放弃，附一张之前的博客图片</p>
-<p>就像之前第一篇博客中写到：一个热爱黑客的家伙，这里有东西不会让你失望<br><img src="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/01.png" alt="image">  </p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" data-id="ckya1sqfr0000bsue6o4pg13r" data-title="新征程" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+  </nav>
 
 </section>
         
@@ -588,6 +593,10 @@
       <ul>
         
           <li>
+            <a href="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/">Windows Server 2012及以上不提取密码登录Administrator桌面</a>
+          </li>
+        
+          <li>
             <a href="/2022/04/03/MemoryAnalyzerTool%E5%90%AF%E5%8A%A8%E5%A4%B1%E8%B4%A5%E6%8F%90%E7%A4%BA%E9%9C%80%E8%A6%81%E6%AD%A3%E7%A1%AEjdk%E8%B7%AF%E5%BE%84-%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/">MemoryAnalyzerTool启动失败提示需要正确jdk路径--解决办法</a>
           </li>
         
@@ -601,10 +610,6 @@
         
           <li>
             <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/">基于phpStudy+PhpStorm配置PHP动态调试环境</a>
-          </li>
-        
-          <li>
-            <a href="/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/">Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）</a>
           </li>
         
       </ul>
