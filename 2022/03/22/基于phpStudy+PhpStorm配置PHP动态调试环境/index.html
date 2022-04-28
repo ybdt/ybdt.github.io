@@ -6,12 +6,12 @@
   
   <title>基于phpStudy+PhpStorm配置PHP动态调试环境 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的ph">
+  <meta name="description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于phpStudy+PhpStorm配置PHP动态调试环境">
 <meta property="og:url" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7 step1-修改php.ini本文我们以php5.6为例，首先修改php5.6中的ph">
+<meta property="og:description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/05.png">
@@ -29,8 +29,9 @@
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png">
 <meta property="article:published_time" content="2022-03-22T01:31:21.000Z">
-<meta property="article:modified_time" content="2022-03-31T07:59:49.559Z">
+<meta property="article:modified_time" content="2022-04-28T08:49:30.714Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
   
@@ -114,6 +115,7 @@
         <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
 <p>以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人</p>
 <p>本文定位教程类文章，共包括step1-step7</p>
+<span id="more"></span>
 <h1 id="step1-修改php-ini"><a href="#step1-修改php-ini" class="headerlink" title="step1-修改php.ini"></a>step1-修改php.ini</h1><p>本文我们以php5.6为例，首先修改php5.6中的php.ini<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png" alt="image"><br>在末尾添加如下代码  </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zend_extension=&quot;C:\phpstudy_pro\Extensions\php\php5.6.9nts\ext\php_xdebug.dll&quot;</span><br><span class="line">xdebug.remote_enable=1</span><br><span class="line">xdebug.remote_host=localhost</span><br><span class="line">xdebug.remote_port=9100</span><br></pre></td></tr></table></figure>
 <p>解释如下  </p>
@@ -136,6 +138,8 @@
       
       
       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li></ul>
+
     </footer>
   </div>
   
@@ -174,7 +178,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/JAVA/" rel="tag">JAVA</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Windows/" rel="tag">Windows</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" rel="tag">内网横向</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" rel="tag">内网横向</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/" rel="tag">工具开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%BB%E5%87%BB%E7%8E%AF%E5%A2%83/" rel="tag">攻击环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" rel="tag">漏洞复现</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94%E6%84%9F%E6%82%9F/" rel="tag">随笔感悟</a></li></ul>
     </div>
   </div>
 
@@ -184,7 +188,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/JAVA/" style="font-size: 10px;">JAVA</a> <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/Windows/" style="font-size: 10px;">Windows</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" style="font-size: 10px;">内网横向</a>
+      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" style="font-size: 10px;">内网横向</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/" style="font-size: 10px;">工具开发</a> <a href="/tags/%E6%94%BB%E5%87%BB%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">攻击环境</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" style="font-size: 20px;">漏洞分析</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0/" style="font-size: 10px;">漏洞复现</a> <a href="/tags/%E9%9A%8F%E7%AC%94%E6%84%9F%E6%82%9F/" style="font-size: 10px;">随笔感悟</a>
     </div>
   </div>
 
