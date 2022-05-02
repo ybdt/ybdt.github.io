@@ -4,25 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>如何放心的白嫖安全领域四大主流语言IDE | Hexo</title>
+  <title>v2ray被Windows防火墙拦截--解决办法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="前言安全领域四大主流语言JAVA、PHP、GO、Python，对应的好用的IDE：IntelliJ IDEA Ultimate、PhpStorm、GoLand、PyCharm Professional">
+  <meta name="description" content="发现一个奇怪的现象，VMware虚拟机win10 ping宿主机win10可以ping通，但是telnet宿主机win10的某个开放端口，则有时通有时不通">
 <meta property="og:type" content="article">
-<meta property="og:title" content="如何放心的白嫖安全领域四大主流语言IDE">
-<meta property="og:url" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/index.html">
+<meta property="og:title" content="v2ray被Windows防火墙拦截--解决办法">
+<meta property="og:url" content="http://example.com/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言安全领域四大主流语言JAVA、PHP、GO、Python，对应的好用的IDE：IntelliJ IDEA Ultimate、PhpStorm、GoLand、PyCharm Professional">
+<meta property="og:description" content="发现一个奇怪的现象，VMware虚拟机win10 ping宿主机win10可以ping通，但是telnet宿主机win10的某个开放端口，则有时通有时不通">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/01.png">
-<meta property="og:image" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/02.png">
-<meta property="og:image" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/03.png">
-<meta property="og:image" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/04.png">
-<meta property="article:published_time" content="2022-01-13T02:39:00.000Z">
-<meta property="article:modified_time" content="2022-04-28T08:48:26.389Z">
+<meta property="og:image" content="http://example.com/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/01.png">
+<meta property="article:published_time" content="2022-05-02T15:46:23.000Z">
+<meta property="article:modified_time" content="2022-05-02T16:04:59.577Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="工具开发">
+<meta property="article:tag" content="杂七杂八">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/01.png">
+<meta name="twitter:image" content="http://example.com/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/01.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -79,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-如何放心的白嫖四大主流语言IDE" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-v2ray被Windows防火墙拦截--解决办法" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" class="article-date">
-  <time class="dt-published" datetime="2022-01-13T02:39:00.000Z" itemprop="datePublished">2022-01-13</time>
+    <a href="/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" class="article-date">
+  <time class="dt-published" datetime="2022-05-02T15:46:23.000Z" itemprop="datePublished">2022-05-02</time>
 </a>
     
   </div>
@@ -93,7 +90,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      如何放心的白嫖安全领域四大主流语言IDE
+      v2ray被Windows防火墙拦截--解决办法
     </h1>
   
 
@@ -101,25 +98,22 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>安全领域四大主流语言JAVA、PHP、GO、Python，对应的好用的IDE：IntelliJ IDEA Ultimate、PhpStorm、GoLand、PyCharm Professional</p>
+        <p>发现一个奇怪的现象，VMware虚拟机win10 ping宿主机win10可以ping通，但是telnet宿主机win10的某个开放端口，则有时通有时不通</p>
 <span id="more"></span>
-<h1 id="0x01-YJ结论"><a href="#0x01-YJ结论" class="headerlink" title="0x01-YJ结论"></a>0x01-YJ结论</h1><p>上述4大IDE的2021.1系列，删除指定目录下的文件夹及修改注册表可重新试用30天</p>
-<h1 id="0x02-YJ过程"><a href="#0x02-YJ过程" class="headerlink" title="0x02-YJ过程"></a>0x02-YJ过程</h1><p>之前发现针对IntelliJ IDEA Ultimate的白嫖方法，由于最近用到GoLand，故联想到之前的方式是否可用于GoLand以及PhpStorm</p>
-<p>下图是GoLand 2021.3.2，可看到直接没有免费试用30天的功能<br><img src="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/01.png" alt="image"><br>而GoLand 2021.1.3则有这个功能，如下图<br><img src="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/02.png" alt="image"><br>同理PhpStorm 2021.2.3可看到没有免费试用30天的功能，如下图<br><img src="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/03.png" alt="image"><br>而PhpStorm 2021.1.4则有这个功能（图忘记截了）</p>
-<p>我是2022/01/11日下载的30天试用版GoLand，到期日应该是2022/02/10日<br>然后在第二天2022/01/12日执行批处理后，到期日变为2022/02/11日<br>（其他图忘记截了）只有1个图<br><img src="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/04.png" alt="image"></p>
-<h1 id="0x03-YJ结果"><a href="#0x03-YJ结果" class="headerlink" title="0x03-YJ结果"></a>0x03-YJ结果</h1><p>可通过批处理来自动化做这件事情（我个人用PyCharm Community功能目前足够，暂时没测试PyCharm Professional）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\IntelliJIdea2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\IntelliJIdea2021.1</span><br><span class="line">reg.exe delete HKEY_CURRENT_USER\SOFTWARE\JavaSoft\Prefs\jetbrains /f</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\GoLand2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\GoLand2021.1</span><br><span class="line"></span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Local\JetBrains\PhpStorm2021.1</span><br><span class="line">rmdir /s /q C:\Users\ybdt\AppData\Roaming\JetBrains\PhpStorm2021.1</span><br></pre></td></tr></table></figure>
-<p>将上述批处理加到任务计划程序，每月1号定期执行，并设置“过了计划开始时间，立即执行”  </p>
-<p>有人竟然问我，如果这个月1号没开电脑怎么办？<br>哈哈哈，手动执行一下即可 :)</p>
+<p>经测试，将windows防火墙关闭后能通，可以断定是windows防火墙搞得鬼</p>
+<p>进一步测试，在防火墙上不管是添加端口白名单还是添加程序白名单，均无效，事情到这里有点无语</p>
+<p>感觉不合理呀，于是查看了下已有规则，发现一条规则是在公有网络下阻止v2ray<br><img src="/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/01.png" alt="image"><br>应该就是它了</p>
+<p>将规则改为允许，还是不通，再次尝试在windows防火墙上添加端口白名单，可通，fuck，终于通了。。</p>
+<p>到这里也可以解释，为什么虚拟机telnet宿主机的某个开放端口有时通有时不同，当处于私有网络则通，处于公有网络则不通</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" data-id="ckz9mj5xi0000q8uecibd90x7" data-title="如何放心的白嫖安全领域四大主流语言IDE" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/05/02/v2ray%E8%A2%ABWindows%E9%98%B2%E7%81%AB%E5%A2%99%E6%8B%A6%E6%88%AA--%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/" data-id="cl2owy49q0000pcuehl0y7x81" data-title="v2ray被Windows防火墙拦截--解决办法" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/" rel="tag">工具开发</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%9D%82%E4%B8%83%E6%9D%82%E5%85%AB/" rel="tag">杂七杂八</a></li></ul>
 
     </footer>
   </div>
@@ -127,19 +121,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          如何放心的白嫖Beyond Compare
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">新征程</div>
+      <div class="article-nav-title">通达OA漏洞研究</div>
     </a>
   
 </nav>
