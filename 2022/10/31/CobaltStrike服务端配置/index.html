@@ -4,20 +4,22 @@
   <meta charset="utf-8">
   
   
-  <title>通达OA漏洞研究 | Hexo</title>
+  <title>CobaltStrike服务端配置 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="前言如下是我研究通达OA时的经验、技巧">
+  <meta name="description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="通达OA漏洞研究">
-<meta property="og:url" content="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/index.html">
+<meta property="og:title" content="CobaltStrike服务端配置">
+<meta property="og:url" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="前言如下是我研究通达OA时的经验、技巧">
+<meta property="og:description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2022-04-28T09:27:27.000Z">
-<meta property="article:modified_time" content="2022-10-24T15:47:06.186Z">
+<meta property="og:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png">
+<meta property="article:published_time" content="2022-10-31T02:38:17.000Z">
+<meta property="article:modified_time" content="2022-10-31T02:40:31.355Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="红队环境">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -74,10 +76,10 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-通达OA漏洞研究" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CobaltStrike服务端配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" class="article-date">
-  <time class="dt-published" datetime="2022-04-28T09:27:27.000Z" itemprop="datePublished">2022-04-28</time>
+    <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time class="dt-published" datetime="2022-10-31T02:38:17.000Z" itemprop="datePublished">2022-10-31</time>
 </a>
     
   </div>
@@ -88,7 +90,7 @@
         
   
     <h1 class="p-name article-title" itemprop="headline name">
-      通达OA漏洞研究
+      CobaltStrike服务端配置
     </h1>
   
 
@@ -96,27 +98,38 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>如下是我研究通达OA时的经验、技巧</p>
+        <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11099">https://xz.aliyun.com/t/11099</a></p>
+<p>文章备份：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ybdt/misc-hub/blob/main/06-%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%A1%88%E4%BE%8B%E5%AD%A6%E4%B9%A0/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%9A%90%E8%97%8F--CDN%E5%8F%8A%E7%89%B9%E5%BE%81%E9%9A%90%E5%8C%BFCobalt%20Strike%20-%20%E5%85%88%E7%9F%A5%E7%A4%BE%E5%8C%BA.html">https://github.com/ybdt/misc-hub/blob/main/06-内网横向案例学习/CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html</a></p>
 <span id="more"></span>
-<h1 id="0x01-历史版本下载"><a href="#0x01-历史版本下载" class="headerlink" title="0x01-历史版本下载"></a>0x01-历史版本下载</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">http://cdndown.tongda2000.com/oa/2019/TDOA11.10.exe</span><br><span class="line">经验证可下载TDOA11.2.exe到TDOA11.10.exe</span><br><span class="line"></span><br><span class="line">研究通达OA漏洞期间，记得看到过2017版的安装包名好像是MYOA2017.exe，经测试如下链接可下载</span><br><span class="line">https://cdndown.tongda2000.com/oa/2017/MYOA2017.exe</span><br><span class="line"></span><br><span class="line">其他版本同理：2015、2010、2009</span><br><span class="line"></span><br><span class="line">还差版本2013、2011</span><br></pre></td></tr></table></figure>
 
-<h1 id="0x02-版本查看"><a href="#0x02-版本查看" class="headerlink" title="0x02-版本查看"></a>0x02-版本查看</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">适用于2017、2016、2015、2013、2010、2009、2008</span><br><span class="line">http://192.168.0.116/inc/expired.php</span><br><span class="line"></span><br><span class="line">适用于11.x系列</span><br><span class="line">暂不放出</span><br></pre></td></tr></table></figure>
+<h1 id="0x02-过程记录"><a href="#0x02-过程记录" class="headerlink" title="0x02 过程记录"></a>0x02 过程记录</h1><p>看完上述文章，你在实践时可能会有一些问题，如下温馨提示也许会有帮助：</p>
+<p>01、想从freenom注册免费域名其实挺费劲的，反正我试了几次都没成功，可从namesilo购买一个域名，选一个不那么大众化的，每年0.99$</p>
+<p>02、原文中如下命令可能是笔误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python openssl pkcs12 -export -in server.pem -inkey server.key -out cfcert.p12 -name cloudflare_cert -passout pass:123456</span><br></pre></td></tr></table></figure>
 
-<h1 id="0x03-默认口令"><a href="#0x03-默认口令" class="headerlink" title="0x03-默认口令"></a>0x03-默认口令</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">用户名：admin</span><br><span class="line">密码：（密码为空）</span><br></pre></td></tr></table></figure>
+<p>应为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -export -in server.pem -inkey server.key -out cfcert.p12 -name cloudflare_cert -passout pass:123456</span><br></pre></td></tr></table></figure>
 
-<h1 id="0x04-空间测绘"><a href="#0x04-空间测绘" class="headerlink" title="0x04-空间测绘"></a>0x04-空间测绘</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">fofa搜索关键字：title=&quot;通达OA&quot;</span><br><span class="line">fofa搜索关键字：app=&quot;TDXK-通达OA&quot;</span><br><span class="line">hunter搜索关键字：app.vendor=&quot;通达&quot;</span><br><span class="line"></span><br><span class="line">参考链接：</span><br><span class="line">https://www.bilibili.com/read/cv10888579</span><br></pre></td></tr></table></figure>
+<p>也就是执行如下2条命令，密码由123456改为baidu3478，生成证书</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">openssl pkcs12 -export -in server.pem -inkey server.key -out cfcert.p12 -name cloudflare_cert -passout pass:baidu3478</span><br><span class="line"></span><br><span class="line">keytool -importkeystore -deststorepass baidu3478 -destkeypass baidu3478 -destkeystore cfcert.store -srckeystore cfcert.p12 -srcstoretype PKCS12 -srcstorepass baidu3478 -alias cloudflare_cert</span><br></pre></td></tr></table></figure>
 
-<h1 id="0x05-动态调试技巧"><a href="#0x05-动态调试技巧" class="headerlink" title="0x05-动态调试技巧"></a>0x05-动态调试技巧</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">用解密后的php文件替换原加密php文件，可用于动态调试</span><br></pre></td></tr></table></figure>
+<p>生成后会有一个提醒，推荐迁移到PKCS12，如下命令迁移到PKCS12</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">keytool -importkeystore -srckeystore cfcert.store -destkeystore cfcert.store -deststoretype pkcs12</span><br></pre></td></tr></table></figure>
 
-<h1 id="0x06-适配最新版11-10的后台rce-0day"><a href="#0x06-适配最新版11-10的后台rce-0day" class="headerlink" title="0x06-适配最新版11.10的后台rce 0day"></a>0x06-适配最新版11.10的后台rce 0day</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">暂不放出</span><br></pre></td></tr></table></figure>
+<p>03、修改文件teamserve，将ip换为内网ip，使用c2lint检查profile后去掉http-config</p>
+<h1 id="0x03-上线验证"><a href="#0x03-上线验证" class="headerlink" title="0x03 上线验证"></a>0x03 上线验证</h1><p>上线后，我这边wireshark抓包，抓到的ip查询后发现是微软云（可能是cloudflare的节点在微软云上，或其他原因），如下图</p>
+<p><img src="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png" alt="img"></p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="cl9mzoohr000pdhfycadlcie4" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/" data-id="cl9w6cpdl0000jefy6qis1zom" data-title="CobaltStrike服务端配置" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%BA%A2%E9%98%9F%E7%8E%AF%E5%A2%83/" rel="tag">红队环境</a></li></ul>
 
     </footer>
   </div>
@@ -124,19 +137,10 @@
     
 <nav id="article-nav">
   
-    <a href="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          无感知使Windows Defender失效
-        
-      </div>
-    </a>
   
-  
-    <a href="/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Windows Server 2012及以上不提取密码登录Administrator桌面</div>
+      <div class="article-nav-title">ThinkPHP最新版6.0.13 0day利用链分析</div>
     </a>
   
 </nav>

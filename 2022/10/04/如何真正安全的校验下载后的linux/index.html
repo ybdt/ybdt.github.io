@@ -102,7 +102,7 @@
 <h1 id="kali"><a href="#kali" class="headerlink" title="kali"></a>kali</h1><p>公钥指纹ID：7D8D0BF6（<a target="_blank" rel="noopener" href="https://www.kali.org/downloads/%EF%BC%89">https://www.kali.org/downloads/）</a><br>win10中的ubuntu下gpg校验<br>gpg2 –verify ./ SHA256SUMS.gpg ./SHA256SUMS<br>gpg签名没有问题<br>f86b3c6cc98af2d2d86e829fb8a3b08b4d5c4f376d6b8b1e108c58fcfdb46229  kali-linux-xfce-2019.1-amd64.iso<br>python脚本hash验证<br>hash没有问题</p>
 <h1 id="kali校验从头操作"><a href="#kali校验从头操作" class="headerlink" title="kali校验从头操作"></a>kali校验从头操作</h1><p>windows下的linux子系统ubuntu之前被我卸载了，重新安装ubuntu18.04<br>安装后更新系统：sudo apt update &amp;&amp; sudo apt upgrade<br>由于没有gpg2，执行：sudo apt install gnup2<br>伴随系统镜像下载的只有kali-linux-2019.4-amd64.iso.txt.sha256sum和种子文件，从<a target="_blank" rel="noopener" href="http://cdimage.kali.org/kali-2019.4/%E4%B8%8B%E8%BD%BDSHA256SUMS.gpg%E4%BB%A5%E5%8F%8ASHA256SUMS%EF%BC%8C%E6%89%A7%E8%A1%8C%EF%BC%9A">http://cdimage.kali.org/kali-2019.4/下载SHA256SUMS.gpg以及SHA256SUMS，执行：</a><br>gpg2 –verify ./SHA256SUMS.gpg ./SHA256SUMS<br>提示：<br>gpg: Signature made Tue Nov 26 01:13:21 2019 CST<br>gpg:                using RSA key 44C6513A8E4FB3D30875F758ED444FF07D8D0BF6<br>gpg: Can’t check signature: No public key</p>
 <p>尝试执行<br>gpg –keyserver hkp://keys.gnupg.net –recv-key 7D8D0BF6<br>下载公钥失败<br>尝试执行<br>gpg2 –recv-keys 0x7D8D0BF6<br>下载公钥失败<br>尝试执行<br>wget -q -O - <a target="_blank" rel="noopener" href="https://www.kali.org/archive-key.asc">https://www.kali.org/archive-key.asc</a> | gpg –import<br>下载公钥成功</p>
-<p>gpg2 –verify ./SHA256SUMS.gpg ./SHA256SUMS<br>提示<br>gpg: Signature made Tue Nov 26 01:13:21 2019 CST<br>gpg:                using RSA key 44C6513A8E4FB3D30875F758ED444FF07D8D0BF6<br>gpg: Good signature from “Kali Linux Repository <a href="mailto:&#100;&#101;&#x76;&#x65;&#108;&#64;&#107;&#97;&#x6c;&#105;&#x2e;&#111;&#x72;&#103;">&#100;&#101;&#x76;&#x65;&#108;&#64;&#107;&#97;&#x6c;&#105;&#x2e;&#111;&#x72;&#103;</a>“ [unknown]<br>gpg: WARNING: This key is not certified with a trusted signature!<br>gpg:          There is no indication that the signature belongs to the owner.<br>Primary key fingerprint: 44C6 513A 8E4F B3D3 0875  F758 ED44 4FF0 7D8D 0BF6<br>签名校验成功</p>
+<p>gpg2 –verify ./SHA256SUMS.gpg ./SHA256SUMS<br>提示<br>gpg: Signature made Tue Nov 26 01:13:21 2019 CST<br>gpg:                using RSA key 44C6513A8E4FB3D30875F758ED444FF07D8D0BF6<br>gpg: Good signature from “Kali Linux Repository <a href="mailto:&#100;&#101;&#118;&#x65;&#x6c;&#x40;&#x6b;&#x61;&#108;&#x69;&#x2e;&#111;&#x72;&#x67;">&#100;&#101;&#118;&#x65;&#x6c;&#x40;&#x6b;&#x61;&#108;&#x69;&#x2e;&#111;&#x72;&#x67;</a>“ [unknown]<br>gpg: WARNING: This key is not certified with a trusted signature!<br>gpg:          There is no indication that the signature belongs to the owner.<br>Primary key fingerprint: 44C6 513A 8E4F B3D3 0875  F758 ED44 4FF0 7D8D 0BF6<br>签名校验成功</p>
 <p>使用自己编写的python脚本校验hash<br>python .\hash_verify.py .\kali-linux-2019.4-amd64.iso bad0d602a531b872575e23cc025b45fee475523b51378a035928b733ca395ac5<br>哈希校验成功</p>
 <h1 id="ubuntu"><a href="#ubuntu" class="headerlink" title="ubuntu"></a>ubuntu</h1><p>下载torrent文件从官方站点（<a target="_blank" rel="noopener" href="https://www.ubuntu.com/download/alternative-downloads%EF%BC%89">https://www.ubuntu.com/download/alternative-downloads）</a></p>
 <p>下载iso文件通过迅雷</p>
@@ -113,7 +113,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/10/04/%E5%A6%82%E4%BD%95%E7%9C%9F%E6%AD%A3%E5%AE%89%E5%85%A8%E7%9A%84%E6%A0%A1%E9%AA%8C%E4%B8%8B%E8%BD%BD%E5%90%8E%E7%9A%84linux/" data-id="cl8uaqtzp000dfzgt99t49hgq" data-title="如何真正安全的校验下载后的linux" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/10/04/%E5%A6%82%E4%BD%95%E7%9C%9F%E6%AD%A3%E5%AE%89%E5%85%A8%E7%9A%84%E6%A0%A1%E9%AA%8C%E4%B8%8B%E8%BD%BD%E5%90%8E%E7%9A%84linux/" data-id="cl9w6cpdp0004jefyam235zov" data-title="如何真正安全的校验下载后的linux" class="article-share-link">Share</a>
       
       
       
@@ -133,9 +133,9 @@
     </a>
   
   
-    <a href="/2022/07/09/Apache-APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/" id="article-nav-older" class="article-nav-link-wrap">
+    <a href="/2022/10/04/%E5%A6%82%E4%BD%95%E7%9C%9F%E6%AD%A3%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%8B%E8%BD%BDlinux/" id="article-nav-older" class="article-nav-link-wrap">
       <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">Apache APISIX Dashboard 未授权访问漏洞简单分析（CVE-2021-45232）</div>
+      <div class="article-nav-title">如何真正安全的下载linux</div>
     </a>
   
 </nav>
@@ -155,7 +155,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" rel="tag">内网横向</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/" rel="tag">工具开发</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%94%BB%E5%87%BB%E7%8E%AF%E5%A2%83/" rel="tag">攻击环境</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" rel="tag">漏洞分析</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94%E6%84%9F%E6%82%9F/" rel="tag">随笔感悟</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A2%E9%98%9F%E7%8E%AF%E5%A2%83/" rel="tag">红队环境</a></li></ul>
     </div>
   </div>
 
@@ -165,7 +165,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 15px;">代码审计</a> <a href="/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/" style="font-size: 10px;">内网横向</a> <a href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/" style="font-size: 10px;">工具开发</a> <a href="/tags/%E6%94%BB%E5%87%BB%E7%8E%AF%E5%A2%83/" style="font-size: 10px;">攻击环境</a> <a href="/tags/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/" style="font-size: 20px;">漏洞分析</a> <a href="/tags/%E9%9A%8F%E7%AC%94%E6%84%9F%E6%82%9F/" style="font-size: 10px;">随笔感悟</a>
+      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" style="font-size: 10px;">免杀对抗</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a> <a href="/tags/%E7%BA%A2%E9%98%9F%E7%8E%AF%E5%A2%83/" style="font-size: 15px;">红队环境</a>
     </div>
   </div>
 
@@ -187,6 +187,10 @@
       <ul>
         
           <li>
+            <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/">CobaltStrike服务端配置</a>
+          </li>
+        
+          <li>
             <a href="/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/">ThinkPHP最新版6.0.13 0day利用链分析</a>
           </li>
         
@@ -195,15 +199,11 @@
           </li>
         
           <li>
-            <a href="/2022/07/09/Apache-APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/">Apache APISIX Dashboard 未授权访问漏洞简单分析（CVE-2021-45232）</a>
+            <a href="/2022/10/04/%E5%A6%82%E4%BD%95%E7%9C%9F%E6%AD%A3%E5%AE%89%E5%85%A8%E7%9A%84%E4%B8%8B%E8%BD%BDlinux/">如何真正安全的下载linux</a>
           </li>
         
           <li>
-            <a href="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/">Redis RCE复现及简单分析（CVE-2022-0543）</a>
-          </li>
-        
-          <li>
-            <a href="/2022/07/09/%E5%B0%9D%E8%AF%95%E8%A7%A3%E5%AF%86goby%E7%BA%A2%E9%98%9F%E7%89%88poc/">尝试解密goby红队版poc</a>
+            <a href="/2022/07/09/APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/">Apache APISIX Dashboard 未授权访问漏洞分析（CVE-2021-45232）</a>
           </li>
         
       </ul>
