@@ -9,17 +9,17 @@
   <meta name="description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CobaltStrike服务端配置">
-<meta property="og:url" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png">
+<meta property="og:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/image.png">
 <meta property="article:published_time" content="2022-10-31T02:38:17.000Z">
-<meta property="article:modified_time" content="2022-10-31T02:40:31.355Z">
+<meta property="article:modified_time" content="2022-10-31T03:00:16.090Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="红队环境">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png">
+<meta name="twitter:image" content="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/image.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,9 +76,9 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-CobaltStrike服务端配置" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-CobaltStrike服务端配置及上线微信提醒" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/" class="article-date">
+    <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" class="article-date">
   <time class="dt-published" datetime="2022-10-31T02:38:17.000Z" itemprop="datePublished">2022-10-31</time>
 </a>
     
@@ -120,12 +120,24 @@
 
 <p>03、修改文件teamserve，将ip换为内网ip，使用c2lint检查profile后去掉http-config</p>
 <h1 id="0x03-上线验证"><a href="#0x03-上线验证" class="headerlink" title="0x03 上线验证"></a>0x03 上线验证</h1><p>上线后，我这边wireshark抓包，抓到的ip查询后发现是微软云（可能是cloudflare的节点在微软云上，或其他原因），如下图</p>
-<p><img src="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/image.png" alt="img"></p>
+<p><img src="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/image.png" alt="img"></p>
+<h1 id="0x04-上线微信提醒"><a href="#0x04-上线微信提醒" class="headerlink" title="0x04 上线微信提醒"></a>0x04 上线微信提醒</h1><p>参考文章：</p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/10698">https://xz.aliyun.com/t/10698</a></p>
+<p>文章备份：</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ybdt/misc-hub/blob/main/06-%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%A1%88%E4%BE%8B%E5%AD%A6%E4%B9%A0/Cobalt%20Strike%E7%9A%84%E5%A4%9A%E7%A7%8D%E4%B8%8A%E7%BA%BF%E6%8F%90%E9%86%92%E6%96%B9%E6%B3%95%20-%20%E5%85%88%E7%9F%A5%E7%A4%BE%E5%8C%BA.html">https://github.com/ybdt/misc-hub/blob/main/06-内网横向案例学习/Cobalt%20Strike的多种上线提醒方法%20-%20先知社区.html</a></p>
+<p>vps会提示需要转发X11请求，解决办法：启动时需要加一个参数-Djava.awt.headless=true</p>
+<p>修改后，agscript-start.sh如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./agscript 120.48.45.46 26783 pushplus hello-lan PushPlus.cna</span><br></pre></td></tr></table></figure>
+
+<p>agscript如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java -XX:ParallelGCThreads=4 -XX:+AggressiveHeap -XX:+UseParallelGC -Djava.awt.headless=true -classpath ./cobaltstrike.jar aggressor.headless.Start $*</span><br></pre></td></tr></table></figure>
+
+<p>然后可关闭xshell的X11转发提醒，属性-&gt;SSH-&gt;隧道-&gt;X11转移</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/" data-id="cl9w6hrff0003qnfyc78cho8h" data-title="CobaltStrike服务端配置" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" data-id="cl9w71qvp0000jjfy2rpn2rwj" data-title="CobaltStrike服务端配置" class="article-share-link">Share</a>
       
       
       
@@ -192,7 +204,7 @@
       <ul>
         
           <li>
-            <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE/">CobaltStrike服务端配置</a>
+            <a href="/2022/10/31/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/">CobaltStrike服务端配置</a>
           </li>
         
           <li>
