@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png">
 <meta property="article:published_time" content="2022-03-22T01:31:21.000Z">
-<meta property="article:modified_time" content="2022-04-28T08:49:32.000Z">
+<meta property="article:modified_time" content="2022-12-06T06:14:23.680Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
@@ -123,7 +123,7 @@
 <p>结果如下<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/05.png" alt="image"><br>修改后重启Web服务，可通过phpinfo查看是否修改成功<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/10.png" alt="image">  </p>
 <h1 id="step2-配置xdebug"><a href="#step2-配置xdebug" class="headerlink" title="step2-配置xdebug"></a>step2-配置xdebug</h1><p>phpstudy中默认带有xdebug，无需额外下载，直接指定即可，设置方式如下<br>文件-&gt;设置<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/01.png" alt="image"><br>PHP-&gt;CLI解释器（点击右边包含3个点的按钮）-&gt;设置名称、PHP可执行文件、调试器扩展<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/02.png" alt="image"><br>回到设置-&gt;PHP界面，顺便将PHP语言级别指定为：5.6（可变函数，实参解包），这样更对称一些<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/03.png" alt="image"><br>PHP-&gt;调试-&gt;Xdebug，指定调试端口为之前设置的9100<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/06.png" alt="image">  </p>
 <h1 id="step3-配置服务器"><a href="#step3-配置服务器" class="headerlink" title="step3-配置服务器"></a>step3-配置服务器</h1><p>PHP-&gt;服务器-&gt;添加，指定名称、主机、端口（其中<a target="_blank" rel="noopener" href="http://www.ybdt.best是我修改hosts后,指向127.0.0.1的域名)/">www.ybdt.best是我修改hosts后，指向127.0.0.1的域名）</a><br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/07.png" alt="image">  </p>
-<h1 id="step4-编辑配置"><a href="#step4-编辑配置" class="headerlink" title="step4-编辑配置"></a>step4-编辑配置</h1><p>打开编辑配置<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/08.png" alt="image"><br>在编辑配置中设置名称、服务器、起始URL<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/09.png" alt="image">  </p>
+<h1 id="step4-编辑配置"><a href="#step4-编辑配置" class="headerlink" title="step4-编辑配置"></a>step4-编辑配置</h1><p>打开编辑配置，首次配置需要选择“PHP Web Page”<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/08.png" alt="image"><br>在编辑配置中设置名称、服务器、起始URL<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/09.png" alt="image">  </p>
 <h1 id="step5-调试测试"><a href="#step5-调试测试" class="headerlink" title="step5-调试测试"></a>step5-调试测试</h1><p>在第9行下断点，并点击右上角的甲壳虫<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/11.png" alt="image"><br>PHPStorm会自动打开浏览器<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/12.png" alt="image"><br>同时停在设置的断点处<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/13.png" alt="image">  </p>
 <h1 id="step6-带参数的调试测试"><a href="#step6-带参数的调试测试" class="headerlink" title="step6-带参数的调试测试"></a>step6-带参数的调试测试</h1><p>有人可能会问，直接点击甲壳虫不能带有参数啊？<br>其实首次发起请求后，Cookie中会带有XDEBUG_SESSION_START参数，再次发起请求后会自动走phpstorm的xdebug<br>例如，发起如下请求<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png" alt="image"><br>phpstorm会停在断点，可看到用户传入的参数<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png" alt="image">  </p>
 <h1 id="step7-网关超时"><a href="#step7-网关超时" class="headerlink" title="step7-网关超时"></a>step7-网关超时</h1><p>停在断点处没几分钟，会出现网关超时的问题，解决办法  </p>
@@ -134,7 +134,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cl9y7u425000fizfy6cff6pxn" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clbbtuswp000fngfyf2ee5u5k" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       
@@ -218,15 +218,15 @@
           </li>
         
           <li>
-            <a href="/2022/11/01/%E5%A6%82%E4%BD%95%E7%94%A8C%E8%AF%AD%E8%A8%80%E5%AE%9E%E7%8E%B0%E8%87%AA%E5%B7%B1%E7%9A%84Shellcode-Loader/">如何用C语言实现自己的Shellcode Loader</a>
-          </li>
-        
-          <li>
             <a href="/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/">CobaltStrike服务端配置及上线微信提醒</a>
           </li>
         
           <li>
             <a href="/2022/10/24/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/">ThinkPHP最新版6.0.13 0day利用链分析</a>
+          </li>
+        
+          <li>
+            <a href="/2022/10/04/%E5%A6%82%E4%BD%95%E7%9C%9F%E6%AD%A3%E5%AE%89%E5%85%A8%E7%9A%84%E6%A0%A1%E9%AA%8C%E4%B8%8B%E8%BD%BD%E5%90%8E%E7%9A%84linux/">如何真正安全的校验下载后的linux</a>
           </li>
         
       </ul>
