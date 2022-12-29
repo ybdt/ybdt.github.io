@@ -6,16 +6,16 @@
   
   <title>CobaltStrike服务端配置及上线微信提醒 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
+  <meta name="description" content="0x01 前言参考文章：https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份：https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html 0x02 过程记录看完上述文章，你在实践时可能会有一些问题，如下温馨提示也">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CobaltStrike服务端配置及上线微信提醒">
 <meta property="og:url" content="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="0x01 前言参考文章： https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份： https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html">
+<meta property="og:description" content="0x01 前言参考文章：https:&#x2F;&#x2F;xz.aliyun.com&#x2F;t&#x2F;11099 文章备份：https:&#x2F;&#x2F;github.com&#x2F;ybdt&#x2F;misc-hub&#x2F;blob&#x2F;main&#x2F;06-内网横向案例学习&#x2F;CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html 0x02 过程记录看完上述文章，你在实践时可能会有一些问题，如下温馨提示也">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/image.png">
 <meta property="article:published_time" content="2022-11-01T12:26:45.000Z">
-<meta property="article:modified_time" content="2022-11-01T12:28:21.222Z">
+<meta property="article:modified_time" content="2022-12-29T07:19:10.081Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="红队环境">
 <meta name="twitter:card" content="summary">
@@ -98,12 +98,10 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>参考文章：</p>
-<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11099">https://xz.aliyun.com/t/11099</a></p>
-<p>文章备份：</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/ybdt/misc-hub/blob/main/06-%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%A1%88%E4%BE%8B%E5%AD%A6%E4%B9%A0/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%9A%90%E8%97%8F--CDN%E5%8F%8A%E7%89%B9%E5%BE%81%E9%9A%90%E5%8C%BFCobalt%20Strike%20-%20%E5%85%88%E7%9F%A5%E7%A4%BE%E5%8C%BA.html">https://github.com/ybdt/misc-hub/blob/main/06-内网横向案例学习/CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html</a></p>
-<span id="more"></span>
+        <span id="more"></span>
 
+<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>参考文章：<a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/11099">https://xz.aliyun.com/t/11099</a></p>
+<p>文章备份：<a target="_blank" rel="noopener" href="https://github.com/ybdt/misc-hub/blob/main/06-%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%A1%88%E4%BE%8B%E5%AD%A6%E4%B9%A0/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%9A%90%E8%97%8F--CDN%E5%8F%8A%E7%89%B9%E5%BE%81%E9%9A%90%E5%8C%BFCobalt%20Strike%20-%20%E5%85%88%E7%9F%A5%E7%A4%BE%E5%8C%BA.html">https://github.com/ybdt/misc-hub/blob/main/06-内网横向案例学习/CobaltStrike服务端隐藏--CDN及特征隐匿Cobalt%20Strike%20-%20先知社区.html</a></p>
 <h1 id="0x02-过程记录"><a href="#0x02-过程记录" class="headerlink" title="0x02 过程记录"></a>0x02 过程记录</h1><p>看完上述文章，你在实践时可能会有一些问题，如下温馨提示也许会有帮助：</p>
 <p>01、想从freenom注册免费域名其实挺费劲的，反正我试了几次都没成功，可从namesilo购买一个域名，选一个不那么大众化的，每年0.99$</p>
 <p>02、原文中如下命令可能是笔误</p>
@@ -137,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" data-id="clc8qy2ba0003sufyhohw8osy" data-title="CobaltStrike服务端配置及上线微信提醒" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/11/01/CobaltStrike%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%B8%8A%E7%BA%BF%E5%BE%AE%E4%BF%A1%E6%8F%90%E9%86%92/" data-id="clc8rchp20001zzfy3l4ufx4s" data-title="CobaltStrike服务端配置及上线微信提醒" class="article-share-link">Share</a>
       
       
       
@@ -221,7 +219,7 @@
           </li>
         
           <li>
-            <a href="/2022/12/11/%E5%BE%AE%E6%93%8E%E5%AE%A1%E8%AE%A1/">微擎审计</a>
+            <a href="/2022/12/11/%E5%BE%AE%E6%93%8E%E5%AE%A1%E8%AE%A1/">微擎后台Getshell exp构造</a>
           </li>
         
           <li>

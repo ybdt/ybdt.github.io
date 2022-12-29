@@ -6,12 +6,12 @@
   
   <title>无感知使Windows Defender失效 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="缺点需要system权限 优点Defender失效后，没有任何反应，适合高端钓鱼">
+  <meta name="description" content="缺点需要system权限 优点Defender失效后，没有任何反应，适合高端钓鱼 基本原理去掉MsMpEng.exe（Defender进程）的token的privilege和integrity，由于没有对这个行为做限制，只要system权限都可以 参考链接https:&#x2F;&#x2F;elastic.github.io&#x2F;security-research&#x2F;whitepapers&#x2F;2022&#x2F;02&#x2F;02.san">
 <meta property="og:type" content="article">
 <meta property="og:title" content="无感知使Windows Defender失效">
 <meta property="og:url" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="缺点需要system权限 优点Defender失效后，没有任何反应，适合高端钓鱼">
+<meta property="og:description" content="缺点需要system权限 优点Defender失效后，没有任何反应，适合高端钓鱼 基本原理去掉MsMpEng.exe（Defender进程）的token的privilege和integrity，由于没有对这个行为做限制，只要system权限都可以 参考链接https:&#x2F;&#x2F;elastic.github.io&#x2F;security-research&#x2F;whitepapers&#x2F;2022&#x2F;02&#x2F;02.san">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/01.png">
 <meta property="og:image" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/02.png">
@@ -20,7 +20,7 @@
 <meta property="og:image" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/05.png">
 <meta property="og:image" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/06.png">
 <meta property="article:published_time" content="2022-07-08T06:55:04.000Z">
-<meta property="article:modified_time" content="2022-07-08T07:08:40.000Z">
+<meta property="article:modified_time" content="2022-12-29T07:17:21.434Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/01.png">
@@ -102,9 +102,10 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><p>需要system权限</p>
+        <span id="more"></span>
+
+<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><p>需要system权限</p>
 <h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><p>Defender失效后，没有任何反应，适合高端钓鱼</p>
-<span id="more"></span>
 <h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>去掉MsMpEng.exe（Defender进程）的token的privilege和integrity，由于没有对这个行为做限制，只要system权限都可以</p>
 <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://elastic.github.io/security-research/whitepapers/2022/02/02.sandboxing-antimalware-products-for-fun-and-profit/article/">https://elastic.github.io/security-research/whitepapers/2022/02/02.sandboxing-antimalware-products-for-fun-and-profit/article/</a><br><a target="_blank" rel="noopener" href="https://github.com/pwn1sher/KillDefender">https://github.com/pwn1sher/KillDefender</a></p>
 <h1 id="测试背景"><a href="#测试背景" class="headerlink" title="测试背景"></a>测试背景</h1><p>测试时间：2022/02/07<br>测试版本：Win10 20H2  </p>
@@ -113,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="clc8qy2bl0011sufyd9rl3g1w" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="clc8rchpe0011zzfy5l4ngd5h" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
       
       
       
@@ -195,7 +196,7 @@
           </li>
         
           <li>
-            <a href="/2022/12/11/%E5%BE%AE%E6%93%8E%E5%AE%A1%E8%AE%A1/">微擎审计</a>
+            <a href="/2022/12/11/%E5%BE%AE%E6%93%8E%E5%AE%A1%E8%AE%A1/">微擎后台Getshell exp构造</a>
           </li>
         
           <li>
