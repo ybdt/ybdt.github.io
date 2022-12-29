@@ -6,12 +6,12 @@
   
   <title>基于phpStudy+PhpStorm配置PHP动态调试环境 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7">
+  <meta name="description" content="之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm">
 <meta property="og:type" content="article">
 <meta property="og:title" content="基于phpStudy+PhpStorm配置PHP动态调试环境">
 <meta property="og:url" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="吐槽之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm 以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人 本文定位教程类文章，共包括step1-step7">
+<meta property="og:description" content="之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/05.png">
@@ -29,7 +29,7 @@
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/14.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/15.png">
 <meta property="article:published_time" content="2022-03-22T01:31:21.000Z">
-<meta property="article:modified_time" content="2022-12-06T06:14:23.680Z">
+<meta property="article:modified_time" content="2022-12-29T07:44:51.506Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
@@ -112,10 +112,11 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
+        <p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
+<span id="more"></span>
+
 <p>以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人</p>
 <p>本文定位教程类文章，共包括step1-step7</p>
-<span id="more"></span>
 <h1 id="step1-修改php-ini"><a href="#step1-修改php-ini" class="headerlink" title="step1-修改php.ini"></a>step1-修改php.ini</h1><p>本文我们以php5.6为例，首先修改php5.6中的php.ini<br><img src="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/04.png" alt="image"><br>在末尾添加如下代码  </p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">zend_extension=&quot;C:\phpstudy_pro\Extensions\php\php5.6.9nts\ext\php_xdebug.dll&quot;</span><br><span class="line">xdebug.remote_enable=1</span><br><span class="line">xdebug.remote_host=localhost</span><br><span class="line">xdebug.remote_port=9100</span><br></pre></td></tr></table></figure>
 <p>解释如下  </p>
@@ -134,7 +135,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clc8rqcvp000k6bfy06kg6s9w" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clc8s8ph2000kczfy4x6a35ev" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       

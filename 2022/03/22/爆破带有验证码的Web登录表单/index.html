@@ -6,12 +6,12 @@
   
   <title>爆破带有验证码的Web登录表单 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时） 连续2篇图文记录真是太累人了，以后还是多文字描述吧。。 本文定位教程类文章，共包括step1-step5">
+  <meta name="description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）">
 <meta property="og:type" content="article">
 <meta property="og:title" content="爆破带有验证码的Web登录表单">
 <meta property="og:url" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时） 连续2篇图文记录真是太累人了，以后还是多文字描述吧。。 本文定位教程类文章，共包括step1-step5">
+<meta property="og:description" content="吐槽逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/02.png">
@@ -25,7 +25,7 @@
 <meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/10.png">
 <meta property="og:image" content="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/11.png">
 <meta property="article:published_time" content="2022-03-22T14:28:59.000Z">
-<meta property="article:modified_time" content="2022-04-28T08:49:48.000Z">
+<meta property="article:modified_time" content="2022-12-29T07:43:47.909Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="Web打点">
 <meta name="twitter:card" content="summary">
@@ -109,9 +109,10 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）</p>
+<span id="more"></span>
+
 <p>连续2篇图文记录真是太累人了，以后还是多文字描述吧。。</p>
 <p>本文定位教程类文章，共包括step1-step5</p>
-<span id="more"></span>
 <h1 id="step1-安装插件"><a href="#step1-安装插件" class="headerlink" title="step1-安装插件"></a>step1-安装插件</h1><p>下载并安装插件<br>下载地址：<a target="_blank" rel="noopener" href="https://github.com/f0ng/captcha-killer-modified/releases">https://github.com/f0ng/captcha-killer-modified/releases</a>  </p>
 <h1 id="step2-插件获取图片验证码"><a href="#step2-插件获取图片验证码" class="headerlink" title="step2-插件获取图片验证码"></a>step2-插件获取图片验证码</h1><p>burp抓包会发现某个请求是获取图片验证码的，将这个请求发送到插件中的captcha panel<br><img src="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/01.png" alt="image"><br>点击captcha-killer-modified界面中的获取，发现可以正常获取验证码<br><img src="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/02.png" alt="image">  </p>
 <h1 id="step3-本地启动验证码识别接口"><a href="#step3-本地启动验证码识别接口" class="headerlink" title="step3-本地启动验证码识别接口"></a>step3-本地启动验证码识别接口</h1><p>此处我们使用github上的一个开源验证码识别项目，没有次数限制，识别率在80%左右</p>
@@ -128,7 +129,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="clc8rqcvw00176bfy0pd58veg" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="clc8s8ph70014czfyhzhnbken" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
       
       
       

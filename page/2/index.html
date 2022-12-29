@@ -93,19 +93,16 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <span id="more"></span>
-
-<h1 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h1><p>需要system权限</p>
-<h1 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h1><p>Defender失效后，没有任何反应，适合高端钓鱼</p>
-<h1 id="基本原理"><a href="#基本原理" class="headerlink" title="基本原理"></a>基本原理</h1><p>去掉MsMpEng.exe（Defender进程）的token的privilege和integrity，由于没有对这个行为做限制，只要system权限都可以</p>
-<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://elastic.github.io/security-research/whitepapers/2022/02/02.sandboxing-antimalware-products-for-fun-and-profit/article/">https://elastic.github.io/security-research/whitepapers/2022/02/02.sandboxing-antimalware-products-for-fun-and-profit/article/</a><br><a target="_blank" rel="noopener" href="https://github.com/pwn1sher/KillDefender">https://github.com/pwn1sher/KillDefender</a></p>
-<h1 id="测试背景"><a href="#测试背景" class="headerlink" title="测试背景"></a>测试背景</h1><p>测试时间：2022/02/07<br>测试版本：Win10 20H2  </p>
-<h1 id="测试过程"><a href="#测试过程" class="headerlink" title="测试过程"></a>测试过程</h1><p>通过Process Explorer查看一下MsMpEng.exe这个进程的token的privilege和integrity，如下图圈出部分<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/01.png" alt="image"><br>将mimikatz_trunk.zip拷贝到虚拟机，能看到被拦截<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/02.png" alt="image"><br>经测试，普通用户权限控制台、管理员权限控制台执行后均失败，如下图<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/03.png" alt="image"><br>通过psexec获取system权限，执行KillDefender.exe，此时不再失败，如下图<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/04.png" alt="image"><br>再次通过Process Explorer查看一下MsMpEng.exe这个进程的token的privilege和integrity，如下图<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/05.png" alt="image"><br>拷贝mimikatz_trunk.zip，执行mimikatz均不再拦截，如下图<br><img src="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/06.png" alt="image">  </p>
-
+        <p>优点：Defender失效后，没有任何反应，适合高端钓鱼</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/#more">Read More</a>
+          </p>
+        
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="clc8rqcvu00116bfybd2z9xn2" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="clc8s8ph60011czfybkaq3hrt" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
       
       
       
@@ -148,7 +145,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="clc8rqcvw00186bfy0zp5a0ve" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="clc8s8ph70016czfy895wf6kc" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
       
       
       
@@ -193,7 +190,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="clc8rqcvo000f6bfy42ieceyi" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="clc8s8ph1000fczfy6a6c7cx7" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
       
       
       
@@ -230,8 +227,6 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>逛github看到一个项目，讲述如何爆破带有验证码的Web登录表单，作者是基于c0ny1师傅的captcha-killer项目修改了一下，过程叙述稍微有点简陋，自己折腾了好一会，想了想还是记录一下使用过程，方便自己也方便他人（耗时约3小时）</p>
-<p>连续2篇图文记录真是太累人了，以后还是多文字描述吧。。</p>
-<p>本文定位教程类文章，共包括step1-step5</p>
         
           <p class="article-more-link">
             <a href="/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/#more">Read More</a>
@@ -240,7 +235,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="clc8rqcvw00176bfy0pd58veg" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="clc8s8ph70014czfyhzhnbken" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
       
       
       
@@ -276,9 +271,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <h1 id="吐槽"><a href="#吐槽" class="headerlink" title="吐槽"></a>吐槽</h1><p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
-<p>以往这种教程类文章我都是网上找一篇好文照着做然后本地备份一份，奈何搜了一圈没有好文，在此记录一下（耗时约3小时），方便自己也方便他人</p>
-<p>本文定位教程类文章，共包括step1-step7</p>
+        <p>之前配置过基于phpstudy+vscode的php动态调试环境，不过在大型框架上用着效果不怎么好，还是试试phpstorm</p>
         
           <p class="article-more-link">
             <a href="/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/#more">Read More</a>
@@ -287,7 +280,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clc8rqcvp000k6bfy06kg6s9w" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clc8s8ph2000kczfy4x6a35ev" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       
@@ -332,7 +325,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="clc8rqcvg00016bfy8kp63w0v" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="clc8s8pgt0001czfy7z9hebtd" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
       
       
       
@@ -377,7 +370,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/02/VMware-vCenter-Server%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-21972%EF%BC%89/" data-id="clc8rqcvn000d6bfy5l8924qh" data-title="VMware vCenter Server未授权文件上传漏洞分析（CVE-2021-21972）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/02/VMware-vCenter-Server%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-21972%EF%BC%89/" data-id="clc8s8ph0000dczfyfs7pcvyq" data-title="VMware vCenter Server未授权文件上传漏洞分析（CVE-2021-21972）" class="article-share-link">Share</a>
       
       
       
@@ -422,7 +415,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/" data-id="clc8rqcvt000x6bfyfhtj5wqh" data-title="整合Linux渗透环境到Windows中，不再用2套渗透环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/" data-id="clc8s8ph5000xczfy5jt95mks" data-title="整合Linux渗透环境到Windows中，不再用2套渗透环境" class="article-share-link">Share</a>
       
       
       
@@ -467,7 +460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/" data-id="clc8rqcvq000n6bfya30j9pk8" data-title="如何放心的白嫖Beyond Compare" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/" data-id="clc8s8ph3000nczfyh0jb8xct" data-title="如何放心的白嫖Beyond Compare" class="article-share-link">Share</a>
       
       
       
@@ -512,7 +505,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" data-id="clc8rqcvr000p6bfy5obx8x2i" data-title="如何放心的白嫖安全领域四大主流语言IDE" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" data-id="clc8s8ph3000pczfy83pj3gzu" data-title="如何放心的白嫖安全领域四大主流语言IDE" class="article-share-link">Share</a>
       
       
       
