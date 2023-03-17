@@ -71,6 +71,51 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-Redis-RCE复现及简单分析（CVE-2022-0543）" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" class="article-date">
+  <time class="dt-published" datetime="2022-07-09T01:22:32.000Z" itemprop="datePublished">2022-07-09</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/">Redis RCE复现及简单分析（CVE-2022-0543）</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <h1 id="0x01-原理浅析"><a href="#0x01-原理浅析" class="headerlink" title="0x01 原理浅析"></a>0x01 原理浅析</h1><p>Debian及其衍生版打包Redis时，在Lua沙箱中遗留了一个对象package，攻击者可以利用这个对象中的loadlib函数来加载动态链接库/usr/lib/x86_64-linux-gnu/liblua5.1.so.0中的导出函数luaopen_io，执行这个导出函数获得io库，最后使用其执行命令，作者提到不同系统下liblua5.1.so.0的路径可能不同，所以需要在本地对照一下，，，吐槽一句，不能打红帽系有点鸡肋了……</p>
+        
+          <p class="article-more-link">
+            <a href="/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/#more">Read More</a>
+          </p>
+        
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2022/07/09/Redis-RCE%E5%A4%8D%E7%8E%B0%E5%8F%8A%E7%AE%80%E5%8D%95%E5%88%86%E6%9E%90%EF%BC%88CVE-2022-0543%EF%BC%89/" data-id="clfbzfyai0005cq78gu84ftq0" data-title="Redis RCE复现及简单分析（CVE-2022-0543）" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-无感知使Windows-Defender失效" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" class="article-date">
@@ -102,7 +147,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="cle8mz16t0011vngqbgp69l3n" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/07/08/%E6%97%A0%E6%84%9F%E7%9F%A5%E4%BD%BFWindows-Defender%E5%A4%B1%E6%95%88/" data-id="clfbzfyar0011cq788hlc9xob" data-title="无感知使Windows Defender失效" class="article-share-link">Share</a>
       
       
       
@@ -147,7 +192,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="cle8mz16u0016vngq5ga83zr8" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/28/%E9%80%9A%E8%BE%BEOA%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/" data-id="clfbzfyau001ecq78danqfbin" data-title="通达OA漏洞研究" class="article-share-link">Share</a>
       
       
       
@@ -192,7 +237,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="cle8mz16o000fvngq5opa4yqf" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/04/18/Windows-Server-2012%E5%8F%8A%E4%BB%A5%E4%B8%8A%E4%B8%8D%E6%8F%90%E5%8F%96%E5%AF%86%E7%A0%81%E7%99%BB%E5%BD%95Administrator%E6%A1%8C%E9%9D%A2/" data-id="clfbzfyam000fcq784qtr30n4" data-title="Windows Server 2012及以上不提取密码登录Administrator桌面" class="article-share-link">Share</a>
       
       
       
@@ -237,7 +282,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="cle8mz16u0014vngq7yvrhoqp" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E7%88%86%E7%A0%B4%E5%B8%A6%E6%9C%89%E9%AA%8C%E8%AF%81%E7%A0%81%E7%9A%84Web%E7%99%BB%E5%BD%95%E8%A1%A8%E5%8D%95/" data-id="clfbzfyas0016cq78hndb5jv6" data-title="爆破带有验证码的Web登录表单" class="article-share-link">Share</a>
       
       
       
@@ -282,7 +327,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="cle8mz16p000kvngqe6znfy92" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/22/%E5%9F%BA%E4%BA%8EphpStudy+PhpStorm%E9%85%8D%E7%BD%AEPHP%E5%8A%A8%E6%80%81%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83/" data-id="clfbzfyan000kcq787k0xepjh" data-title="基于phpStudy+PhpStorm配置PHP动态调试环境" class="article-share-link">Share</a>
       
       
       
@@ -327,7 +372,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="cle8mz16f0001vngqc6wz9rlm" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/02/Citrix-XenMobile%E7%9B%AE%E5%BD%95%E9%81%8D%E5%8E%86%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2020-8209%EF%BC%89/" data-id="clfbzfyae0001cq785kxf4hl0" data-title="Citrix XenMobile目录遍历漏洞分析（CVE-2020-8209）" class="article-share-link">Share</a>
       
       
       
@@ -372,7 +417,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/03/02/VMware-vCenter-Server%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-21972%EF%BC%89/" data-id="cle8mz16n000dvngqd1uj2td8" data-title="VMware vCenter Server未授权文件上传漏洞分析（CVE-2021-21972）" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/03/02/VMware-vCenter-Server%E6%9C%AA%E6%8E%88%E6%9D%83%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2021-21972%EF%BC%89/" data-id="clfbzfyal000dcq78b0769szv" data-title="VMware vCenter Server未授权文件上传漏洞分析（CVE-2021-21972）" class="article-share-link">Share</a>
       
       
       
@@ -417,7 +462,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/" data-id="cle8mz16t000xvngqc79x1tfu" data-title="整合Linux渗透环境到Windows中，不再用2套渗透环境" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/02/05/%E6%95%B4%E5%90%88Linux%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83%E5%88%B0Windows%E4%B8%AD%EF%BC%8C%E4%B8%8D%E5%86%8D%E7%94%A82%E5%A5%97%E6%B8%97%E9%80%8F%E7%8E%AF%E5%A2%83/" data-id="clfbzfyaq000xcq78edq01h2i" data-title="整合Linux渗透环境到Windows中，不再用2套渗透环境" class="article-share-link">Share</a>
       
       
       
@@ -462,52 +507,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/" data-id="cle8mz16q000nvngq45yj2m63" data-title="如何放心的白嫖Beyond Compare" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
-    <article id="post-如何放心的白嫖四大主流语言IDE" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" class="article-date">
-  <time class="dt-published" datetime="2022-01-13T02:39:00.000Z" itemprop="datePublished">2022-01-13</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/">如何放心的白嫖安全领域四大主流语言IDE</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>安全领域四大主流语言JAVA、PHP、GO、Python，对应的好用的IDE：IntelliJ IDEA Ultimate、PhpStorm、GoLand、PyCharm Professional</p>
-        
-          <p class="article-more-link">
-            <a href="/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/#more">Read More</a>
-          </p>
-        
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/01/13/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE/" data-id="cle8mz16r000pvngqd8bmfyz7" data-title="如何放心的白嫖安全领域四大主流语言IDE" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2022/02/05/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96Beyond-Compare/" data-id="clfbzfyao000ncq78233g5g0q" data-title="如何放心的白嫖Beyond Compare" class="article-share-link">Share</a>
       
       
       
@@ -539,7 +539,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Web%E6%89%93%E7%82%B9/" rel="tag">Web打点</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" rel="tag">代码审计</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" rel="tag">免杀对抗</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" rel="tag">渗透测试</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" rel="tag">环境搭建</a></li></ul>
     </div>
   </div>
 
@@ -549,7 +549,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" style="font-size: 15px;">免杀对抗</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">环境搭建</a>
+      <a href="/tags/Web%E6%89%93%E7%82%B9/" style="font-size: 10px;">Web打点</a> <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/" style="font-size: 20px;">代码审计</a> <a href="/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/" style="font-size: 15px;">免杀对抗</a> <a href="/tags/%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95/" style="font-size: 10px;">渗透测试</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a> <a href="/tags/%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/" style="font-size: 15px;">环境搭建</a>
     </div>
   </div>
 
@@ -558,7 +558,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2023/03/">March 2023</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/11/">November 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/10/">October 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">July 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">April 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/03/">March 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/02/">February 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
     </div>
   </div>
 
@@ -569,6 +569,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8B403-Bypass/">权限绕过之403 Bypass</a>
+          </li>
         
           <li>
             <a href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/">JPress最新版后台Getshell</a>
@@ -584,10 +588,6 @@
         
           <li>
             <a href="/2022/12/10/Nim%E8%AF%AD%E8%A8%80%E5%AD%A6%E4%B9%A0/">Nim语言学习</a>
-          </li>
-        
-          <li>
-            <a href="/2022/11/12/%E5%9F%BA%E4%BA%8ENim%E8%AF%AD%E8%A8%80%E7%9A%84%E5%85%8D%E6%9D%80%E6%89%93%E5%8C%85%E5%99%A8/">基于Nim语言的免杀打包器</a>
           </li>
         
       </ul>
