@@ -6,15 +6,15 @@
   
   <title>权限绕过之Host碰撞 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下">
+  <meta name="description" content="一直想学习下Host碰撞，换了新公司后终于有时间可以学习下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="权限绕过之Host碰撞">
 <meta property="og:url" content="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8BHost%E7%A2%B0%E6%92%9E/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="一直想学习下403绕过，换了新公司后终于有时间可以学习下">
+<meta property="og:description" content="一直想学习下Host碰撞，换了新公司后终于有时间可以学习下">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-03-17T06:03:19.000Z">
-<meta property="article:modified_time" content="2023-03-17T06:19:29.581Z">
+<meta property="article:modified_time" content="2023-03-17T06:24:37.989Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="渗透测试">
 <meta name="twitter:card" content="summary">
@@ -96,7 +96,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>一直想学习下403绕过，换了新公司后终于有时间可以学习下</p>
+        <p>一直想学习下Host碰撞，换了新公司后终于有时间可以学习下</p>
 <span id="more"></span>
 <h1 id="0x01-漏洞原理"><a href="#0x01-漏洞原理" class="headerlink" title="0x01 漏洞原理"></a>0x01 漏洞原理</h1><p>在当今的反向代理技术架构下，正常访问一个网站的流程是：<br>用户通过浏览器访问一个域名 -&gt; 先在本地hosts文件中查询域名对应的IP，没查到的话再通过DNS查询域名对应的IP -&gt; 访问查询到的IP并以最初访问的域名作为请求头中host字段的值 -&gt; 反代服务器nginx根据host字段的值转发到对应的server_name下</p>
 <p>补充一句：有些网站通过IP不能直接访问就是因为它本身是一个反代服务器，并且在配置文件中配置了不允许通过IP直接访问</p>
@@ -112,7 +112,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8BHost%E7%A2%B0%E6%92%9E/" data-id="clfc5j8z40015yy78h4ttbh06" data-title="权限绕过之Host碰撞" class="article-share-link">Share</a>
+      <a data-url="http://example.com/2023/03/17/%E6%9D%83%E9%99%90%E7%BB%95%E8%BF%87%E4%B9%8BHost%E7%A2%B0%E6%92%9E/" data-id="clfc5nyp8001d1h78ewvtdy84" data-title="权限绕过之Host碰撞" class="article-share-link">Share</a>
       
       
       
