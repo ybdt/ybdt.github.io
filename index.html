@@ -116,89 +116,6 @@
 
 
   
-    <article id="post-JPress审计" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/" class="article-date">
-  <time class="dt-published" datetime="2022-12-29T07:05:18.000Z" itemprop="datePublished">2022-12-29</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/">JPress最新版后台Getshell</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <h1 id="0x01-目标熟悉"><a href="#0x01-目标熟悉" class="headerlink" title="0x01 目标熟悉"></a>0x01 目标熟悉</h1><p>JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 WordPress，目前已经有超过 10w+ 的网站使用 JPress 搭建，其中包括多个政府机构，200+上市公司，中科院、红十字会等。</p>
-<p>比起普通的 SpringBoot 搭建的 Java 环境相比，jpress 使用和 SpringBoot 十分类似的 jBoot</p>
-<h1 id="0x02-环境搭建"><a href="#0x02-环境搭建" class="headerlink" title="0x02 环境搭建"></a>0x02 环境搭建</h1><p>依照官方文档：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/start.html">http://doc.jpress.cn/manual/start.html</a></p>
-<p>下载项目并解压到指定目录下</p>
-<p>配置好java环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/jdk_config.html">http://doc.jpress.cn/manual/jdk_config.html</a></p>
-<p>配置好maven环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/maven_config.html">http://doc.jpress.cn/manual/maven_config.html</a></p>
-<p>这里有一个小问题，maven切换到阿里云的源后，执行mvn help:system会报错，暂时使用官方源</p>
-<p>配置好IDEA开发环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/idea_environment_config.html">http://doc.jpress.cn/manual/idea_environment_config.html</a></p>
-<p>maven不了解的，可参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lenve/p/12047793.html">https://www.cnblogs.com/lenve/p/12047793.html</a></p>
-<p>可通过如下命令启动</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd jpress</span><br><span class="line">mvn clean package</span><br><span class="line">cd starter/target/starter-4.0</span><br><span class="line">./jpress.sh start</span><br></pre></td></tr></table></figure>
-
-<p>也可通过，配置好IDEA开发环境后，依照文档，定位到文件starter/src/main/java/io.jpress/Starter，点击启动方法main，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226153949475.png" alt="image-20221226153949475"></p>
-<p>成功启动，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154120204.png" alt="image-20221226154120204"></p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104411543.png" alt="image-20221220104411543"></p>
-<p>访问127.0.0.1:8080后如下图，一路下一步，依照提示操作即可</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104649641.png" alt="image-20221220104649641"></p>
-<p>成功搭建后，使用内网ip访问，前台界面如下</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154312930.png" alt="image-20221226154312930"></p>
-<p>后台界面如下</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154626800.png" alt="image-20221226154626800"></p>
-<p>在 starter/src/main/resources/undertow.txt 中可以修改端口</p>
-<h1 id="0x03-代码审计"><a href="#0x03-代码审计" class="headerlink" title="0x03 代码审计"></a>0x03 代码审计</h1><h2 id="01-通杀最新版的后台上传插件getshell"><a href="#01-通杀最新版的后台上传插件getshell" class="headerlink" title="01 通杀最新版的后台上传插件getshell"></a>01 通杀最新版的后台上传插件getshell</h2><p>登录后台后，查看后台功能，在插件-&gt;安装处可以看到能安装插件，想到将恶意代码放入插件中，然后上传插件getshell，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227141058166.png" alt="image-20221227141058166"></p>
-<p>开始动手，首先查看项目目录，能大概猜到，插件目录是jpress-addons，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154325574.png" alt="image-20221227154325574"></p>
-<p>展开项目，我们修改jpress-addon-helloworld子项目，可以看到HelloWorldAddon这个文件是负责，安装、卸载、启动、停止时触发的动作，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154904932.png" alt="image-20221227154904932"></p>
-<p>HelloWorldAddonController这个文件负责，访问某些路径时触发的动作，我们选择在方法adminmenutest()中添加如下恶意代码</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">        Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>添加后如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155336903.png" alt="image-20221227155336903"></p>
-<p>然后我们将项目jpress-addon-helloworld打包成jar包，我这边进入jpress-addon-helloworld子目录后执行mvn clean package会打包失败，需要进入根目录执行mvn clean package，执行后如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155830016.png" alt="image-20221227155830016"></p>
-<p>然后在jpress-addon-helloworld的target目录下找到jpress-addon-helloworld-4.0.jar，登录后台，在插件处上传jpress-addon-helloworld-4.0.jar，然后点击插件测试，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160221062.png" alt="image-20221227160221062"></p>
-<p>可以看到成功弹出计算器</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160017106.png" alt="image-20221227160017106"></p>
-<p>同样的方式，我们测试下，在最新版（截止到2022/12/27，最新版为5.0.5）中，此方法是否可以getshell，同样的过程搭建一下jpress最新版，搭建好后进入后台，如下图</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170402762.png" alt="image-20221227170402762"></p>
-<p>上传刚才打包好的jar包，点击插件测试，看到可成功执行命令，弹出计算器</p>
-<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170736878.png" alt="image-20221227170736878"></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/" data-id="clh1rf4vs0000ecgo6dp8806a" data-title="JPress最新版后台Getshell" class="article-share-link">Share</a>
-      
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-  
     <article id="post-新征程" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" class="article-date">
@@ -221,7 +138,7 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <p>这是博客新家（Github Pages）的第一篇博客，也是2022年的第一篇，更是我从长春来到北京入职新公司后的第一篇，一段新的征程，一段新的开始</p>
+        <p>这是博客从谷歌云搬到新家（Github Pages）的第一篇，也是2022年的第一篇，更是我从长春来到北京入职新公司后的第一篇，一段新的征程，一段新的开始</p>
         
           <p class="article-more-link">
             <a href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/#more">Read More</a>
@@ -234,7 +151,7 @@
       
       
       
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%BE%80%E4%BA%8B%E5%A6%82%E7%83%9F/" rel="tag">往事如烟</a></li></ul>
 
     </footer>
   </div>
@@ -257,7 +174,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tags</h3>
     <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Problem-Solving/" rel="tag">Problem Solving</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" rel="tag">点滴生活</a></li></ul>
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Problem-Solving/" rel="tag">Problem Solving</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BE%80%E4%BA%8B%E5%A6%82%E7%83%9F/" rel="tag">往事如烟</a></li></ul>
     </div>
   </div>
 
@@ -267,7 +184,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/Problem-Solving/" style="font-size: 10px;">Problem Solving</a> <a href="/tags/%E7%82%B9%E6%BB%B4%E7%94%9F%E6%B4%BB/" style="font-size: 10px;">点滴生活</a>
+      <a href="/tags/Problem-Solving/" style="font-size: 10px;">Problem Solving</a> <a href="/tags/%E5%BE%80%E4%BA%8B%E5%A6%82%E7%83%9F/" style="font-size: 10px;">往事如烟</a>
     </div>
   </div>
 
@@ -276,7 +193,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Archives</h3>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/12/">December 2022</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">February 2024</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">January 2022</a></li></ul>
     </div>
   </div>
 
@@ -290,10 +207,6 @@
         
           <li>
             <a href="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/">解决Windows Defender关闭后又自动打开的困扰（隐蔽的关闭杀软方式？）</a>
-          </li>
-        
-          <li>
-            <a href="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/">JPress最新版后台Getshell</a>
           </li>
         
           <li>
