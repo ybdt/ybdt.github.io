@@ -6,18 +6,34 @@
   
   <title>JPress最新版后台Getshell | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="此文章已加密">
+  <meta name="description" content="0x01 目标熟悉JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 WordPress，目前已经有超过 10w+ 的网站使用 JPress 搭建，其中包括多个政府机构，200+上市公司，中科院、红十字会等。 比起普通的 SpringBoot 搭建的 Java 环境相比，jpress 使用和 SpringBoot 十分类似的 jBoot 0x02 环境搭建依照官方文档：ht">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JPress最新版后台Getshell">
 <meta property="og:url" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="此文章已加密">
+<meta property="og:description" content="0x01 目标熟悉JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 WordPress，目前已经有超过 10w+ 的网站使用 JPress 搭建，其中包括多个政府机构，200+上市公司，中科院、红十字会等。 比起普通的 SpringBoot 搭建的 Java 环境相比，jpress 使用和 SpringBoot 十分类似的 jBoot 0x02 环境搭建依照官方文档：ht">
 <meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226153949475.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154120204.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104411543.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104649641.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154312930.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154626800.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227141058166.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154325574.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154904932.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155336903.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155830016.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160221062.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160017106.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170402762.png">
+<meta property="og:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170736878.png">
 <meta property="article:published_time" content="2022-12-29T07:05:18.000Z">
-<meta property="article:modified_time" content="2023-02-06T12:21:33.630Z">
+<meta property="article:modified_time" content="2024-04-16T08:00:16.367Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="代码审计">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226153949475.png">
   
     <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -96,18 +112,52 @@
     
     <div class="e-content article-entry" itemprop="articleBody">
       
-        <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="Oh, this is an invalid password. Check and try again, please." data-whm="OOPS, these decrypted content may changed, but you can still have a look.">
-  <script id="hbeData" type="hbeData" data-hmacdigest="00b9c7b8a584e9af2611383833ffe0f6d1225911245a88f443080a5346e5e5c6">20cab4cae92891a59905b79e8fa5a34e387be6ec16e31251f599b3c8a7670fb87a4ce8e2aa42ce4f28b574113a6fc39f07060bb2780aac4d1c8fb2f7a23d70c2f776a1974b5fb1e4e4e2039208fd5862f9cf9ed5d934652b1452b3b8afe5762fe2fc4972551a2dc1dd63d0eed641330387108d29d6ce5256aecb5bd9970db3dda3a4ae2f34710e31848d4fb2e243792cf8b0c36c49f5a7378536a5a4e19e2bb15f1fc6bf14d052753ed46ec62ba9c7b5ef365947cffe082344d54c5f93a96a56b1ed242f7f685e8853840a4070e879153835f204eb8a14f67bb9424b83a587fe9eab7b109e87f50a3771f1695133a88629b029398ec4c133f8ee97511e1d707ded30500774878e1a97624e3c14171e61ea48172f898de93270bbca8de9602f8aa4b29b8ad17972ed948e0efce984a147198e98154431ecbab74ab1dd51ca187f435e4b55a4fd51e80df0c18993d76c8a4d08d084f8500b3a109241afa447eff4f820f9c5779f10d5d6718d06fc7a3bb6e517908f5e231864c2c9b98902c8f1486aecdeaff91ccbab4010d0fb42b11bf62cd090a1dd4da7d71549e6a3c1419f06d1ecbb4919e3fb1747018d37d34b354ae1bbdeeda95b9bb313962d91be9c9c22c4de8460bf028e512cd179cf457e07b3011556e61df3691d745309e90bb9c57c08db4c36575e6312e967736f295ba875efebd67761cf300b577928f330a902d6735695dbacbfd1374590d4c3a6f585887be0c0ef9d5d1a1e1c532cc7ad175d8aae715f237aceac0f1cf39a0de430613af98d90fd6db28459c0f88dc7e54c532e9f17050efe8298980112b27a8838a5cac2a20f6295ea0168ee9788f4553adf84d0cff9946990dd1638a0dce98a09d0c71419cb443ba58f3dd5fa0b5399e16793f7b91f728ac0edef1f6e8da01ae826d94a3afe5285958380cfd863d8bfa4832ec4de91d0f84c58663b129153d9335923a53e0c53810dc151b2bdd014b31b53202d0342c38d144f26f0ec2ac3c76dfc4e243405996504f30671df6d5643aace51f67dfa1efd19701b7d9421ae797a94afa63d1bafdcbd5c688289a1ebc25eaeddf80511383387780c318c943bd3923b18bde15012e0c1c90a01d7e09c1a8425250a78a4d9575b9f9dad9750c52a438a17bf23f9cd7b5321edae8872b83b9dd63bfd4a9c4b14bf438d3b53ba5caf072ee1b658824f3ff73e5b9e2306c1d8389d730cc6a63c2cc9e1a04ae1ec6ee9130156f9e74523c6522cb310a156b8ecbe5d98d65ca3e695e34e5e82329f2e9a1c64a69808b8a0164639437cea35dc0a535fea05c8c580ea405f3d8327229cb24843999020f47facf129a870ce8dda531896187f71cad48c0bc58cb00d0bfa00a0a8e4e0edace7ffee33b734dbdeecb6ccc9838f7d0e50304a810575c5929f607657dc3f1c8c36cb067499c10ff5ef224548b1b47fa5a6f112363c29ef872facb73166e9a3dbe320dc11d2e61e865440031926b5a7fa4258ba67d0cc127e77f419e89e35545e8338466511c88e9bee7a6941c8ee9f666a9832951ef2871d3bd8800890799039317c6b59b93df87488e8c147dbc062864c962d3747ef1d80b3f5ca52e4e77f9b3e8a57ed8e476cdc28971d39a8b6c53598aa8c9929aaaaa48f2820c3dcaf22a30e34147c72019c7f4bdfbe12a5a242baee4602d497cb9582f7a973d2e38ec61c1b543e8dc1cbd684cafe90e67b93900d116d734ed26a98d5da8d9551357526ca03c28958889db7c0e6b350a4956a8a2de97eb8dd24e0591efd70517d9751b598f05f08c1aa7d130450ebfdc650077a3bb506223d79591bdedadb554cf920a0455d906ed56ebaac78eb47c5055b2e15951194c609231b9ad07a0fadb84c689a021257af125348effab7eabc954850b7b62a79bb8ef9488fd1380970e945f729cc4c29afd445e2030a7779cade7380489bb557f241809d7f1c255431a218e385583d4bf5bdf02a3208d76898127eb54126d733dec8ba4f75890ad15aec982276978c3f4c3b86d4e175a02ec7ca541ea633ccf06f1a09289b66ca2ba222472290257ec350e9e9c6c8d7d8759a00d5640cb63eb90a42fdfa7fdbb0ffe78b1d0b27913e93e8a50c0a0adae55b0bb46716fb1a3d32775bc5d7819b3725743d412b660febba4d83676389240a1b8c98e599156524137ac0d2b040c9f68f706b701c576836c02f7d73641423256371c6981dc4d41d8f928bab296bcb8f8e840fa2dd70aebb4695dd174c13e8b7d3c1d7ee93c1f8015366e1499c821abc5b8d0bde2458bbe912f4771942c528a1122ba1c0625b9978e2602ca5cd354ea87e51f7863806f02b910544d8fbc28dc18283f60c7e5a03b9df9ff6aadd743b74de57ac8da1ab3d16892c7896371c9471d735618b74d7c4ac470d244acfa49e8b50afd09fef675e9a51794e1bc20e72b8e885bdf1786c8ba43f96aefd95e64f0739f2c32719665ab6c11abf2d06807e5cf8996f8c15c7108b348957e712425a575837e2caa4a83ef52617e92a783f9022cd625937904b43cc2f1095d83ad07ff8accb668589041adb56407e3c021c3051621828b576d1b3ec2a10ec3dd665f785bcf7045b6646021f02fcf0623c4876ea8a0d2bf2877c75dd57929be3f9bc67cb5568117d257afe065b297908d4e3349becf5e2ec0dd1eb1f160c1d7b32ac3f5b9db425df884e598222581caf0a69e8a76363bbedde92f49b2ff9ba8300dd08735d4ef44af0ab19cd4c611795c20e30ed2527582a51207001263edb70cdf28cf7486096c79845f8cb08eb0f56f2cddc6e6a3604cac26ba9f78c4912bb24142e02920af1413e35e0785584aafa4ffc8b2b898727a7fabd0deebbf408000183d1d46287223dc250c3bd2887b98a1029749b24df66bafda8d875efd785e3e34f1af31d0b3eaf0e184f03035302e9192b06c32096b5b2b983dbf070456e9825fe837702010f2f1b6dfb6728536dd494f5134bcb828ccbed63cc3f89ea3aa8d9d59d8f41ba531b5ed612e7e6c4c35e52c2b1c6cc390be0a7bdfb59b526e6b1d95d20ad28419cdef925460ba23d89765a2dd62d76dff91f61e94f9ce89bea8ce567890492c66209ec16cc9eb9923c52e412694bfed8aec948b50ac1cc1b08995c026283237d41feade37146ca0b6f75635016f5dfbcfdc2236ea4f523ea3a8734afabf0cb85daf1e2e45407f9a8c367f1e8b2809fe37e74133b1e6cddd5c622dca7b96d377e7084ce14b765ebb5332d3e592e96229dfce5b21eb9a358876081b4f8abb76b05915cea90d222cbd61c49309ecc5ddafb13d641b56c56e7c3ddd73d30702d56ebd0af0bb8fa4a7e47c635152aa26e59967e9d19425f53c36fb239c993c1eec8df3f664f60ad470e07feebf5ccbdf3ebbcef61a141737ff10127e4a4cd76db69e838695d5bb96613139aa68773446b391e252c6d763ef3d86012123e2eb503ed86625028eeeadbb0eda619aa83cdcc22fe006b633b1dccae04377048b4a03eacbe06d68d9b56101baae0f2c771c434a4f0fc9be71c8134b253d65d47ca4b406365a8ea847ada34529546d949985dd8960a966c6aec6c92b80ee739dca80a38a18eeb2f5473dab99d9aa4d9de404e27141374af7ad3a1a8c8650f6494d1dca1697045ad1415a2d0633ce61673fbccee4fec39c77b054a668ab35de06e5b328bbe9078334778c90c0e52c9f2d0d8aa6c79d6acda58672f6b9880c63bdc9f77ecc019f7ce50a83f364d0d672a00e385630766662129d8a07af979793577b81533ad2a918102079320a974f8edd502339f1fb16fb5bb91e2b218d38ce92ddca38de2771d5b8fd819336e5ccdcdb33c447b7899438c9ecf7e0dd115fec28b19a78c4f9302ea53397c7e2a9b4e3e587bb14f09079bfdcfa7c000abd19dce7836b04d7d7d87baa3c6f685522bdab96c6513e4b2077a84f814aab7376047efb749f4939008c1fb17ac06d4184287a8765da3390e8686513b4d8702b1834d9bfbb9f09037ba1f0d81dc17cc1d50b442d6e8afede0262a74d1f901e687e7b8969638783ee6ca44d3b2f3822635ac8beeca159f39f4843f523b7227c4660926f8df392834c2e0b3db9039f9b7abe6c2b9353de8ef5d3ee840416d30f0e9982d1760426665bb765582d350ad86358b1b452ca840d0a40376f58eb03fc9364e289760f3fff8d0d72ec57b9ffb7bb85707ccc4a680060b2fb1821825842cdcdb4029d1fb14bd83cb7a2bde3f548dc0674f5699422bf839bf1a1c4de0b6eeff88c49577e8ad4cd41c18c49044192f4759ccbe54bb84c630f658f01fe0baba5b2693fa85d43f9390debbed3a8e85104e5d7b33ab1105dbed410452c0fcf141609219ab6155ffc3005b94968859376ba473ec0787e98fc4b6c6c18b071d876151459452eae499b623547427db73a830694015ddbf24fed285810102be8967299729a088a1eff0d24d0bdf3344e2198d00dba6570cc04010146c0cfbbba690924db13a14184e8ae405542ec373afb8b5ebc29c866082fb1ea4aff0d11de9d9159fbfdf9a09915f668a6d10926e7cade3905c85a9d1837aa741b7c5102b8a3675944afb09313956ba892c1feb6254336e87bab9e1a5332c46870bb164d679f174376d7c12e39b500e1da5fc60f556fbe7a3fd89cbba0d2603200abf5f85b424717faf85d8e382dc859fb871a5c57fccea45fc65b57899b18d2a0a1a832d7612f794ffbb10a0a9f89c1772d767e2c8961ae95b43b4074283f5bee2e55bebc3055d867d0a9b2eff42ac1ff4e5850825e574cd6c00474f4388a6e7764fcf7fbb5e74dab2db5febfa02c5b138338e982f91ca9ef0888df34ad855b36c9be69845e425bc3a9ed7a6891c7cd56040135609a6ebe771a52340b344c9b82900c9557c52b092d431c8ff549d40f6841db4f89bb9d6c455ae54dbaed4234b72e5f8526f5290542343c28f81f7983379e11f4ca5e8c6e8cc0eb7b6db367093662cac1bc72d99469ea16b34922bcd901f9751bacda991e690ee393e679a866a0fe875f15b83c7c1fea802dff6ef0c15635950a18e622f64d9c4b5f65149bd448369a9232568bd07ae133dc872af2a862b0ab7bb37280d9195a6e800be572f69dd1b50b6683f4bc519d39b3d476c9c80b0a6dcfcfb74079a2a5a7ccf46ab4ffd932d8ffe94a8ce5a981a11df1ec568fa9d9d8e138edaed21eb5bdb0213b3b65d2362c87570f9aea7e1891183465f438caea9f2991e28a5aaeb10bd7d41cd1aeeaeb586690495433a1230e5951d39738aaa903b3a9f44a1f8db905abda381d06eece318204184267c6b23da6a7a93e1e7e1f0cad19f189315b8e065b35f6e397862dac7d1b25d9b75eb02220d3b6fbd72597f389c3a5d522f0b094f0660f70f2d9d432441e362859258c4e6e07938caad7a2d8ca613da4d41429ad3ac6464daf7a36dd347ae87c9a1368b88f41f7e6350faf78057b8ac64105d06c6201dec01b46a6124252e1bed664a125fad2c6d08d4ad308928e38f814a0eba634912723e93348393ae0c3fdbd9d0976d9349f3814a671708139f0492759804433a138306accbe16463f283aa7c5d3f1399806cc01e6647f921cb4e02655940f3b75fd4a54941506f43d5d074eba062a8729b71d40c0a3286fbd32d23e5c637c724599a3cbc1339f57da8dd6fede476db4489bb0f14927a2a60f3a3d964413181229b8fc9732069e5dccee75226a28a6aaa2d68db516d0411fd65da84f52ae22ad94a192da55828c36e0570e4aa8fe3aaa62e8b0080ed87358f251aae2c2fefebf872716acd9baedfdadf8ea5d1d9d59dff8f2d478fe33940f9d523d9a94d9e9d56b675cacac63a84764df8b8b92972d92e6b645669ce5166ae82128b9889b2d7e214630ad9ba79c6223fea1c252881756af88f995e1b294b069ba320ec74f1690bf3c413167744a63799818613518feaac6401f80c59821a72806f031d540d25df80c351b046d5844357a18f8639c35aefd9c9a6d6b2f0b2161dd8edea8a41979b6c80c007cfe4c317ebd01736fc45db3dd6a75d0027c41d2cc65eda11ae65aa8b843623121c88ff3367a773a36080f071aa9f0d9da794c4348986c96bfe95e63e590d956f68f57e11a873309d6ae377e907bd04b3b63bc43b28fe31cae95101a703bd3c6ede115b39660f159990e95d1b28e5cc594ed7206c78d549a15fb3bd978c014b60ee22ef2dd5837145b87c330a799408199b0bd068b479ecfabefecf24b1b892156649f2d9952051216162d287df12c2c7a80a41381f3a25e3f44dc5e84e6596bba8ef17fb00e06af188abe7516195165c17790db0c49b14481b3547d8b06332df4b260d79311c36e6433f1e7533c182abc52c945ee74a7a468f8ddfe44dd131d86fc5221846d7037c2108cb3607af7bc852fd7d567fc3926549b159c20e4262333e1f7d5e1137440d090207f3cc58165e24319e09da99292a3076c48731a8e7f8b8629ac1f98d7adad9173aa5f03627fd0114a97c5035fc8e7a2ff2e6b7de67f3abe7a917a6afdb0bd086f159b316409f452cb7d1e14b53f677a347658a98134f9c05abd3590991703b40c297c21c842517aa509291cbadfe07349084ea23e02d3da5f8359618b03e2285c57b480b9b0ca7d303c033c0c7d4bb19fc0cee8e48083f19427f3c4c69be891e6bb2732b0dc1da87aa69c2f5090bf5736e825298cf4ef378d06e0b996707629231fdc5837d5652200d10c949f3cf4b7fbffbc2c752c13aaec7c93b6714a539eda61ac932d008862ddcf6e70397183fed887f09f093af27939d5dd122b668a73344a4f5959f68cf06925748f21a97c907ee490c0ca4a819bed991cf134b82f57c0d9ef5190024b199fbc22795d8c1b201527492fec22ec9cfbf851dacd499e54f89fc0c1d6f258662c1488601ed87b75c43ada45694845d585958dfac2ca1ae3061591d153750417d2c3b59657bc6df36878b0265f40c3ee63395cda8b75bb498703bb6faef8367683949af57188317c5b35c12f07db10c909437caf1f56071206715a4a30593eae340f5ff263feb776b5211c95740aa444e25eaa137a3b197e24d7c838ba1c4fd8fcae670995fbaaeca3803aa30ec6e95de62d2f39b18dea2e72aaeee2e04f27c98186930e77d9162669f30fea8c202d4e7d6e2acffa47f33401cdf30fae3cd3192a5b9148f6c025879a3f7344665aae396ead08365713909a03e97b395c4b32ba1896427b7a7710fc9316d8f04c2f82cebd1b8f4181ac82ddd385e2aaf5107e905886213ea58e6ab7bfc3dddb9e8a1ed5b7ab118488e4221d8978341db66f84edb5c616c10760d813fc64902441f732eb6aef9bb523687afb8d1c9f6f46f83077cf0b6e21e14588439f7c9628e21a7cdc55d6a1c2e59294dc12c9e07f998d1a808ae019d45dcdc7051486fa6ea76fe41ac4de14e9b779dc036049a0b2b7ca26c164861fb0656dcd0c895fb0e1d479529588006c2d95045326d14a2e6002ae9aec8634e95de1169d25abded6aebc1752f20f71ee7b96568bbf38bddc939b31fa37da4b9129393e6595128154e1b085cbe4710fee5c5126e42f65ffe581a70580403ac479aef9a5d233c05dc26aed6bb47c5d4a0c68a077426f86c391cb77737a2c7ca10149c006d108024c7047ea8b24439ce70a54e6fd354ee50d9546ccf11326feee0ea6d2c2861f383011df19a53297cf3678dc99b9a607bb58691750510959d4a0b37ad08ca6827f298195d0b962f9bbe793b7295689e17089ce05d25da2703dc6108492ad735760f9efbf708f9d857d934f42f9e4ff5fe7a59309e7abb872bc233527bea0a0b91f309f08db1ed446c071c55852d8668934de057cd9e639dcfce632cf8e74aaf1c9fbaa0fd803c652f6b231f798e5c30f115bd76c5a58d188a4c16c5aed45179cf93e02dafdb97717324defb59882ee501b6dd2e255b02d4afd0639ff9ea10f9933e7cb06e1656a953a8dae35d4f8b826824a689d40818c485cb05a714406ab05712c36ef17b6f05d14de71e43bd5fc546bab9ae1c1c3f788a41d4666a8079c653c9982cc814559b12be1cc25d224b765da6ca9457b1a9000fa73d693d8c9d42d0141cdb6e40180a7b6b1efb83c8c0244dbf238ccefa25f7306d996453b81901a2e4c898a42be55264cfcd70ad465953f94fec349801c28a7b55ca2dc35c9c833291ceb271abfa5b2b626d54414a5308d6d2ef3dd2671ac06aecfd27a25f520fd5ad3611092553c82f3ccb15f85193afa8e5f6d14970d4b0292b622cb9b63dede0618d3d1b8c1f333b184bdad4f674be175039602eca0b12e74e1741d4a19bdf198d7c401462b40e5c9c5ac1fb7ba5e13a6108c27b7abf295224bd6c8100adbc97d6e062a9019cd1416a58794bd734f9014f2fa2787b16a85eae08d923244a4cd4f793d1b4c8bd57d16ecdd25b011b204e6b3f4421d3a1182192a2e365a56fe21caac57969f0685f2af658aff5d0844679fc86d60357aa6309cdb8cec3db91581f8c72766ae82eec93713dedbc69f575dcfae195f11a0d55ee594b0dad4c95bf88e8f8f2ae0c66a3eb59fc23bf08d9f2031ba133287a353c51bf7310d3fd4dc06f654ea8895498ff758fdedc06b49d938d5e8a8736d2c4c301ef88bb685cc080165d72eb8729354dea6b3174e8c9f23baeedb7fb953b1bddd2614288f490cde80a4eb69ad54d749ece76966f23de65a418c2b70235dc2d85e57342e1d4b181dd0d6f16519049dbf6ddfc16cf535cf63bc3f957b3747f59cd522bfaae16d9776b14ce13d8595bcf9afa0a08f3014902d62c480939b312993aa409a94f3946eaebccdd9f6d4043ed0f93a353900725c8084f6d4fa26b7c5a791d99daf3a4cfa862a14dc54452649a7f0985ef047c4a8799186fa1d4cded67b945cfd76742e721bac522c2bd345204c4a9b0eecf52c6c603b577dd88654c3719b6243a09f5e1f9504069c03904c4f8c722837a63d581334659c7550580e96d0174ee9ef6b04bd03c701fff8682bb7296b7f79bb1bdbc7fdd1eb1ff3b9e66d75c8a5c636df6e83739b758b5abe66a036ddf19de6cc4773787f4bd3303f9257bab9dcc5d09969a218fce801d0d29be26de5c5263699c52144bd58843cccc832be0a371258004d0c3a255ef7108309334b6144e89744f8f5af72562f9bdb635db782ce7b1328f3d743b33a1993e20dd0dc4b7520e6ce9cfb879eaebef3cd46d26770a22317034d5ce20c4c69d7cfba3546fcbf09f8163c419d9401ff536ee58c0942e2e1c96cfb3baecba41461bbbc1b9b4e34cdcd8cde707d2330e2decb55f9509ea520ea767e8c3597448ba139fbe654d7507</script>
-  <div class="hbe hbe-content">
-    <div class="hbe hbe-input hbe-input-default">
-      <input class="hbe hbe-input-field hbe-input-field-default" type="password" id="hbePass">
-      <label class="hbe hbe-input-label hbe-input-label-default" for="hbePass">
-        <span class="hbe hbe-input-label-content hbe-input-label-content-default">请输入文章密码！</span>
-      </label>
-    </div>
-  </div>
-</div>
-<script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
+        <h1 id="0x01-目标熟悉"><a href="#0x01-目标熟悉" class="headerlink" title="0x01 目标熟悉"></a>0x01 目标熟悉</h1><p>JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 WordPress，目前已经有超过 10w+ 的网站使用 JPress 搭建，其中包括多个政府机构，200+上市公司，中科院、红十字会等。</p>
+<p>比起普通的 SpringBoot 搭建的 Java 环境相比，jpress 使用和 SpringBoot 十分类似的 jBoot</p>
+<h1 id="0x02-环境搭建"><a href="#0x02-环境搭建" class="headerlink" title="0x02 环境搭建"></a>0x02 环境搭建</h1><p>依照官方文档：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/start.html">http://doc.jpress.cn/manual/start.html</a></p>
+<p>下载项目并解压到指定目录下</p>
+<p>配置好java环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/jdk_config.html">http://doc.jpress.cn/manual/jdk_config.html</a></p>
+<p>配置好maven环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/maven_config.html">http://doc.jpress.cn/manual/maven_config.html</a></p>
+<p>这里有一个小问题，maven切换到阿里云的源后，执行mvn help:system会报错，暂时使用官方源</p>
+<p>配置好IDEA开发环境，可参考：<a target="_blank" rel="noopener" href="http://doc.jpress.cn/manual/idea_environment_config.html">http://doc.jpress.cn/manual/idea_environment_config.html</a></p>
+<p>maven不了解的，可参考：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/lenve/p/12047793.html">https://www.cnblogs.com/lenve/p/12047793.html</a></p>
+<p>可通过如下命令启动</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd jpress</span><br><span class="line">mvn clean package</span><br><span class="line">cd starter/target/starter-4.0</span><br><span class="line">./jpress.sh start</span><br></pre></td></tr></table></figure>
+
+<p>也可通过，配置好IDEA开发环境后，依照文档，定位到文件starter/src/main/java/io.jpress/Starter，点击启动方法main，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226153949475.png" alt="image-20221226153949475"></p>
+<p>成功启动，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154120204.png" alt="image-20221226154120204"></p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104411543.png" alt="image-20221220104411543"></p>
+<p>访问127.0.0.1:8080后如下图，一路下一步，依照提示操作即可</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221220104649641.png" alt="image-20221220104649641"></p>
+<p>成功搭建后，使用内网ip访问，前台界面如下</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154312930.png" alt="image-20221226154312930"></p>
+<p>后台界面如下</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221226154626800.png" alt="image-20221226154626800"></p>
+<p>在 starter/src/main/resources/undertow.txt 中可以修改端口</p>
+<h1 id="0x03-代码审计"><a href="#0x03-代码审计" class="headerlink" title="0x03 代码审计"></a>0x03 代码审计</h1><h2 id="01-通杀最新版的后台上传插件getshell"><a href="#01-通杀最新版的后台上传插件getshell" class="headerlink" title="01 通杀最新版的后台上传插件getshell"></a>01 通杀最新版的后台上传插件getshell</h2><p>登录后台后，查看后台功能，在插件-&gt;安装处可以看到能安装插件，想到将恶意代码放入插件中，然后上传插件getshell，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227141058166.png" alt="image-20221227141058166"></p>
+<p>开始动手，首先查看项目目录，能大概猜到，插件目录是jpress-addons，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154325574.png" alt="image-20221227154325574"></p>
+<p>展开项目，我们修改jpress-addon-helloworld子项目，可以看到HelloWorldAddon这个文件是负责，安装、卸载、启动、停止时触发的动作，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227154904932.png" alt="image-20221227154904932"></p>
+<p>HelloWorldAddonController这个文件负责，访问某些路径时触发的动作，我们选择在方法adminmenutest()中添加如下恶意代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">        Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>添加后如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155336903.png" alt="image-20221227155336903"></p>
+<p>然后我们将项目jpress-addon-helloworld打包成jar包，我这边进入jpress-addon-helloworld子目录后执行mvn clean package会打包失败，需要进入根目录执行mvn clean package，执行后如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227155830016.png" alt="image-20221227155830016"></p>
+<p>然后在jpress-addon-helloworld的target目录下找到jpress-addon-helloworld-4.0.jar，登录后台，在插件处上传jpress-addon-helloworld-4.0.jar，然后点击插件测试，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160221062.png" alt="image-20221227160221062"></p>
+<p>可以看到成功弹出计算器</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227160017106.png" alt="image-20221227160017106"></p>
+<p>同样的方式，我们测试下，在最新版（截止到2022/12/27，最新版为5.0.5）中，此方法是否可以getshell，同样的过程搭建一下jpress最新版，搭建好后进入后台，如下图</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170402762.png" alt="image-20221227170402762"></p>
+<p>上传刚才打包好的jar包，点击插件测试，看到可成功执行命令，弹出计算器</p>
+<p><img src="/2022/12/29/JPress%E5%AE%A1%E8%AE%A1/image-20221227170736878.png" alt="image-20221227170736878"></p>
+
       
     </div>
     <footer class="article-footer">
@@ -127,7 +177,7 @@
       <strong class="article-nav-caption">Newer</strong>
       <div class="article-nav-title">
         
-          解决Windows Defender关闭后又自动打开的困扰
+          解决Windows Defender关闭后又自动打开的困扰（隐蔽的关闭杀软方式？）
         
       </div>
     </a>
@@ -187,7 +237,7 @@
       <ul>
         
           <li>
-            <a href="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/">解决Windows Defender关闭后又自动打开的困扰</a>
+            <a href="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/">解决Windows Defender关闭后又自动打开的困扰（隐蔽的关闭杀软方式？）</a>
           </li>
         
           <li>
