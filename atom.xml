@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-04-19T01:38:33.523Z</updated>
+  <updated>2024-04-22T11:37:33.002Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>JPress审计</title>
+    <link href="http://example.com/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/"/>
+    <id>http://example.com/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/</id>
+    <published>2024-04-22T11:28:19.000Z</published>
+    <updated>2024-04-22T11:37:33.002Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-目标熟悉"><a href="#0x01-目标熟悉" class="headerlink" title="0x01 目标熟悉"></a>0x01 目标熟悉</h1><p>JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 WordPress，目前已经有超过 10w+ 的网站使用 JPress 搭建，其中包括多个政府机构，200+上市公司，中科院、红十字会等。</p><p>JPress基于JBoot而不是SpringBoot</p><h1 id="0x02-环境搭建"><a href="#0x02-环境搭建" class="headerlink" title="0x02 环境搭建"></a>0x02 环境搭建</h1><p>依照官方文档：<a href="http://doc.jpress.cn/manual/start.html">http://doc.jpress.cn/manual/start.html</a></p><p>下载项目并解压到指定目录下</p><p>配置好java环境，可参考：<a href="http://doc.jpress.cn/manual/jdk_config.html">http://doc.jpress.cn/manual/jdk_config.html</a></p><p>配置好maven环境，可参考：<a href="http://doc.jpress.cn/manual/maven_config.html">http://doc.jpress.cn/manual/maven_config.html</a></p><p>这里有一个小问题，maven切换到阿里云的源后，执行mvn help:system会报错，暂时使用官方源</p><p>配置好IDEA开发环境，可参考：<a href="http://doc.jpress.cn/manual/idea_environment_config.html">http://doc.jpress.cn/manual/idea_environment_config.html</a></p><p>maven不了解的，可参考：<a href="https://www.cnblogs.com/lenve/p/12047793.html">https://www.cnblogs.com/lenve/p/12047793.html</a></p><p>可通过如下命令启动</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">cd jpress</span><br><span class="line">mvn clean package</span><br><span class="line">cd starter/target/starter-4.0</span><br><span class="line">./jpress.sh start</span><br></pre></td></tr></table></figure><p>也可通过IDEA启动，配置好IDEA开发环境后，依照文档定位到文件starter/src/main/java/io.jpress/Starter，点击启动方法main，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221226153949475.png" alt="image-20221226153949475"></p><p>成功启动，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221226154120204.png" alt="image-20221226154120204"></p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221220104411543.png" alt="image-20221220104411543"></p><p>访问127.0.0.1:8080进入安装界面，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221220104649641.png" alt="image-20221220104649641"></p><p>一路下一步，依照提示操作即可，成功搭建后，使用内网ip访问，前台界面如下</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221226154312930.png" alt="image-20221226154312930"></p><p>后台界面如下</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221226154626800.png" alt="image-20221226154626800"></p><p>在 starter/src/main/resources/undertow.txt 中可以修改端口</p><h1 id="0x03-代码审计"><a href="#0x03-代码审计" class="headerlink" title="0x03 代码审计"></a>0x03 代码审计</h1><h2 id="01-通杀最新版的后台插件上传getshell"><a href="#01-通杀最新版的后台插件上传getshell" class="headerlink" title="01 通杀最新版的后台插件上传getshell"></a>01 通杀最新版的后台插件上传getshell</h2><p>登录后台后，查看后台功能，在插件-&gt;安装可以看到能安装插件，想到将恶意代码放入插件中，然后上传插件getshell，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227141058166.png" alt="image-20221227141058166"></p><p>开始动手，首先查看项目目录，能大概猜到，插件目录是jpress-addons，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227154325574.png" alt="image-20221227154325574"></p><p>展开项目，我们修改jpress-addon-helloworld子项目，可以看到HelloWorldAddon这个文件负责：安装、卸载、启动、停止时触发的动作，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227154904932.png" alt="image-20221227154904932"></p><p>HelloWorldAddonController这个文件负责访问某些路径时触发的动作，我们选择在方法adminmenutest()中添加如下恶意代码</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">try &#123;</span><br><span class="line">        Runtime.getRuntime().exec(&quot;calc&quot;);</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>添加后如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227155336903.png" alt="image-20221227155336903"></p><p>然后我们将项目jpress-addon-helloworld打包成jar包，我这边进入jpress-addon-helloworld子目录后执行mvn clean package会打包失败，需要进入根目录执行mvn clean package，执行后如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227155830016.png" alt="image-20221227155830016"></p><p>然后在jpress-addon-helloworld的target目录下找到jpress-addon-helloworld-4.0.jar，登录后台，在插件处上传jpress-addon-helloworld-4.0.jar，然后点击插件测试，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227160221062.png" alt="image-20221227160221062"></p><p>可以看到成功弹出计算器</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227160017106.png" alt="image-20221227160017106"></p><p>同样的方式，我们测试下，在最新版（截止到2022/12/27，最新版为5.0.5）中，此方法是否可以getshell，同样的过程搭建一下jpress最新版，搭建好后进入后台，如下图</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227170402762.png" alt="image-20221227170402762"></p><p>上传刚才打包好的jar包，点击插件测试，看到可成功执行命令，弹出计算器</p><p><img src="/2024/04/22/JPress%E5%AE%A1%E8%AE%A1/image-20221227170736878.png" alt="image-20221227170736878"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;0x01-目标熟悉&quot;&gt;&lt;a href=&quot;#0x01-目标熟悉&quot; class=&quot;headerlink&quot; title=&quot;0x01 目标熟悉&quot;&gt;&lt;/a&gt;0x01 目标熟悉&lt;/h1&gt;&lt;p&gt;JPress 是一个使用 Java 开发的、开源免费的建站神器，灵感来源于 Word</summary>
+      
+    
+    
+    
+    
+    <category term="代码审计" scheme="http://example.com/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"/>
+    
+  </entry>
   
   <entry>
     <title>悟空CRM审计</title>
