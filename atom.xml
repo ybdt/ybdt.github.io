@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-04-22T14:56:15.537Z</updated>
+  <updated>2024-04-28T12:31:14.824Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>向日葵旧版本下载</title>
+    <link href="http://example.com/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/"/>
+    <id>http://example.com/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/</id>
+    <published>2024-04-28T12:29:09.000Z</published>
+    <updated>2024-04-28T12:31:14.824Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-成果"><a href="#0x01-成果" class="headerlink" title="0x01 成果"></a>0x01 成果</h1><p>可下载15.3.2.62919（截止到2024.04.03的最新版）到12.5.1.44969之间的任意版本，如下图<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/01.png" alt="image"><br>更旧的版本不能下载，原因见下文</p><h1 id="0x02-起源"><a href="#0x02-起源" class="headerlink" title="0x02 起源"></a>0x02 起源</h1><p>想用旧版本向日葵测试一个功能，发现官网只提供最新版下载，故研究下如何下载旧版本</p><h1 id="0x03-过程"><a href="#0x03-过程" class="headerlink" title="0x03 过程"></a>0x03 过程</h1><p>下载页面点击下载后，burp抓包，依次筛选每个请求包，发现如下请求包最像下载链接<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/02.png" alt="image">  如图可看到，根据参数versionid指定版本，试了下2225、2224都返回404，看来不是每个数字都有对应版本，写个python脚本生成1到2226的字典，请求包扔到Intruder中进行爆破，发现如上请求id返回302<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/03.png" alt="image">  ok，现在我们可以根据id下载对应版本</p><h1 id="0x04-遗憾"><a href="#0x04-遗憾" class="headerlink" title="0x04 遗憾"></a>0x04 遗憾</h1><p>经测试，版本SunloginClient_12.5.0.44227_x64.exe及之前的版本，下载后会返回404，猜测可能官方给删除了</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;0x01-成果&quot;&gt;&lt;a href=&quot;#0x01-成果&quot; class=&quot;headerlink&quot; title=&quot;0x01 成果&quot;&gt;&lt;/a&gt;0x01 成果&lt;/h1&gt;&lt;p&gt;可下载15.3.2.62919（截止到2024.04.03的最新版）到12.5.1.44969之间的</summary>
+      
+    
+    
+    
+    
+    <category term="Problem Solving" scheme="http://example.com/tags/Problem-Solving/"/>
+    
+  </entry>
   
   <entry>
     <title>微擎审计</title>
