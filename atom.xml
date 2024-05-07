@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-05-07T13:27:21.277Z</updated>
+  <updated>2024-05-07T13:33:37.335Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>小程序-多用户微博系统</title>
+    <link href="http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/"/>
+    <id>http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/</id>
+    <published>2024-05-07T13:30:01.000Z</published>
+    <updated>2024-05-07T13:33:37.335Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>之前有段时间在搞小程序开发，搞来搞去最终放弃了，不过收获还是蛮多的，记得刚入行安全时，一直想学开发，总觉得不懂开发就搞不好安全，现在也算圆了这个执念，学习开发对安全是有帮助的，不过现在想对那时的自己说一句，不用专门学开发也可以把安全搞得好</p><h1 id="0x02-简介"><a href="#0x02-简介" class="headerlink" title="0x02 简介"></a>0x02 简介</h1><p>一个简易的多用户微博系统，每个人都可以在上面留言，欢迎大家留言，地址：<a href="https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/">https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/</a></p><p>截图如下：<br><img src="/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/01.jpg" alt="image"></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;0x01-前言&quot;&gt;&lt;a href=&quot;#0x01-前言&quot; class=&quot;headerlink&quot; title=&quot;0x01 前言&quot;&gt;&lt;/a&gt;0x01 前言&lt;/h1&gt;&lt;p&gt;之前有段时间在搞小程序开发，搞来搞去最终放弃了，不过收获还是蛮多的，记得刚入行安全时，一直想学开发，</summary>
+      
+    
+    
+    
+    
+    <category term="程序开发" scheme="http://example.com/tags/%E7%A8%8B%E5%BA%8F%E5%BC%80%E5%8F%91/"/>
+    
+  </entry>
   
   <entry>
     <title>分享一个自己开发的工具</title>
