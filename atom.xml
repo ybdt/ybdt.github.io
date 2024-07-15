@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-05-07T13:49:57.691Z</updated>
+  <updated>2024-07-15T08:52:24.612Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>移动端渗透测试环境搭建</title>
+    <link href="http://example.com/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
+    <id>http://example.com/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
+    <published>2024-07-15T08:47:10.000Z</published>
+    <updated>2024-07-15T08:52:24.612Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>接到一个Android APP渗透的任务，我的手机型号是OPPO A57 5G，系统是ColorOS 14，手机和电脑在同一WiFi下，安装好burp证书，配置好代理，尝试抓包，发现无法抓取https包，OK，开启折腾之旅</p><p>oppo安装证书<br><a href="https://www.cnblogs.com/tianpin/p/17503604.html">https://www.cnblogs.com/tianpin/p/17503604.html</a>  </p><h1 id="0x02-手机降级"><a href="#0x02-手机降级" class="headerlink" title="0x02 手机降级"></a>0x02 手机降级</h1><p>查阅相关资料得知，安卓7.0开始，想抓https包需要将证书装到系统证书目录下，想装到系统证书目录下需要root权限，现在问题变成如何root</p><p>之前手欠将ColorOS升级到14，我们都知道版本越高越不利于root，所以第一步是降级，ColorOS官方规定，降级需要一级一级降，不能一次降多级，所以我们要先降到ColorOS 13，再降到ColorOS 12，由于ColorOS最低只能降到手机出厂时的系统，我这边最低只能降到ColorOS 12</p><p>ColorOS 14降级到ColorOS 13<br><a href="https://www.ithome.com/0/742/497.htm">https://www.ithome.com/0/742/497.htm</a><br>ColorOS 13降级到ColorOS 12<br><a href="https://bbs.oneplus.com/thread/6387108">https://bbs.oneplus.com/thread/6387108</a>  </p><h1 id="0x03-Root准备"><a href="#0x03-Root准备" class="headerlink" title="0x03 Root准备"></a>0x03 Root准备</h1><p>首先复习了一下adb、recovery、fastboot的知识，然后手机连上电脑，开启USB调试，尝试通过adb和fastboot连接手机，发现没有fastboot命令，下载Android Studio的SDK，里面的platform-tools目录下有我们需要的工具（像夜神模拟器安装目录下也有adb，但是没有fastboot命令）</p><p>adb连接手机<br><a href="https://blog.csdn.net/qq_42864343/article/details/123813339">https://blog.csdn.net/qq_42864343/article/details/123813339</a><br>使用fastboot命令刷机流程详解<br><a href="https://blog.csdn.net/s13383754499/article/details/82755012">https://blog.csdn.net/s13383754499/article/details/82755012</a><br>oppo开启usb调试<br><a href="https://baijiahao.baidu.com/s?id=1750732106730743094&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1750732106730743094&amp;wfr=spider&amp;for=pc</a><br>【2021】解决 Android Studio下载SDK失败 问题<br><a href="https://blog.csdn.net/weixin_43461724/article/details/120706675">https://blog.csdn.net/weixin_43461724/article/details/120706675</a>  </p><h1 id="0x04-成功Root"><a href="#0x04-成功Root" class="headerlink" title="0x04 成功Root"></a>0x04 成功Root</h1><p>查阅大量文章尝试root，发现OPPO A57 5G无法解锁BootLoader</p><p>oppo手机root<br><a href="https://www.shoujiroot.com/archives/146545.html">https://www.shoujiroot.com/archives/146545.html</a><br><a href="https://www.thenextdroid.com/oppo-a56s-root-without-pc-via-magisk/">https://www.thenextdroid.com/oppo-a56s-root-without-pc-via-magisk/</a>  </p><p>oppo a57刷机<br><a href="https://www.cnblogs.com/feiquan/p/9055823.html">https://www.cnblogs.com/feiquan/p/9055823.html</a><br><a href="https://blog.csdn.net/xgocn/article/details/107565522">https://blog.csdn.net/xgocn/article/details/107565522</a><br><a href="http://www.romgw.com/?p=334">http://www.romgw.com/?p=334</a>  </p><p>期间尝试刷机时碰到一个问题，我是mac系统下pd虚拟化的win10，无法将串口设备挂接到虚拟机，如下图<br><img src="/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/01.png" alt="image">  </p><p>经历各种失败后，已经打算放弃了，想想再试一次万能的淘宝吧，搜了一下还真有刷机业务，并且可以刷OPPO A57 5G，不过mac系统下pd虚拟化的win10不行，需要物理机win10，然后又找了一台物理机win10，全程需要对方远程控制我电脑，很反感别人控制我电脑，好在那台物理机win10上面啥数据也没有，看对面一顿操作，最后成功root</p><p>通过观察他们的操作，发现他们其实是用的一款第三方付费工具UnlockTool，好像是一个越南团队开发的，这款工具其中一个root方式是利用联发科这款CPU的一个漏洞，正好OPPO A57 5G的CPU就是联发科</p><h1 id="0x05-成功抓包"><a href="#0x05-成功抓包" class="headerlink" title="0x05 成功抓包"></a>0x05 成功抓包</h1><p>手机root后成功安装了magisk，但是adb连接后权限还是shell，无法将证书装到系统证书目录下，尝试过Root Explorer，但是无法修改证书权限，最终通过magisk的模块MoveCertiticate成功将证书移到系统证书目录下，需要注意MoveCertiticate会从指定目录将证书移到系统证书目录下，所以需要先将证书放到/data/local/tmp/cert/下，另外有些app出于反调试目的，可能不走系统本身的代理，需要一款类似Proxifier的全局代理客户端，可以使用Postern</p><p>一切准备就绪后，尝试抓包，可成功抓到app的https包，如下图<br><img src="/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/02.png" alt="image">  </p><p>移动端抓包<br><a href="https://xz.aliyun.com/t/11817?time__1311=Cq0xuD07u4lh=iQwYYv3iIPx7qEYoD">https://xz.aliyun.com/t/11817?time__1311=Cq0xuD07u4lh%3DiQwYYv3iIPx7qEYoD</a><br><a href="https://blog.csdn.net/Arched/article/details/135777104">https://blog.csdn.net/Arched/article/details/135777104</a><br><a href="https://github.com/ys1231/MoveCertificate">https://github.com/ys1231/MoveCertificate</a>  </p><h1 id="0x06-总结感悟"><a href="#0x06-总结感悟" class="headerlink" title="0x06 总结感悟"></a>0x06 总结感悟</h1><p>之前一直有一个问题，可以直接通过burp抓包，为何还要再通过charles或者fiddler中转一下，这次正好测试了一下，发现直接通过burp抓包，数据包从APP到burp需要好几秒，有点慢，而通过charles中转一下，则可以秒抓</p><p>最后，其实iOS下导入证书就可以抓https包，比Android省事多，所以条件允许的话，优先在iOS下抓包，但是像我这种没有iOS客户端的情况，就得折腾了~</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;0x01-前言&quot;&gt;&lt;a href=&quot;#0x01-前言&quot; class=&quot;headerlink&quot; title=&quot;0x01 前言&quot;&gt;&lt;/a&gt;0x01 前言&lt;/h1&gt;&lt;p&gt;接到一个Android APP渗透的任务，我的手机型号是OPPO A57 5G，系统是ColorOS</summary>
+      
+    
+    
+    
+    
+    <category term="Problem Solving" scheme="http://example.com/tags/Problem-Solving/"/>
+    
+  </entry>
   
   <entry>
     <title>自动化连接ssh并反弹shell</title>
