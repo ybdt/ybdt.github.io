@@ -136,7 +136,7 @@
     <link href="http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/"/>
     <id>http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/</id>
     <published>2024-05-07T13:30:01.000Z</published>
-    <updated>2024-10-06T01:43:33.592Z</updated>
+    <updated>2024-11-18T13:03:03.029Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>之前有段时间在搞小程序开发，搞来搞去最终放弃了，不过收获还是蛮多的，记得刚入行安全时，一直想学开发，总觉得不懂开发就搞不好安全，现在也算圆了这个执念，学习开发对安全是有帮助的，不过现在想对那时的自己说一句，不用专门学开发也可以把安全搞得好</p><h1 id="0x02-简介"><a href="#0x02-简介" class="headerlink" title="0x02 简介"></a>0x02 简介</h1><p>一个简易的多用户微博系统，每个人都可以在上面留言，欢迎大家留言，地址：<a href="https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/">https://static-mp-5cacf972-c2bb-47de-9b31-244f0c9e5038.next.bspapp.com/article/#/</a></p><p>截图如下：<br><img src="/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/01.jpg" alt="image"></p>]]></content>
     
@@ -149,7 +149,7 @@
     
     
     
-    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
+    <category term="工具开发" scheme="http://example.com/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
@@ -158,7 +158,7 @@
     <link href="http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/"/>
     <id>http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/</id>
     <published>2024-05-07T13:25:18.000Z</published>
-    <updated>2024-10-06T01:43:49.418Z</updated>
+    <updated>2024-11-18T13:03:24.261Z</updated>
     
     <content type="html"><![CDATA[<p>程序流程如下<br><img src="/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/01.png" alt="image"></p><p>之前做红队时自己开发的工具，代码完全开源到GitHub，地址：<a href="https://github.com/ybdt/RuiningGather-Python">https://github.com/ybdt/RuiningGather-Python</a></p>]]></content>
     
@@ -171,7 +171,7 @@
     
     
     
-    <category term="开发" scheme="http://example.com/tags/%E5%BC%80%E5%8F%91/"/>
+    <category term="工具开发" scheme="http://example.com/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/"/>
     
   </entry>
   
