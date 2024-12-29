@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-11-18T12:40:07.621Z</updated>
+  <updated>2024-12-29T14:03:25.008Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,28 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Parallels Desktop虚拟机（PD虚拟机）迁移到VMware Workstation</title>
+    <link href="http://example.com/2024/12/29/Parallels-Desktop%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88PD%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%89%E8%BF%81%E7%A7%BB%E5%88%B0VMware-Workstation/"/>
+    <id>http://example.com/2024/12/29/Parallels-Desktop%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88PD%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%89%E8%BF%81%E7%A7%BB%E5%88%B0VMware-Workstation/</id>
+    <published>2024-12-29T14:01:44.000Z</published>
+    <updated>2024-12-29T14:03:25.008Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>工作需要，去现场干活但不能用自己的电脑，考虑将我平时用的虚拟机拷贝过去，但我是intel mac下使用parallels desktop虚拟化的win10，现场是windows机器，pd虚拟机无法导入vmware workstation中，google、知乎、v2ex上各种搜索，不是不完整，就是不可用，最终通过自己尝试和国外一篇博客发现可行的方法，本文记录一下</p><h1 id="过程"><a href="#过程" class="headerlink" title="过程"></a>过程</h1><p>整体思路是，mac下vmware fusion导入pd虚拟机，vmware fusion中将虚拟机导出为ovf格式，最终导入vmware workstation中</p><h2 id="步骤1"><a href="#步骤1" class="headerlink" title="步骤1"></a>步骤1</h2><p>mac下安装好vmware fusion，截止到2024年12月22日，vmware fusion已经免费了，现在连破解许可都不用找了</p><h2 id="步骤2"><a href="#步骤2" class="headerlink" title="步骤2"></a>步骤2</h2><p>vmware fusion直接导入pd虚拟机会报错</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Error23 无法导入虚拟机</span><br></pre></td></tr></table></figure><p>需要使用qemu-img转换一下格式，安装qemu-img命令如下</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">brew install qemu</span><br></pre></td></tr></table></figure><p>我这边安装过程中提示还需要安装什么xcode(记不清了…)，需要一并安装，安装后使用如下命令转换（转换之前，虚拟机需要关机）</p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qemu-img convert -f parallels -O vmdk Win11-开发-0.hdd.0.&#123;5fbaabe3-6958-40ff-92a7-860e329aab41&#125;.hds win11.vmdk</span><br></pre></td></tr></table></figure><p>不知是否注意到，转换的不是.pvm文件，而是.hds文件，pvm文件-&gt;右键-&gt;显示包内容，将里面的.hdd文件拖出来，hdd文件-&gt;右键-&gt;显示包内容，将里面的.hds文件拖出来，这个地方让我伤到了，一开始转换pvm失败，后来转换hdd还是失败，想不到里面还有一个hds…</p><p>这里还有一个小坑点，hdd文件显示包内容后，可能会有两个hds文件，如果有2个，那另一个是你的快照，对比没有快照的pvm文件，里面只有一个hds文件</p><p>转换后，vmware fusion新建虚拟机，使用刚才生成的vmdk文件作为磁盘，可以成功导入</p><h2 id="步骤3"><a href="#步骤3" class="headerlink" title="步骤3"></a>步骤3</h2><p>vmware fusion中将虚拟机导出为ovf格式，最终导入vmware workstation中<br><img src="/2024/12/29/Parallels-Desktop%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88PD%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%89%E8%BF%81%E7%A7%BB%E5%88%B0VMware-Workstation/02.png" alt="image">  </p><h2 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h2><p>隐约记得vmware workstation中是可以直接导入vmdk格式的文件，尝试一下，vmware workstation中，新建虚拟机-&gt;自定义虚拟机，一路下一步，创建硬盘时选择之前的vmdk文件，经测试，可成功导入<br><img src="/2024/12/29/Parallels-Desktop%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%88PD%E8%99%9A%E6%8B%9F%E6%9C%BA%EF%BC%89%E8%BF%81%E7%A7%BB%E5%88%B0VMware-Workstation/03.png" alt="image">  </p><h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a href="https://www.reddit.com/r/vmware/comments/1dvrkye/how_to_move_from_parallels_to_vmware/?rdt=39473">https://www.reddit.com/r/vmware/comments/1dvrkye/how_to_move_from_parallels_to_vmware/?rdt=39473</a></p><p><a href="https://chrisdooks.com/2024/05/15/import-a-parallels-vm-into-vmware-fusion-pro/">https://chrisdooks.com/2024/05/15/import-a-parallels-vm-into-vmware-fusion-pro/</a></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt;工作需要，去现场干活但不能用自己的电脑，考虑将我平时用的虚拟机拷贝过去，但我是intel mac下使用parallels desktop虚拟</summary>
+      
+    
+    
+    
+    
+    <category term="系统运维" scheme="http://example.com/tags/%E7%B3%BB%E7%BB%9F%E8%BF%90%E7%BB%B4/"/>
+    
+  </entry>
   
   <entry>
     <title>ThinkPHP GetShell WAF绕过</title>
