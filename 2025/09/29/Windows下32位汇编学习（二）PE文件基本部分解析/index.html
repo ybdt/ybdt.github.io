@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Windows下32位汇编学习（二）PE文件基本部分解析 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="引言想开发反病毒引擎，第一步总是对PE文件进行解析，虽然有点落伍，但这是基础，想开发病毒也同理，很多的病毒样本在使用Indirect Syscall + 调用栈欺骗前，都需要动态调用API，这个时候就需要你了解PE文件的结构，通过解析PE文件找到IAT，进而找到PEB来动态获取地址，所以不想学也得学~ 本文会介绍从书中学到的部分知识，以及通过C++和汇编分别实现一个PE文件解析器 本篇博客的学习参">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows下32位汇编学习（二）PE文件基本部分解析">
+<meta property="og:url" content="http://example.com/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="引言想开发反病毒引擎，第一步总是对PE文件进行解析，虽然有点落伍，但这是基础，想开发病毒也同理，很多的病毒样本在使用Indirect Syscall + 调用栈欺骗前，都需要动态调用API，这个时候就需要你了解PE文件的结构，通过解析PE文件找到IAT，进而找到PEB来动态获取地址，所以不想学也得学~ 本文会介绍从书中学到的部分知识，以及通过C++和汇编分别实现一个PE文件解析器 本篇博客的学习参">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2025-09-29T14:55:15.000Z">
+<meta property="article:modified_time" content="2025-09-29T14:58:00.451Z">
+<meta property="article:author" content="ybdt">
+<meta property="article:tag" content="32位汇编">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Windows下32位汇编学习（二）PE文件基本部分解析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-29 22:58:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Windows下32位汇编学习（二）PE文件基本部分解析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-29T14:55:15.000Z" title="Created 2025-09-29 22:55:15">2025-09-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-09-29T14:58:00.451Z" title="Updated 2025-09-29 22:58:00">2025-09-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/">汇编语言</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Windows下32位汇编学习（二）PE文件基本部分解析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p>想开发反病毒引擎，第一步总是对PE文件进行解析，虽然有点落伍，但这是基础，想开发病毒也同理，很多的病毒样本在使用Indirect Syscall + 调用栈欺骗前，都需要动态调用API，这个时候就需要你了解PE文件的结构，通过解析PE文件找到IAT，进而找到PEB来动态获取地址，所以不想学也得学~</p>
+<p>本文会介绍从书中学到的部分知识，以及通过C++和汇编分别实现一个PE文件解析器</p>
+<p>本篇博客的学习参考罗云彬老师的《Windows环境下32位汇编语言程序设计》，尤其是第17章的“PE文件”</p>
+<h1 id="正文"><a href="#正文" class="headerlink" title="正文"></a>正文</h1><p>借用一下罗云彬老师的图，PE文件从文件头到文件尾依次是：DOS部分、PE头、节表、节数据<br>DOS部分：包括DOS标识和DOS代码，为了兼容DOS系统而保留的部分<br>PE头：包括PE标识、PE头、PE可选头<br>节表：下面节数据的起始位置、大小<br>节数据：就是代码段、数据段<br><img src="/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/01.png" alt="image"><br>上面是用通俗的语言描述，在代码中是下面的样子  </p>
+<h2 id="DOS部分"><a href="#DOS部分" class="headerlink" title="DOS部分"></a>DOS部分</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_DOS_HEADER &#123;</span><br><span class="line">    e_magic    2字节    // DOS标识</span><br><span class="line">    ...</span><br><span class="line">    e_lfanew    4字节    // PE头相对文件头的偏移量</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>常用的就是e_magic和e_lfanew，DOS标识转换成字符就是常见的MZ（MZ是DOS创始人名字的首字符）</p>
+<h2 id="PE头"><a href="#PE头" class="headerlink" title="PE头"></a>PE头</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_NT_HEADERS &#123;</span><br><span class="line">    Signature    4字节    // PE标识</span><br><span class="line">    IMAGE_FILE_HEADER</span><br><span class="line">    IMAGE_OPTIONAL_HEADER32</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMAGE_FILE_HEADER &#123;</span><br><span class="line">    Machine                 2字节    // 运行平台</span><br><span class="line">    NumberOfSections        2字节    // 文件的节数目</span><br><span class="line">    TimeDateStamp           4字节    // 文件创建的时间和日期</span><br><span class="line">    ...</span><br><span class="line">    SizeOfOptionalHeader    2字节    // IMAGE_OPTIONAL_HEADER32的大小</span><br><span class="line">    Characteristics         2字节    // 这是一个EXE文件还是DLL文件还是别的类型的文件</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMAGE_OPTIONAL_HEADER32 &#123;</span><br><span class="line">    ...</span><br><span class="line">    AddressOfEntryPoint    4字节    // 程序装入内存后从这个地址开始执行</span><br><span class="line">    ImageBase              4字节    // 程序装入内存后在内存中的起始地址，默认起始地址就是调试器中常看到的0x00400000</span><br><span class="line">    SectionAlignment       4字节    // 内存中对齐的最小单位</span><br><span class="line">    FileAlignment          4字节    // 文件中对齐的最小单位</span><br><span class="line">    Subsystem              2字节    // 指定是GUI程序还是CLI程序</span><br><span class="line">    DataDirectory          IMAGE_DATA_DIRECTORY * 16    // 这是一个数组，里面包含16个IMAGE_DATA_DIRECTORY</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMAGE_DATA_DIRECTORY &#123;</span><br><span class="line">    VirtualAddress    4字节    // 起始地址</span><br><span class="line">    isize             4字节    // 大小</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到PE头就复杂多了，上面的结构体和注释已经展示了大部分字段的含义，再补充一下DataDirectory，Windows PE文件中，代码段和数据段是按照装入内存后的属性划分的，装入内存后这段数据是可读可执行，那这段数据在装入内存前就位于代码段，装入内存后这段数据是只读，那这段数据在装入内存前就位于只读数据段，可是问题来了，像导出表、导入表装入内存后都是只读，所以都位于数据段，那我们改如何区分它们呢，就是利用DataDirectory，16个IMAGE_DATA_DIRECTORY，序号是0-15，依次表示</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0    导出表</span><br><span class="line">1    导入表</span><br><span class="line">2    资源</span><br><span class="line">...</span><br><span class="line">5    重定位表</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>还需要注意，这里的偏移指的是程序被装载到内存后，在内存中的偏移，由于内存对齐的最小单位和文件对齐的最小单位不同（还有其他因素），内存中的偏移和文件中的偏移并不一致</p>
+<h2 id="节表"><a href="#节表" class="headerlink" title="节表"></a>节表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_SECTION_HEADER &#123;</span><br><span class="line">    Name                   8字节    // Byte[8]，8个字节的数组</span><br><span class="line">    union &#123;</span><br><span class="line">        PhysicalAddress    4字节    //</span><br><span class="line">        VirtualSize        4字节    // 被文件对齐和内存对齐前的实际大小</span><br><span class="line">    &#125;</span><br><span class="line">    PointerOfRawData       4字节    // 在文件中相对于文件头的偏移</span><br><span class="line">    SizeOfRawData          4字节    // 被文件对齐后的大小</span><br><span class="line">    VirtualAddress         4字节    // 在内存中相对于内存基址的便宜</span><br><span class="line">    Characteristics        4字节    // 节的各种属性，是否可读、可写、可执行等等</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>例1，想要计算只读数据段中偏移20个字节的数据A在内存中的地址，假如PE被装载的起始地址是0x00400000，那么A在内存中的地址就是0x00400000+VirtualAddress+20Byte<br>例2，已知一个RVA，想计算在文件中的偏移地址：<br>1、通过例1的方式分别得到每个节在内存中的地址，节1在内存中的地址Addr1，节2在内存中的地址Addr2<br>2、Addr1 &lt;= 0x00400000+VirtualAddress+20Byte &lt; Addr1+VirtualSize，通过这个方式判断A在哪个节中<br>3、RVA - 对应节的起始地址 + PointerOfRawData就是在文件中的偏移<br>有人可能会问，节在内存中的大小是经过SectionAlignment对齐的，不等于VirtualSize，为什么是Addr1+VirtualSize，假如VirtualSize是0x523，在内存中经过SectionAlignment是0x1000，从0x523开始到后面都被填充0，所以在比较的时候可以忽略后面的部分，只计算Addr1+VirtualSize</p>
+<h2 id="节数据"><a href="#节数据" class="headerlink" title="节数据"></a>节数据</h2><p>就是代码段、数据段、只读数据段、等等</p>
+<h2 id="导入表"><a href="#导入表" class="headerlink" title="导入表"></a>导入表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_IMPORT_DESCRIPTOR &#123;</span><br><span class="line">    union &#123;</span><br><span class="line">        ...</span><br><span class="line">        OriginalFirstThunk    4字节    // 指向包含IMAGE_THUNK_DATA的数组</span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">    Name1                     4字节    // DLL文件名称</span><br><span class="line">    FirstThunk                4字节    // 指向包含IMAGE_THUNK_DATA的数组</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMAGE_THUNK_DATA &#123;</span><br><span class="line">    union &#123;</span><br><span class="line">        ForwarderString    4字节</span><br><span class="line">        Function    4字节</span><br><span class="line">        Ordinal    4字节</span><br><span class="line">        AddressOfData    4字节</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">IMAGE_IMPORT_BY_NAME &#123;</span><br><span class="line">    ...</span><br><span class="line">    Name1    1字节    // 导入函数名称字符串</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序要使用的函数及相关信息，存储在导入表中</p>
+<p>导入表地址可以从IMAGE_NT_HEADERS中的IMAGE_OPTIONAL_HEADER32中的IMAGE_DATA_DIRECTORY中的索引为5的结构体中的VirtualAddress和isize获取地址偏移和大小，一个DLL对应一个IMAGE_IMPORT_DESCRIPTOR，也就是说有多少个DLL就有多少个IMAGE_IMPORT_DESCRIPTOR，最后以一个值全为0的IMAGE_IMPORT_DESCRIPTOR结构结束，同样，包含IMAGE_THUNK_DATA的数组也是，一个IMAGE_THUNK_DATA对应一个导入函数，最后以一个值全为0的IMAGE_THUNK_DAT结构结束，IMAGE_THUNK_DATA本质上是一个4字节，当最高位为1时，表示函数以序号方式导入，这时4字节的低位就是函数的序号，当最高位为0时，表示函数以名称方式导入，这时4字节的值是一个RVA，指向IMAGE_IMPORT_BY_NAME，IMAGE_IMPORT_BY_NAME中的Name1包含导入函数的名称</p>
+<h2 id="导出表"><a href="#导出表" class="headerlink" title="导出表"></a>导出表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_EXPORT_DIRECTORY &#123;</span><br><span class="line">    ...</span><br><span class="line">    nName    4字节    // 指向包含文件名字符串的RVA，即使更改了DLL的文件名为Ker.dll，也能从这个字段中获取编译时的DLL文件名Kernel32.dll</span><br><span class="line">    nBase    4字节    // 导出函数的起始序号</span><br><span class="line">    NumberOfFunctions    4字节    // 导出函数的总个数</span><br><span class="line">    NumberOfNames    4字节    // 有名称的导出函数总个数</span><br><span class="line">    AddressOfFunctions    4字节    // 指向包含导出函数地址数组的RVA</span><br><span class="line">    AddressOfNames    4字节    // 指向包含导出函数名称数组的RVA</span><br><span class="line">    AddressOfNameOrdinals    4字节    // 指向包含函数名称序号数组的RVA</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>和导入表相对应，存储要给别的程序使用的函数</p>
+<h2 id="重定位表"><a href="#重定位表" class="headerlink" title="重定位表"></a>重定位表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">IMAGE_BASE_RELOCATION &#123;</span><br><span class="line">    VirtualAddress    4字节    // 包含要重定位的内存页的起始RVA</span><br><span class="line">    SizeOfBlock       4字节    // 重定位块的长度</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>没有意外的情况下，程序的建议装载地址就是实际装载地址，但是对于EXE文件，如果启用了ASLR（地址空间布局随机化），则实际装载地址会不同，对于DLL文件，如果建议装载地址已经被其他DLL占用了，则实际装载地址会不同，所以需要对代码进行重定位</p>
+<p> 直接寻址指令的地址 + (实际装载地址 - 建议装载地址)，实际装载地址由Windows装载器提供不用我们操心，建议装载地址存储在PE文件的IMAGE_OPTIONAL_HEADER32中的ImageBase中，所以重定位表中只需要存储要修改的直接寻址指令的地址</p>
+<p>重定位表由一系列重定位块组成，一个重定位块对应一个内存页，用来描述这个内存页中需要重定位的项，每个重定位块以一个IMAGE_BASE_RELOCATION开头，后面跟着一系列重定位项，每个重定位项占2个字节，SizeOfBlock = 4 + 4 + 2*重定位项数，所以重定位项数 = (SizeOfBlock - 8) / 2，每个重定位项占用2个字节共16位，VirtualAddress + 16位中的低12位就是要重定位指令的最终RVA，16位中的高4位用来表示属性，所有重定位块最终以一个VirtualAddress字段为0的IMAGE_BASE_RELOCATION结构结束。还有一个问题可以借此解答，假如PE的装载地址是0x00400000，代码的起始地址如果和装载地址一样的话，那第一页的重定位块的IMAGE_BASE_RELOCATION结构中的VirtualAddress的RVA就为0x00400000 - 0x00400000 = 0，此时 系统就会认为当前的重定位块结束了，导致重定位失败</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/">http://example.com/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/32%E4%BD%8D%E6%B1%87%E7%BC%96/">32位汇编</a></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/09/26/%E9%80%9A%E8%BF%87APC%E6%89%A7%E8%A1%8CShellcode/" title="通过APC执行Shellcode"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">通过APC执行Shellcode</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><div><a href="/2025/08/14/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0/" title="Windows下32位汇编学习"><div class="cover" style="background: var(--default-bg-color)"></div><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-08-14</div><div class="title">Windows下32位汇编学习</div></div></a></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">24</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">引言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%A3%E6%96%87"><span class="toc-number">2.</span> <span class="toc-text">正文</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#DOS%E9%83%A8%E5%88%86"><span class="toc-number">2.1.</span> <span class="toc-text">DOS部分</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PE%E5%A4%B4"><span class="toc-number">2.2.</span> <span class="toc-text">PE头</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8A%82%E8%A1%A8"><span class="toc-number">2.3.</span> <span class="toc-text">节表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%8A%82%E6%95%B0%E6%8D%AE"><span class="toc-number">2.4.</span> <span class="toc-text">节数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E8%A1%A8"><span class="toc-number">2.5.</span> <span class="toc-text">导入表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%87%BA%E8%A1%A8"><span class="toc-number">2.6.</span> <span class="toc-text">导出表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%AE%9A%E4%BD%8D%E8%A1%A8"><span class="toc-number">2.7.</span> <span class="toc-text">重定位表</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/29/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0%EF%BC%88%E4%BA%8C%EF%BC%89PE%E6%96%87%E4%BB%B6%E5%9F%BA%E6%9C%AC%E9%83%A8%E5%88%86%E8%A7%A3%E6%9E%90/" title="Windows下32位汇编学习（二）PE文件基本部分解析">Windows下32位汇编学习（二）PE文件基本部分解析</a><time datetime="2025-09-29T14:55:15.000Z" title="Created 2025-09-29 22:55:15">2025-09-29</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/26/%E9%80%9A%E8%BF%87APC%E6%89%A7%E8%A1%8CShellcode/" title="通过APC执行Shellcode">通过APC执行Shellcode</a><time datetime="2025-09-26T02:50:20.000Z" title="Created 2025-09-26 10:50:20">2025-09-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/18/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" title="回调函数">回调函数</a><time datetime="2025-09-18T02:13:14.000Z" title="Created 2025-09-18 10:13:14">2025-09-18</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/09/03/%E4%B8%80%E6%AC%A1%E7%AE%80%E5%8D%95%E7%9A%84%E9%92%93%E9%B1%BC%E5%88%86%E6%9E%90%E4%B9%8BFTP%E6%89%A7%E8%A1%8CLNK/" title="一次简单的钓鱼分析之FTP执行LNK">一次简单的钓鱼分析之FTP执行LNK</a><time datetime="2025-09-03T13:37:39.000Z" title="Created 2025-09-03 21:37:39">2025-09-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/08/14/%E2%80%9CWorstFit%E2%80%9D%E5%AD%A6%E4%B9%A0/" title="“WorstFit”学习">“WorstFit”学习</a><time datetime="2025-08-14T13:56:08.000Z" title="Created 2025-08-14 21:56:08">2025-08-14</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
