@@ -1,0 +1,211 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Windows RPC初探 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="前言看到一篇利用RPC实现免杀对抗的文章，不懂RPC的我读起来像天书，恍然大悟，我得先搞懂RPC是什么，本文的目的是掌握RPC的背景、概念、实现 RPC背景随着计算机技术从“单机时代”进入“分布式时代”，传统的IPC（Inter-Process Communication，进程间通信）已经无法满足跨设备、跨网络的协作需求，如大型企业的财务系统，单台计算机的算力、存储、可靠性已经无法满足需求，需要多">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Windows RPC初探">
+<meta property="og:url" content="http://example.com/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="前言看到一篇利用RPC实现免杀对抗的文章，不懂RPC的我读起来像天书，恍然大悟，我得先搞懂RPC是什么，本文的目的是掌握RPC的背景、概念、实现 RPC背景随着计算机技术从“单机时代”进入“分布式时代”，传统的IPC（Inter-Process Communication，进程间通信）已经无法满足跨设备、跨网络的协作需求，如大型企业的财务系统，单台计算机的算力、存储、可靠性已经无法满足需求，需要多">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2025-11-27T12:41:06.000Z">
+<meta property="article:modified_time" content="2025-11-27T12:42:34.442Z">
+<meta property="article:author" content="ybdt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Windows RPC初探',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-27 20:42:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Windows RPC初探</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-27T12:41:06.000Z" title="Created 2025-11-27 20:41:06">2025-11-27</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-27T12:42:34.442Z" title="Updated 2025-11-27 20:42:34">2025-11-27</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/">漏洞研究</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Windows RPC初探"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>看到一篇利用RPC实现免杀对抗的文章，不懂RPC的我读起来像天书，恍然大悟，我得先搞懂RPC是什么，本文的目的是掌握RPC的背景、概念、实现</p>
+<h1 id="RPC背景"><a href="#RPC背景" class="headerlink" title="RPC背景"></a>RPC背景</h1><p>随着计算机技术从“单机时代”进入“分布式时代”，传统的IPC（Inter-Process Communication，进程间通信）已经无法满足跨设备、跨网络的协作需求，如大型企业的财务系统，单台计算机的算力、存储、可靠性已经无法满足需求，需要多台计算机协同合作，其中包括负责存储的（数据库服务器）、负责计算的（应用服务器）、负责展示的（前端服务器），各个服务器的进程之间无法再通过传统的IPC（Inter-Process Communication，进程间通信）通信，需要一种新的通信机制</p>
+<p>早期程序员们自己实现通信机制，包括自己基于TCP/IP协议编写数据发送/接收逻辑，处理数据序列化反序列化、考虑丢包等等，这些底层细节与“业务逻辑”无关，却占用了开发者大量的时间精力，急需一种全新的标准，这个时候RPC应运而生</p>
+<p>RPC最早是由贝尔实验室的Bruce Jay Nelson在1984年的论文中提出的，随后Sun公司实现了自研的ONC RPC，有了这个成熟的机制，大幅降低了跨进程通信的开发门槛，微软在1993年自Windows NT起，在ONC RPC的基础上研发了适用于Windows的RPC机制，我们都知道Windows是组件化架构，典型的组件就是COM，而DCOM就是基于RPC实现的分布式COM组件</p>
+<h1 id="RPC概念"><a href="#RPC概念" class="headerlink" title="RPC概念"></a>RPC概念</h1><p>IPC（Inter-Process Communication，进程间通信）是用于本地的一套机制，RPC（Remote Procedure Call，远程过程调用）相比IPC是一套用于远程的机制，包含客户端和服务端，服务端提供服务（比如计算器服务），客户端发起请求（比如传入1+1，服务端返回结果2），当然这是最简化的场景，实际要复杂的多，RPC机制中涉及4个概念：<br>RPC客户端：发起请求的代码<br>RPC客户端存根（也叫RPC客户端Stub）：负责将客户端的请求参数打包成网络数据，并通过网络发送给服务端<br>RPC服务端存根（也叫RPC服务端Stub）：负责接收并拆解数据包，然后调用本地方法<br>RPC服务端：实际处理请求的代码</p>
+<p>RPC调用过程：<br>1、客户端以本地调用方式调用服务<br>2、客户端存根接收到调用后，负责将方法、参数等组装成能够进行网络传输的消息体（将消息对象序列化为二进制）<br>3、客户端存根通过socket将网络消息发送到服务端<br>4、服务端存根收到消息后进行解码（将消息对象反序列化）<br>5、服务端存根根据解码结果调用本地的服务<br>6、服务端执行本地过程并将执行结果返回给服务端存根<br>7、服务端存根将返回结果打包成网络消息（将结果消息进行发序列）<br>8、服务端存根通过socket将网络消息发送到客户端<br>9、客户端存根接收到结果消息，并进行解码（将结果消息反序列化）<br>10、客户端接收到返回结果</p>
+<p>RPC的接口使用了IDL（Interface Description Language，接口描述语言）作为接口语言，熟悉COM的同学应该一眼就能认出来，COM也是用的这个接口语言，这个接口语言使用的编译器是MIDL，在Visual Studio套件中，通过IDL文件定义RPC客户端和RPC服务端之间的通信接口，只有实现了此接口的RPC客户端和RPC服务端才能互相通信</p>
+<h1 id="RPC实现"><a href="#RPC实现" class="headerlink" title="RPC实现"></a>RPC实现</h1><p>下面是一个Demo演示，创建一个文件夹包含下面三个文件</p>
+<p>SimpleCalc.idl代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[</span><br><span class="line">    uuid(8A4B8C38-6BBD-4A9D-AE8E-1234567890AB),</span><br><span class="line">    version(1.0)</span><br><span class="line">]</span><br><span class="line">interface SimpleCalc</span><br><span class="line">&#123;</span><br><span class="line">    // 两个输入参数，返回它们的和</span><br><span class="line">    int Add([in] int a, [in] int b);</span><br><span class="line"></span><br><span class="line">    // 让服务端优雅退出（示例）</span><br><span class="line">    void Shutdown(void);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>server.cpp代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &quot;SimpleCalc.h&quot;</span><br><span class="line">#pragma comment(lib, &quot;Rpcrt4.lib&quot;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">void* __RPC_USER MIDL_user_allocate(size_t size) &#123; return malloc(size); &#125;</span><br><span class="line">void  __RPC_USER MIDL_user_free(void* p) &#123; free(p); &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; int Add(handle_t IDL_handle, int a, int b) &#123;</span><br><span class="line">    printf(&quot;[Server] Add(%d, %d)\n&quot;, a, b);</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br><span class="line">extern &quot;C&quot; void Shutdown(handle_t IDL_handle) &#123;</span><br><span class="line">    printf(&quot;[Server] Shutdown requested\n&quot;);</span><br><span class="line">    RpcMgmtStopServerListening(NULL);</span><br><span class="line">    RpcServerUnregisterIf(NULL, NULL, TRUE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    RPC_STATUS status;</span><br><span class="line">    RPC_CSTR pszProtocolSequence = (RPC_CSTR)&quot;ncalrpc&quot;;</span><br><span class="line">    RPC_CSTR pszEndpoint = (RPC_CSTR)&quot;MyLocalRPC&quot;;</span><br><span class="line">    status = RpcServerUseProtseqEpA(pszProtocolSequence, RPC_C_PROTSEQ_MAX_REQS_DEFAULT, pszEndpoint, NULL);</span><br><span class="line">    if (status != RPC_S_OK) &#123;</span><br><span class="line">        fprintf(stderr, &quot;RpcServerUseProtseqEpA failed: 0x%lx\n&quot;, status);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    status = RpcServerRegisterIf(SimpleCalc_v1_0_s_ifspec, NULL, NULL);</span><br><span class="line">    if (status != RPC_S_OK) &#123;</span><br><span class="line">        fprintf(stderr, &quot;RpcServerRegisterIf failed: 0x%lx\n&quot;, status);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RpcServerRegisterAuthInfoA(NULL, RPC_C_AUTHN_NONE, NULL, NULL);</span><br><span class="line"></span><br><span class="line">    printf(&quot;[Server] Listening on ncacn_ip_tcp port %s\n&quot;, (char*)pszEndpoint);</span><br><span class="line"></span><br><span class="line">    status = RpcServerListen(1, RPC_C_LISTEN_MAX_CALLS_DEFAULT, FALSE);</span><br><span class="line">    if (status != RPC_S_OK) &#123;</span><br><span class="line">        fprintf(stderr, &quot;RpcServerListen failed: 0x%lx\n&quot;, status);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    printf(&quot;[Server] RpcServerListen returned, exiting.\n&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>client.cpp代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &lt;stdio.h&gt;</span><br><span class="line">#include &quot;SimpleCalc.h&quot;</span><br><span class="line"></span><br><span class="line">#pragma comment(lib, &quot;Rpcrt4.lib&quot;)</span><br><span class="line"></span><br><span class="line">void* __RPC_USER MIDL_user_allocate(size_t size) &#123; return malloc(size); &#125;</span><br><span class="line">void  __RPC_USER MIDL_user_free(void* p) &#123; free(p); &#125;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    RPC_STATUS status;</span><br><span class="line">    RPC_BINDING_HANDLE binding = NULL;</span><br><span class="line">    RPC_CSTR pszStringBinding = NULL;</span><br><span class="line">    </span><br><span class="line">    /*</span><br><span class="line">    status = RpcStringBindingComposeA(</span><br><span class="line">        NULL,</span><br><span class="line">        (RPC_CSTR)&quot;ncacn_ip_tcp&quot;,</span><br><span class="line">        (RPC_CSTR)&quot;127.0.0.1&quot;,</span><br><span class="line">        (RPC_CSTR)&quot;50000&quot;,</span><br><span class="line">        NULL,</span><br><span class="line">        &amp;pszStringBinding</span><br><span class="line">    );</span><br><span class="line">    */</span><br><span class="line">    </span><br><span class="line">    status = RpcStringBindingComposeA(</span><br><span class="line">        NULL,</span><br><span class="line">        (RPC_CSTR)&quot;ncalrpc&quot;,</span><br><span class="line">        NULL,               // LRPC不需要地址</span><br><span class="line">        (RPC_CSTR)&quot;MyLocalRPC&quot;,</span><br><span class="line">        NULL,</span><br><span class="line">        &amp;pszStringBinding</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    if (status != RPC_S_OK) &#123;</span><br><span class="line">        fprintf(stderr, &quot;RpcStringBindingComposeA failed: 0x%lx\n&quot;, status);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    status = RpcBindingFromStringBindingA(pszStringBinding, &amp;binding);</span><br><span class="line">    if (status != RPC_S_OK) &#123;</span><br><span class="line">        fprintf(stderr, &quot;RpcBindingFromStringBindingA failed: 0x%lx\n&quot;, status);</span><br><span class="line">        RpcStringFreeA(&amp;pszStringBinding);</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    RpcStringFreeA(&amp;pszStringBinding);</span><br><span class="line"></span><br><span class="line">    // ✅ 用 RpcTryExcept 捕获 RPC 异常</span><br><span class="line">    RpcTryExcept</span><br><span class="line">    &#123;</span><br><span class="line">        int sum = Add(binding, 3, 7);</span><br><span class="line">        printf(&quot;[Client] Add(3,7) = %d\n&quot;, sum);</span><br><span class="line"></span><br><span class="line">        Shutdown(binding);</span><br><span class="line">    &#125;</span><br><span class="line">    RpcExcept(1)</span><br><span class="line">    &#123;</span><br><span class="line">        printf(&quot;[Client] RPC Exception code: 0x%lx\n&quot;, RpcExceptionCode());</span><br><span class="line">    &#125;</span><br><span class="line">    RpcEndExcept</span><br><span class="line"></span><br><span class="line">    RpcBindingFree(&amp;binding);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>安装好VS2022后，打开“x64 Native Tools Command Prompt for VS 2022”，切换到上述目录，先编译idl文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">midl SimpleCalc.idl</span><br></pre></td></tr></table></figure>
+<p>执行后会生成头文件、客户端存根文件、服务端存根文件、等</p>
+<p>然后编译服务端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl /EHsc server.cpp SimpleCalc_s.c /link rpcrt4.lib</span><br></pre></td></tr></table></figure>
+
+<p>最后编译客户端</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cl /EHsc client.cpp SimpleCalc_c.c /link rpcrt4.lib</span><br></pre></td></tr></table></figure>
+
+<p>成功编译后，先执行服务端，再执行客户端，结果如下图<br><img src="/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/01.png" alt="image"></p>
+<p>上图显示成功进行了一次RPC通信，我们对代码进行一下初步讲解</p>
+<p>服务端代码中，MIDL_user_allocate 与 MIDL_user_free是RPC运行时需要调用的分配/释放函数，需要在代码中实现它，所以需要下述2行代码，其实就是把malloc和free包装一下，符合RPC的要求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void* __RPC_USER MIDL_user_allocate(size_t size) &#123; return malloc(size); &#125;</span><br><span class="line">void  __RPC_USER MIDL_user_free(void* p) &#123; free(p); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>实现函数Add和Shutdown，并将其声明为C语言风格，确保编译后的函数名称不会有额外修饰</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">extern &quot;C&quot; int Add(handle_t IDL_handle, int a, int b) &#123;</span><br><span class="line">    printf(&quot;[Server] Add(%d, %d)\n&quot;, a, b);</span><br><span class="line">    return a + b;</span><br><span class="line">&#125;</span><br><span class="line">extern &quot;C&quot; void Shutdown(handle_t IDL_handle) &#123;</span><br><span class="line">    printf(&quot;[Server] Shutdown requested\n&quot;);</span><br><span class="line">    RpcMgmtStopServerListening(NULL);</span><br><span class="line">    RpcServerUnregisterIf(NULL, NULL, TRUE);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化一些参数，并调用RpcServerUseProtseqEpA注册协议</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">RPC_STATUS status;</span><br><span class="line">RPC_CSTR pszProtocolSequence = (RPC_CSTR)&quot;ncalrpc&quot;;</span><br><span class="line">RPC_CSTR pszEndpoint = (RPC_CSTR)&quot;MyLocalRPC&quot;;</span><br><span class="line">status = RpcServerUseProtseqEpA(pszProtocolSequence, RPC_C_PROTSEQ_MAX_REQS_DEFAULT, pszEndpoint, NULL);</span><br><span class="line">if (status != RPC_S_OK) &#123;</span><br><span class="line">    fprintf(stderr, &quot;RpcServerUseProtseqEpA failed: 0x%lx\n&quot;, status);</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用RpcServerRegisterIf将IDL的接口注册到RPC运行时</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">status = RpcServerRegisterIf(SimpleCalc_v1_0_s_ifspec, NULL, NULL);</span><br><span class="line">if (status != RPC_S_OK) &#123;</span><br><span class="line">    fprintf(stderr, &quot;RpcServerRegisterIf failed: 0x%lx\n&quot;, status);</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用RpcServerRegisterAuthInfoA并传入RPC_C_AUTHN_NONE允许匿名访问</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">RpcServerRegisterAuthInfoA(NULL, RPC_C_AUTHN_NONE, NULL, NULL);</span><br></pre></td></tr></table></figure>
+
+<p>调用RpcServerListen监听来自客户端的请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">status = RpcServerListen(1, RPC_C_LISTEN_MAX_CALLS_DEFAULT, FALSE);</span><br><span class="line">if (status != RPC_S_OK) &#123;</span><br><span class="line">    fprintf(stderr, &quot;RpcServerListen failed: 0x%lx\n&quot;, status);</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>客户端代码中，MIDL_user_allocate 与 MIDL_user_free同服务端一样</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">void* __RPC_USER MIDL_user_allocate(size_t size) &#123; return malloc(size); &#125;</span><br><span class="line">void  __RPC_USER MIDL_user_free(void* p) &#123; free(p); &#125;</span><br></pre></td></tr></table></figure>
+
+<p>初始化参数，并调用RpcStringBindingComposeA创建一个字符串形式绑定</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RPC_STATUS status;</span><br><span class="line">RPC_BINDING_HANDLE binding = NULL;</span><br><span class="line">RPC_CSTR pszStringBinding = NULL;</span><br><span class="line">status = RpcStringBindingComposeA(</span><br><span class="line">    NULL,</span><br><span class="line">    (RPC_CSTR)&quot;ncalrpc&quot;,</span><br><span class="line">    NULL,               // LRPC不需要地址</span><br><span class="line">    (RPC_CSTR)&quot;MyLocalRPC&quot;,</span><br><span class="line">    NULL,</span><br><span class="line">    &amp;pszStringBinding</span><br><span class="line">);</span><br><span class="line">if (status != RPC_S_OK) &#123;</span><br><span class="line">    fprintf(stderr, &quot;RpcStringBindingComposeA failed: 0x%lx\n&quot;, status);</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用RpcBindingFromStringBindingA将字符串绑定转化为RPC绑定句柄</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">status = RpcBindingFromStringBindingA(pszStringBinding, &amp;binding);</span><br><span class="line">if (status != RPC_S_OK) &#123;</span><br><span class="line">    fprintf(stderr, &quot;RpcBindingFromStringBindingA failed: 0x%lx\n&quot;, status);</span><br><span class="line">    RpcStringFreeA(&amp;pszStringBinding);</span><br><span class="line">    return 1;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>调用服务端提供的功能Add，包含在一个异常处理中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RpcTryExcept &#123;</span><br><span class="line">    int sum = Add(binding, 3, 7);</span><br><span class="line">    printf(&quot;[Client] Add(3,7) = %d\n&quot;, sum);</span><br><span class="line"></span><br><span class="line">    Shutdown(binding);</span><br><span class="line">&#125;</span><br><span class="line">RpcExcept(1) &#123;</span><br><span class="line">    printf(&quot;[Client] RPC Exception code: 0x%lx\n&quot;, RpcExceptionCode());</span><br><span class="line">&#125;</span><br><span class="line">RpcEndExcept</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/">http://example.com/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2025/11/23/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2025-60710%EF%BC%89/" title="Windows任务计划权限提升漏洞分析（CVE-2025-60710）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">Windows任务计划权限提升漏洞分析（CVE-2025-60710）</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">31</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RPC%E8%83%8C%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">RPC背景</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RPC%E6%A6%82%E5%BF%B5"><span class="toc-number">3.</span> <span class="toc-text">RPC概念</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#RPC%E5%AE%9E%E7%8E%B0"><span class="toc-number">4.</span> <span class="toc-text">RPC实现</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/" title="Windows RPC初探">Windows RPC初探</a><time datetime="2025-11-27T12:41:06.000Z" title="Created 2025-11-27 20:41:06">2025-11-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/23/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2025-60710%EF%BC%89/" title="Windows任务计划权限提升漏洞分析（CVE-2025-60710）">Windows任务计划权限提升漏洞分析（CVE-2025-60710）</a><time datetime="2025-11-23T11:47:28.000Z" title="Created 2025-11-23 19:47:28">2025-11-23</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/19/%E7%9B%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-VS-%E9%97%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/" title="直接系统调用 VS 间接系统调用">直接系统调用 VS 间接系统调用</a><time datetime="2025-10-19T01:05:02.000Z" title="Created 2025-10-19 09:05:02">2025-10-19</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/15/%E7%9B%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B9%8B%E4%BB%8E%E4%B8%8A%E5%B1%82API%E5%88%B0%E4%B8%8B%E5%B1%82API%E7%9A%84%E6%97%85%E7%A8%8B/" title="直接系统调用之从上层API到下层API的旅程">直接系统调用之从上层API到下层API的旅程</a><time datetime="2025-10-15T11:39:15.000Z" title="Created 2025-10-15 19:39:15">2025-10-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/10/13/%E9%AB%98%E7%BA%A7%E8%BF%9B%E7%A8%8B%E6%B3%A8%E5%85%A5%E4%B9%8B%E5%88%A9%E7%94%A8%E7%BA%BF%E7%A8%8B%E5%90%8D%E5%92%8CAPC%EF%BC%88%E4%B8%8B%EF%BC%89/" title="高级进程注入之利用线程名和APC（下）">高级进程注入之利用线程名和APC（下）</a><time datetime="2025-10-13T13:50:36.000Z" title="Created 2025-10-13 21:50:36">2025-10-13</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
