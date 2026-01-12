@@ -1,4 +1,4 @@
-http://example.com/2025/12/30/DCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%8E%A2%E7%A9%B6/
+http://example.com/2026/01/12/DCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%8E%A2%E7%A9%B6/
 http://example.com/2025/11/28/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E5%8F%8A%E5%85%B6COM%E7%BB%84%E4%BB%B6/
 http://example.com/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/
 http://example.com/2025/11/23/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2025-60710%EF%BC%89/
@@ -40,3 +40,4 @@ http://example.com/categories/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/
 http://example.com/categories/%E6%94%BB%E9%98%B2%E5%AF%B9%E6%8A%97/
 http://example.com/categories/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/
 http://example.com/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/
+http://example.com/categories/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/
