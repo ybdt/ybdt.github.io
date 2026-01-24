@@ -1,3 +1,5 @@
+http://example.com/2025/08/05/DOS%E4%B8%8B16%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0/
+http://example.com/2025/08/14/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0/
 http://example.com/2025/11/28/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E5%8F%8A%E5%85%B6COM%E7%BB%84%E4%BB%B6/
 http://example.com/2025/10/19/%E7%9B%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8-VS-%E9%97%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8/
 http://example.com/2025/10/15/%E7%9B%B4%E6%8E%A5%E7%B3%BB%E7%BB%9F%E8%B0%83%E7%94%A8%E4%B9%8B%E4%BB%8E%E4%B8%8A%E5%B1%82API%E5%88%B0%E4%B8%8B%E5%B1%82API%E7%9A%84%E6%97%85%E7%A8%8B/
@@ -28,8 +30,6 @@ http://example.com/2026/01/13/%E5%88%A9%E7%94%A8%E6%8E%A7%E5%88%B6%E9%9D%A2%E6%9
 http://example.com/2026/01/12/DCOM%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91%E6%8E%A2%E7%A9%B6/
 http://example.com/2025/11/23/Windows%E4%BB%BB%E5%8A%A1%E8%AE%A1%E5%88%92%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90%EF%BC%88CVE-2025-60710%EF%BC%89/
 http://example.com/about/index.html
-http://example.com/2025/08/14/Windows%E4%B8%8B32%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0/
-http://example.com/2025/08/05/DOS%E4%B8%8B16%E4%BD%8D%E6%B1%87%E7%BC%96%E5%AD%A6%E4%B9%A0/
 http://example.com/2022/01/11/%E6%96%B0%E5%BE%81%E7%A8%8B/
 http://example.com/2024/05/07/%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E5%A4%9A%E7%94%A8%E6%88%B7%E5%BE%AE%E5%8D%9A%E7%B3%BB%E7%BB%9F/
 http://example.com/2024/05/07/%E5%88%86%E4%BA%AB%E4%B8%80%E4%B8%AA%E8%87%AA%E5%B7%B1%E5%BC%80%E5%8F%91%E7%9A%84%E5%B7%A5%E5%85%B7/
@@ -37,7 +37,6 @@ http://example.com/2025/08/14/%E2%80%9CWorstFit%E2%80%9D%E5%AD%A6%E4%B9%A0/
 http://example.com/categories/index.html
 http://example.com/
 http://example.com/categories/%E6%BC%8F%E6%B4%9E%E7%A0%94%E7%A9%B6/
-http://example.com/categories/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/
 http://example.com/categories/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/
 http://example.com/categories/%E5%BF%83%E8%B7%AF%E5%8E%86%E7%A8%8B/
 http://example.com/categories/%E5%86%85%E7%BD%91%E6%A8%AA%E5%90%91/
@@ -45,3 +44,4 @@ http://example.com/categories/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/
 http://example.com/categories/Windows-PE/
 http://example.com/categories/%E7%BB%88%E7%AB%AF%E5%AF%B9%E6%8A%97/
 http://example.com/categories/%E6%94%BB%E9%98%B2%E5%AE%9E%E6%88%98/
+http://example.com/categories/Windows%E6%B1%87%E7%BC%96/
